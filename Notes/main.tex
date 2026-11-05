@@ -1,0 +1,36 @@
+\documentclass[10pt,a4paper]{paper}
+\input{header.tex}
+
+\title{Effective substrate screening in GW and BSE calculations of 2D layers}
+\author{Marco D'Alessandro}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+These notes describe how the dielectric screening of a bulk substrate can be included, in an effective way, in GW
+and Bethe--Salpeter (BSE) calculations of a two-dimensional layer physisorbed on it. The layer is computed alone in
+a periodic supercell, and the substrate never appears explicitly in the calculation. We consider the simplest
+situation, in which layer and substrate interact only through their mutual polarization: there is no charge
+transfer and no hybridization between their states. The first system we have in mind is germanene on hexagonal
+boron nitride.
+
+When the wavefunctions of the two subsystems do not overlap, the independent-particle response is the sum of the
+responses of the layer and of the substrate, $\chi_0 = \chi_0^{\mathrm{L}} + \chi_0^{\mathrm{S}}$. The substrate
+then enters the many-body problem of the layer only through a reaction field that dresses the bare Coulomb
+interaction~\cite{amblard2023many,amblard2024static,duchemin2024polarizable},
+\begin{equation}
+\vt = \vb + \vreac , \qquad \vreac = \vb\,\chiS\,\vb ,
+\label{eq:vtilde}
+\end{equation}
+where $\chiS$ is the interacting response of the substrate alone. The aim of this work is to build $\vreac$ for a
+semi-infinite substrate and to use it in the GW and BSE calculations of the layer, acting on the databases of the
+many-body code rather than on its source.
+
+\bibliographystyle{unsrt}
+\bibliography{biblio}
+
+\end{document}

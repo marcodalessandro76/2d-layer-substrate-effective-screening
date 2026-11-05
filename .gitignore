@@ -1,0 +1,18 @@
+# Data are not tracked: QE/Yambo runs live on the cluster
+.ipynb_checkpoints/
+__pycache__/
+*.pdf
+*.tar
+*.tar.gz
+*.tgz
+.claude/settings.local.json
+# LaTeX auxiliary files of the technical notes (the PDF is compiled locally)
+Notes/*.aux
+Notes/*.log
+Notes/*.out
+Notes/*.toc
+Notes/*.bbl
+Notes/*.blg
+Notes/*.fls
+Notes/*.fdb_latexmk
+Notes/*.synctex.gz

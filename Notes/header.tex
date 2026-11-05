@@ -1,0 +1,42 @@
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{subcaption}
+
+\geometry{margin=1in}
+
+% Paragraphs
+\setlength{\parindent}{4pt}
+
+% Title block: the paper class sets it flush left and does not print the date
+\makeatletter
+\def\@maketitle{%
+  \null
+  \vskip \beforetitlespace
+  \begin{center}
+    {\t@font \@title \par}%
+    \vskip 1.5em
+    {\a@font \lineskip .5em \begin{tabular}[t]{c}\@author\end{tabular}\par}%
+    \vskip 1em
+    {\large \@date \par}%
+  \end{center}
+  \par \vskip 1.5em
+}
+\makeatother
+
+% Notation
+\newcommand{\vb}{v}                                  % bare Coulomb interaction
+\newcommand{\vreac}{v_{\mathrm{reac}}}               % reaction field of the substrate
+\newcommand{\vt}{\tilde{v}}                          % dressed interaction v + v_reac
+\newcommand{\chiL}{\chi^{\mathrm{L}}}                % response of the layer
+\newcommand{\chiS}{\chi^{\mathrm{S}}}                % response of the substrate
+\newcommand{\chiLt}{\tilde{\chi}^{\mathrm{L}}}       % layer response with the dressed interaction
+\newcommand{\Qp}{Q}                                  % |q + G_par|
+\newcommand{\gs}{g}                                  % surface response function of the substrate
