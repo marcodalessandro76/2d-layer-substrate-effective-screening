@@ -60,16 +60,35 @@ computational procedure (possibly a code implementation).
   undefined references); the PDF is not tracked. Do not refer to sections that do not exist yet.
   Figures: `Notes/make_figures.py` (registry `FIGURES`, run from `Notes/` with the miniconda python, saves jpeg in
   `Notes/Figures/`, included with `\includegraphics{Figures/<name>.jpeg}`).
-  State (2026-11-06): Sec. 1 Introduction; Sec. 2 "A sheet of oscillators above a dielectric substrate" (model A,
-  under discussion with the user). Sec. 2.1 rewritten after the user's first comments: rho(r) expanded in charge
-  waves (box of area A, Kronecker delta: only Q = 0 carries net charge; point-charge example; Q = q + G_par),
-  Poisson equation per wave, matching conditions derived (continuity of phi, jump of phi' = -sigma_Q/eps0, Gauss
-  pillbox), Q = 0 uniform plane (linear potential, arbitrary constant, absent for neutral layers) vs Q != 0
-  (sigma_Q/(2 eps0 Q) e^{-Q|z|}; small-Q link with Q = 0), v(Q) = 1/(2 eps0 Q) as the in-plane transform of the 3D
-  Coulomb kernel, then the three "features" bullets (range, long wavelengths, polarization waves: next to discuss).
-  Then image construction and vt(Q) = (1 - beta e^{-2Qd})/(2 eps0 Q), sheet of Lorentz oscillators
-  (eps_sh = 1 - vt chi0, omega_L^2 = omega_0^2 [1 + r0 Q/eps_env], r0 = n alpha(0)/(2 eps0), Keldysh W), single
-  oscillator image shift and lattice sums, summary. Figures `charge_wave_field`, `sheet_potential`, `sheet_modes`.
+  State (2026-11-09; the introduction was removed by the user's request, so the sections start at 1):
+  Sec. 1 "Charges in a plane: charge waves and their potential" (`sec:charge_wave`; read and found clear by the
+  user): intro with quasi-static limit and units, finite sheet of area A with Born-von Karman conditions (discrete Q,
+  limit A -> inf), lattice periodicity (N_c cells, Q = q + G_par, lattice fixes G_par and BZ, sheet size fixes the q
+  grid; from here on the layer has a lattice; homogeneous plane = limit A_c -> 0); 1.1 charge waves (rho in charge
+  waves, only Q = 0 carries net charge, point charge, periodic density sigma_Q = N_c sigma_G delta_{q,0}); 1.2
+  potential of a charge wave (Poisson per wave, matching conditions, Q = 0 uniform plane and neutrality, Q != 0).
+  Sec. 2 "The substrate: dressed Coulomb interaction" (`sec:image`): static local dielectric half-space; terminology
+  (user, 2026-11-09): "sheet" = charged plane at z = d, "surface of the substrate" = z = 0; waves independent because
+  eps depends only on z (substrate-lattice coupling Q -> Q + G neglected, stated); image construction; sigma_pol on
+  the surface (eq:sigma_pol); phi_Q(d) = potential of the wave + that of the polarization charge (eq:phi_sheet);
+  vt = v + v_emb with v(Q) = 1/(2 eps0 Q) and v_emb = -beta e^{-2Qd}/(2 eps0 Q), both explained (eq:vt_sheet);
+  eps_env from vt/v; real-space vt from the images (short sentence, simplified by the user's request); limits.
+  The (Q;z,z') forms v = e^{-Q|z-z'|}/(2 eps0 Q), v_emb = -beta e^{-Qz} e^{-Qz'}/(2 eps0 Q) were removed (user,
+  2026-11-09): introduce them where finite thickness is treated.
+  Sec. 3 "Screening by a polarizable layer on the substrate" (`sec:layer_screening`): 3.1 generic layer response
+  chi0 (no local fields): eps_sh = 1 - vt chi0, W = vt/eps_sh = vt + vt chit vt ("structure of the RPA with v -> vt");
+  insulating layer chi0 = -Q^2 chi_2D, r0 = chi_2D/(2 eps0), static Keldysh W; 3.2 example: Lorentz oscillators,
+  chi_2D = n alpha, single pole eps^-1 = 1 + Omega_Q^2/(w^2 - w_L^2) = plasmon-pole form (substrate moves pole and
+  weight via eps_env), modes bullets, short "Discreteness" paragraph; 3.3 summary.
+  No citations at present: `\bibliographystyle`/`\bibliography` are commented out at the end of main.tex, to be
+  restored with the first \cite (biblio.bib kept).
+  Planned (user, 2026-11-09, not now): a section that defines chi and all the needed quantities and analyses the
+  effect of the substrate in the GW language (v_emb = v chi^S v, link with the Blase-Duchemin papers and their
+  "reaction field"); the removed introduction (goal of the notes, chi0 = chi0^L + chi0^S, eq. vt = v + v chi^S v) is
+  recoverable from git history.
+  Figures: `sheet_modes` only. Removed on 2026-11-09 at the user's request (recoverable from git history): figures
+  `charge_wave_field` and `sheet_potential` (potential profiles of a charge wave above the substrate); the old section on the Coulomb interaction in the plane (point-charge Fourier
+  transform, mixed representation, bullets on range, long wavelengths and polarization waves).
 - `docs/`: working notes in markdown (context, literature, plans); `01_context_and_literature.md`,
   `02_python_route_yambo_databases.md`.
 - Notebooks: to be created when the models/analysis start.
@@ -77,7 +96,7 @@ computational procedure (possibly a code implementation).
 ## Roadmap (provisional, to be agreed step by step)
 1. Framing and literature (in progress): the three embedding papers (done, first reading); still to read: Neaton
    2006, Liu 2019 / Xuan 2019 (plane-wave substrate screening), QEH, G-Delta-W, Brunetti 2018/2019, Kim 2022/2024.
-2. Theory: derive v_reac / g(Q,w) for a semi-infinite substrate (local, anisotropic, Q-dependent, dynamic); GW
+2. Theory: derive v_emb / g(Q,w) for a semi-infinite substrate (local, anisotropic, Q-dependent, dynamic); GW
    self-energy with vt (COH + SEX + renormalized screening of the layer); BSE kernel with vt; q -> 0 and truncation.
 3. Simple models (python): image charge; Keldysh-type W(q) with eps_env(q) = [1 - g e^{-2qd}]^-1; Wannier–Mott / Dirac
    excitons; dependence on eps, d, layer screening r0; static vs dynamic substrate.
@@ -108,7 +127,8 @@ computational procedure (possibly a code implementation).
 q, q_par in-plane wave vector; Q = |q + G_par| (bold Q the vector; Fourier components labelled by the vector,
 sigma_Q, phi_Q(z), with box normalization (1/A) sum_Q over the area A); z out of plane; d layer–substrate distance; z_s substrate reference
 plane; eps_s (eps_inf, eps_0) substrate dielectric function; g(Q,w) surface response function, beta = (eps-1)/(eps+1);
-chi0, chi independent/interacting response; v bare Coulomb, v_reac reaction field, vt = v + v_reac; W screened
+chi0, chi independent/interacting response; v bare Coulomb, v_emb embedding term (= v_reac, "reaction field", of the
+Blase-Duchemin papers and of docs/; renamed by the user 2026-11-09), vt = v + v_emb dressed interaction; W screened
 interaction; r0 = 2 pi chi_2D.
 
 ## Decision log
@@ -134,3 +154,23 @@ interaction; r0 = 2 pi chi_2D.
   crystal bullet now separates Q = G_par (average G_par = 0, modulation G_par != 0) from q != 0 (perturbations).
   For later: in a layer of finite thickness the G_par = 0 component is a profile rho(z) with zero integral
   (average potential across the layer; a step outside only if there is a dipole).
+- 2026-11-06: box/lattice counting added to Sec. 2.1, very concisely and without a figure (user: do not drift from
+  the goal of the notes): the box is a supercell of N_c cells; Q = q + G_par; the lattice fixes the G_par and the BZ,
+  the box fixes the grid of allowed q (N_c points in the BZ, as many as the cells: the q grid of the codes); sigma_Q = N_c sigma_G delta_{q,0}; continuum limit
+  sum_G int_BZ d^2q/(2pi)^2.
+- 2026-11-09: the user found Sec. 2.1 clear and asked to reorganize: charges in a plane became Sec. 2 (with an intro
+  on box/periodic conditions and lattice periodicity, then the layer is taken periodic), the substrate (vt) Sec. 3,
+  the oscillator sheet Sec. 4. Our assessment, given to the user: the charge-wave description and vt / v_reac are the building blocks also of
+  the later, extended model (ab initio layer response, finite thickness, g(Q,w), charged excitations).
+- 2026-11-09: the user asked whether the oscillator model is still useful; agreed to keep it reframed and trimmed:
+  Sec. 4 now starts from a generic layer response (substrate only through vt, eps = 1 - vt chi0, W = vt/eps; Keldysh
+  for an insulating layer), with the oscillators as the single-pole example (link with the plasmon-pole
+  approximation, relevant to the PPA issue in docs/02); the single-oscillator subsection was reduced to a paragraph
+  and the depolarization-field equation removed. To add when we reach germanene: the Dirac-layer chi0 (proportional
+  to -Q, Q-independent screening) and the crossover set by the small SOC gap (qualitative assessment, to verify).
+- 2026-11-09: old Sec. 2.3 (Coulomb interaction in the plane) removed by the user's request; Sec. 3 made clearer:
+  names the two planes (sheet at z = d, surface of the substrate at z = 0), explains why the waves stay independent,
+  writes phi_Q(d) as the potential of the wave plus that of the polarization charge and defines vt from it.
+  v_reac renamed v_emb ("embedding term") in the notes.
+- 2026-11-09: introduction removed (user): the GW-language formulation (chi, v_emb = v chi^S v, papers) will be a
+  later, dedicated section; the reference to v_emb = v chi^S v after eq:vt_sheet and in Sec. 3.1 removed too.
