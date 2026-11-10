@@ -8,14 +8,246 @@
 \begin{document}
 \maketitle
 
+\section{Response functions and screened interaction}
+\label{sec:response}
+
+This section defines the quantities that describe the screening of an electronic system and that enter the GW
+self-energy and the kernel of the Bethe--Salpeter equation: the independent-particle response function $\chi_0$, the
+response function $\chi$, the dielectric function $\varepsilon$ and the screened interaction $W$. The substrate will
+be included by modifying these quantities, so we fix their meaning first. As in Ref.~\cite{strinati1988application},
+all the definitions follow from one question: how do the electrons respond when an external charge is placed in the
+system? They move under the potential of that charge, and the charge they move, the induced charge, produces a
+potential of its own, to which they respond too. Two potentials must then be distinguished, the external one and the
+total one, each with its response function; the dielectric function relates the two potentials, and $W$ is the total
+potential produced by an external point charge.
+
+\paragraph{Conventions.} We work in the quasi-static limit: retardation is neglected and the fields are those of the
+Coulomb interaction (valid for wave vectors $k \gg \omega/c$). The electrostatics is written in SI form,
+$\nabla^2\phi = -\rho/\varepsilon_0$; the Hartree atomic units of GW codes follow from
+$e = m = \hbar = 4\pi\varepsilon_0 = 1$, that is from the replacement $1/\varepsilon_0 \to 4\pi$. The nuclei are
+fixed and only the electrons respond. We consider the linear response to weak perturbations: the ground state is
+stationary, so a perturbation at frequency $\omega$ induces a response at the same frequency, and the relations below
+hold at each $\omega$ separately, with no integral over frequency. The response at $\bm{r}$ depends instead on the
+perturbation at every point $\bm{r}'$: response functions are kernels $A(\bm{r},\bm{r}';\omega)$, integrated over
+$\bm{r}'$.
+
+\paragraph{External charge and response function.} An external charge $\rho^{\mathrm{ext}}$, for instance a test
+charge placed at some point, produces the external potential
+\begin{equation}
+\phi^{\mathrm{ext}}(\bm{r},\omega) = \int d^3r'\;v(\bm{r},\bm{r}')\,\rho^{\mathrm{ext}}(\bm{r}',\omega) , \qquad
+v(\bm{r},\bm{r}') = \frac{1}{4\pi\varepsilon_0\,|\bm{r} - \bm{r}'|} ,
+\label{eq:phi_ext}
+\end{equation}
+with $v$ the bare Coulomb interaction, the potential at $\bm{r}$ of a unit point charge at $\bm{r}'$.
+The external charge can change in time: a test charge can be switched on, moved or made to oscillate, and an electron
+can be added to the system at a given instant. We write it as a sum of frequency components,
+$\rho^{\mathrm{ext}}(\bm{r},t) = \int (d\omega/2\pi)\,\rho^{\mathrm{ext}}(\bm{r},\omega)\,e^{-i\omega t}$, and, since the
+response is linear, treat one component at a time. A charge at rest has only the component $\omega = 0$; a charge that
+appears suddenly contains all frequencies, and each is screened differently, because the electrons need time to
+respond. The Coulomb potential instead follows the charge instantaneously (quasi-static limit), so $v$ in
+Eq.~\eqref{eq:phi_ext} does not depend on $\omega$.
+The electrons move under this potential, and the charge density changes by
+an induced charge, proportional to the external potential when this is weak:
+\begin{equation}
+\rho^{\mathrm{ind}}(\bm{r},\omega) = \int d^3r'\;\chi(\bm{r},\bm{r}';\omega)\,\phi^{\mathrm{ext}}(\bm{r}',\omega) .
+\label{eq:chi_def}
+\end{equation}
+Eq.~\eqref{eq:chi_def} is the definition of the response function $\chi(\bm{r},\bm{r}';\omega)$: the charge induced
+at $\bm{r}$ by a unit external potential at $\bm{r}'$. It is the response of the whole system of interacting electrons, the one that a measurement would see: for
+a test charge, $\rho^{\mathrm{ind}}$ is the cloud of charge that screens it~\cite{blase2018introduction}. Inserting
+Eq.~\eqref{eq:phi_ext},
+\begin{equation}
+\rho^{\mathrm{ind}}(\bm{r},\omega) = \int d^3r'\,d^3r''\;\chi(\bm{r},\bm{r}';\omega)\,v(\bm{r}',\bm{r}'')\,
+\rho^{\mathrm{ext}}(\bm{r}'',\omega) ,
+\label{eq:chain}
+\end{equation}
+which reads from right to left as a chain of two processes (Fig.~\ref{fig:response}a): the external charge at
+$\bm{r}''$ produces, instantaneously, a potential at $\bm{r}'$; the electrons respond to the potential at $\bm{r}'$
+with a charge at $\bm{r}$, with the frequency dependence of $\chi$. All the points $\bm{r}''$ and $\bm{r}'$ contribute.
+In a system that does not polarize (the vacuum, or electrons that cannot move) no charge is induced, whatever the
+external charge: $\rho^{\mathrm{ind}} = 0$, so $\chi = 0$, and the only potential is the external one. The induced
+charge is the change of the charge of the electrons, not a copy of the external charge: $\chi$ measures how much the
+electrons move.
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[>=stealth, font=\small]
+% (a) chain of Eq. (chain)
+\node at (-3.5,1.3) {(a)};
+\fill[gray!12] (0,0) ellipse (3.5 and 1.25);
+\node[gray!60!black, font=\footnotesize] at (0,-0.95) {electron system};
+\node[circle, draw, fill=white, inner sep=0.4pt, font=\scriptsize,
+      label={below:$\rho^{\mathrm{ext}}(\bm{r}'',\omega)$}] (A) at (-2.4,-0.05) {$+$};
+\node[circle, fill, inner sep=1.4pt, label={above:$\phi^{\mathrm{ext}}(\bm{r}',\omega)$}] (B) at (0,0.4) {};
+\node[circle, fill, inner sep=1.4pt, label={below:$\rho^{\mathrm{ind}}(\bm{r},\omega)$}] (C) at (2.4,-0.05) {};
+\draw[->, thick, dashed] (A) -- node[midway, above left] {$v(\bm{r}',\bm{r}'')$} (B);
+\draw[->, thick] (B) -- node[midway, above right] {$\chi(\bm{r},\bm{r}';\omega)$} (C);
+% (b) self-consistent loop of Eqs. (phi_tot) and (chi0_def)
+\begin{scope}[shift={(4.6,0.35)}]
+\node at (-0.3,0.95) {(b)};
+\node (in) at (0,0) {$\phi^{\mathrm{ext}}$};
+\node[circle, draw, inner sep=0.8pt] (S) at (1.3,0) {$+$};
+\node[draw, minimum width=0.9cm, minimum height=0.6cm] (X) at (3.1,0) {$\chi_0$};
+\node (out) at (5.5,0) {$\rho^{\mathrm{ind}}$};
+\node[draw, minimum width=0.9cm, minimum height=0.6cm] (V) at (3.1,-1.2) {$v$};
+\draw[->, thick] (in) -- (S);
+\draw[->, thick] (S) -- node[above] {$\phi$} (X);
+\draw[->, thick] (X) -- (out);
+\draw[->, thick] (4.5,0) |- (V);
+\draw[->, thick] (V) -| node[pos=0.75, right] {$v\rho^{\mathrm{ind}}$} (S);
+\fill (4.5,0) circle (1.2pt);
+\end{scope}
+\end{tikzpicture}
+\caption{(a) The chain of Eq.~\eqref{eq:chain}: the external charge at $\bm{r}''$ produces the potential at $\bm{r}'$
+through the bare Coulomb interaction (dashed, instantaneous), and the electron system responds to it with a charge at
+$\bm{r}$ (solid, response function $\chi$, frequency dependent); all $\bm{r}''$ and $\bm{r}'$ contribute. (b) The
+self-consistent loop of Eqs.~\eqref{eq:phi_tot} and~\eqref{eq:chi0_def}: the independent electrons respond with
+$\chi_0$ to the total potential $\phi$, which contains the Hartree potential $v\rho^{\mathrm{ind}}$ of the induced
+charge. Going around the loop generates the series~\eqref{eq:dyson_chi} for $\chi$.}
+\label{fig:response}
+\end{figure}
+
+\paragraph{Total potential.} The induced charge is itself a source of potential, and the electrons feel the total
+potential
+\begin{equation}
+\phi(\bm{r},\omega) = \phi^{\mathrm{ext}}(\bm{r},\omega) + \int d^3r'\;v(\bm{r},\bm{r}')\,\rho^{\mathrm{ind}}(\bm{r}',\omega) ,
+\label{eq:phi_tot}
+\end{equation}
+the change of the total classical potential of Ref.~\cite{strinati1988application}. The second term is the Hartree
+potential of the induced charge: its classical electrostatic potential, that is, the change of the Hartree potential
+of the electrons caused by the external charge. Like $\phi^{\mathrm{ext}}$, it is a local potential: a function of
+$\bm{r}$ alone, which acts on the wavefunction of an electron by multiplication, $-e\phi(\bm{r})\psi(\bm{r})$. The
+integral over $\bm{r}'$ only says that the potential at $\bm{r}$ is produced by the induced charge at every point.
+Nonlocal potentials, such as the exchange term of Hartree--Fock or the GW self-energy, act instead through an
+integral over the wavefunction, $\int d^3r'\,\Sigma(\bm{r},\bm{r}')\,\psi(\bm{r}')$. The induced charge depends on
+$\phi$, and $\phi$ depends in turn on the induced charge: the response to the external potential is a self-consistent
+problem.
+
+\paragraph{Independent-particle response.} The response to the total potential is simpler,
+\begin{equation}
+\rho^{\mathrm{ind}}(\bm{r},\omega) = \int d^3r'\;\chi_0(\bm{r},\bm{r}';\omega)\,\phi(\bm{r}',\omega) ,
+\label{eq:chi0_def}
+\end{equation}
+because the potential that the electrons actually feel is on the right: $\chi_0$ does not contain the feedback of the
+induced charge on itself. We take for $\chi_0$ the response of independent electrons, the Kohn--Sham electrons
+moving in the potential $\phi$. First-order perturbation theory gives the Adler--Wiser
+form~\cite{golze2019gw,amblard2024static}
+\begin{equation}
+\chi_0(\bm{r},\bm{r}';\omega) = e^2\sum_{n,m}\,(f_n - f_m)\,
+\frac{\psi_n^*(\bm{r})\,\psi_m(\bm{r})\;\psi_m^*(\bm{r}')\,\psi_n(\bm{r}')}{\hbar\omega - (\epsilon_m - \epsilon_n) + i\eta} ,
+\label{eq:chi0_KS}
+\end{equation}
+with $\psi_n$, $\epsilon_n$ and $f_n$ the Kohn--Sham spin-orbitals, their energies and occupations, and
+$\eta \to 0^+$.
+\begin{itemize}
+\item Only pairs of an occupied and an empty state contribute: the potential induces transitions between them, and
+  $\chi_0$ has poles at the Kohn--Sham transition energies. In the static limit $\chi_0 < 0$: the electrons gather
+  where $\phi$ is high (their potential energy $-e\phi$ is low), so the induced charge has the sign opposite to that of
+  the potential and reduces it. This is screening.
+\item Taking $\chi_0$ as the response to $\phi$ is the random-phase approximation (RPA): the electrons respond to the
+  Hartree potential of the induced charge, while the exchange and correlation effects of the induced charge are
+  neglected. The exact response to $\phi$, the irreducible polarizability~\cite{strinati1988application}, contains
+  them. The RPA is the standard approximation of GW calculations, and it is used throughout.
+\item Eq.~\eqref{eq:chi0_KS} is the retarded (causal) response. The time-ordered functions used in the GW
+  self-energy have the same poles and residues, and differ only in the sign of $i\eta$ for the poles at negative
+  frequency~\cite{golze2019gw,amblard2024static}.
+\item In atomic units the charge density is $\rho = -n$, with $n$ the density of electrons, and the potential is
+  $\phi = -V$, with $V$ the potential energy of an electron: the response of $\rho$ to $\phi$ coincides with that of
+  $n$ to $V$, the one of GW codes. In SI units they differ by the factor $e^2$ of Eq.~\eqref{eq:chi0_KS}.
+\end{itemize}
+
+\paragraph{Compact notation.} Eqs.~\eqref{eq:phi_ext}--\eqref{eq:chi0_def} have the same structure: a kernel acts on
+a function through an integral over its second position, at fixed $\omega$. From now on we write this as a product,
+$A\phi$ for $\int d^3r'\,A(\bm{r},\bm{r}')\,\phi(\bm{r}')$, and the product of two kernels as
+$(AB)(\bm{r},\bm{r}') = \int d^3r''\,A(\bm{r},\bm{r}'')\,B(\bm{r}'',\bm{r}')$, with $1$ standing for
+$\delta(\bm{r} - \bm{r}')$; for instance,
+\begin{equation*}
+(\chi_0\,v\,\chi)(\bm{r},\bm{r}';\omega)
+= \int d^3r''\,d^3r'''\;\chi_0(\bm{r},\bm{r}'';\omega)\,v(\bm{r}'',\bm{r}''')\,\chi(\bm{r}''',\bm{r}';\omega) .
+\end{equation*}
+Eqs.~\eqref{eq:phi_ext}--\eqref{eq:chi0_def} read $\phi^{\mathrm{ext}} = v\rho^{\mathrm{ext}}$,
+$\rho^{\mathrm{ind}} = \chi\phi^{\mathrm{ext}}$, $\phi = \phi^{\mathrm{ext}} + v\rho^{\mathrm{ind}}$ and
+$\rho^{\mathrm{ind}} = \chi_0\phi$: the relations look like products of matrices, which they become in a basis set.
+
+\paragraph{Dyson equation.} Eqs.~\eqref{eq:phi_tot} and~\eqref{eq:chi0_def} give
+$\rho^{\mathrm{ind}} = \chi_0\phi^{\mathrm{ext}} + \chi_0 v\rho^{\mathrm{ind}}$, and with Eq.~\eqref{eq:chi_def},
+since the external potential is arbitrary,
+\begin{equation}
+\chi = \chi_0 + \chi_0\,v\,\chi = \chi_0 + \chi_0v\chi_0 + \chi_0v\chi_0v\chi_0 + \dots
+\label{eq:dyson_chi}
+\end{equation}
+The series follows the induced charge step by step around the loop of Fig.~\ref{fig:response}b: the external
+potential induces $\chi_0\phi^{\mathrm{ext}}$ in the
+independent electrons, the Hartree potential of this charge, $v\chi_0\phi^{\mathrm{ext}}$, induces
+$\chi_0v\chi_0\phi^{\mathrm{ext}}$, and so on. $\chi = (1 - \chi_0 v)^{-1}\chi_0$ sums this feedback to all orders.
+Its poles are the neutral excitations of the system in the RPA, shifted from the Kohn--Sham transitions by the
+feedback; collective modes such as the plasmons have no counterpart in $\chi_0$.
+
+\paragraph{Dielectric function.} The dielectric function relates the two potentials. Eq.~\eqref{eq:phi_tot}, with the
+induced charge written through Eq.~\eqref{eq:chi_def} or through Eq.~\eqref{eq:chi0_def}, gives
+\begin{equation}
+\phi = \varepsilon^{-1}\phi^{\mathrm{ext}} , \quad \varepsilon^{-1} = 1 + v\chi ; \qquad
+\phi^{\mathrm{ext}} = \varepsilon\,\phi , \quad \varepsilon = 1 - v\chi_0 .
+\label{eq:eps}
+\end{equation}
+$\varepsilon$ is built from $\chi_0$, which is computed directly from Eq.~\eqref{eq:chi0_KS}, while
+$\varepsilon^{-1}$, which gives the screened potential, requires $\chi$. The two are inverse kernels,
+$\varepsilon\,\varepsilon^{-1} = 1$ by the Dyson equation~\eqref{eq:dyson_chi}: computing $\varepsilon^{-1}$ means
+inverting $\varepsilon$. Note that $\varepsilon^{-1}(\bm{r},\bm{r}')$ is not $1/\varepsilon(\bm{r},\bm{r}')$: the total
+potential at $\bm{r}$ depends on the external potential at every point.
+
+\paragraph{Screened interaction.} Let the external charge be a unit point charge at $\bm{r}'$. Its external potential
+is $v(\bm{r},\bm{r}')$, and the total potential it produces, including that of the charge it induces, is
+\begin{equation}
+W = \varepsilon^{-1}v = v + v\chi v = v + v\chi_0 W .
+\label{eq:W}
+\end{equation}
+$W(\bm{r},\bm{r}';\omega)$ is the Coulomb interaction screened by the electrons: the potential at $\bm{r}$ of a unit
+charge at $\bm{r}'$ together with its screening cloud $\chi v$~\cite{blase2018introduction}. The last form is the
+Dyson equation for $W$, equivalent to Eq.~\eqref{eq:dyson_chi}. In GW the added charge is an electron or a hole, and
+$W$ is its interaction with the other charges: the self-energy $\Sigma = iGW$ is the exchange term of Hartree--Fock
+with $v$ replaced by $W$. $W$ depends on $\omega$ because the electrons need a time to build the screening cloud, of
+the order of the inverse of their excitation energies: $W$ has the poles of $\chi$, and its static limit
+$W(\omega = 0)$ describes the screening of a charge that varies slowly on that time scale.
+
+\paragraph{Summary.} The four quantities and their links are:
+\begin{center}
+\begin{tabular}{p{0.11\textwidth}p{0.36\textwidth}>{\raggedright\arraybackslash}p{0.43\textwidth}}
+\toprule
+Quantity & Relations & Meaning \\
+\midrule
+$\chi_0$ & $\rho^{\mathrm{ind}} = \chi_0\phi$ &
+  response to the total potential: independent Kohn--Sham electrons (RPA) \\
+$\chi$ & $\rho^{\mathrm{ind}} = \chi\phi^{\mathrm{ext}}$, \quad $\chi = \chi_0 + \chi_0v\chi$ &
+  response to the external potential, with the feedback of the induced charge \\
+$\varepsilon$, $\varepsilon^{-1}$ & $\varepsilon = 1 - v\chi_0$, \quad $\varepsilon^{-1} = 1 + v\chi$ &
+  ratio of the external and total potentials, $\phi^{\mathrm{ext}} = \varepsilon\phi$ \\
+$W$ & $W = \varepsilon^{-1}v = v + v\chi v$ &
+  total potential of a unit external point charge: the screened interaction \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Periodic systems.} In a crystal the kernels do not change when $\bm{r}$ and $\bm{r}'$ are translated
+together by a lattice vector. In a basis of plane waves they become matrices, such as
+$\chi_{\bm{G}\bm{G}'}(\bm{q},\omega)$, labelled by a wave vector $\bm{q}$ in the Brillouin zone and by two reciprocal
+lattice vectors, and the products of this section become products of matrices. The bare interaction is diagonal,
+$v(\bm{q} + \bm{G}) = 1/(\varepsilon_0|\bm{q} + \bm{G}|^2)$ ($4\pi/|\bm{q} + \bm{G}|^2$ in atomic units); the
+off-diagonal elements of the response functions (local fields) describe the variation of the response within the
+unit cell. These forms will be written when needed.
+
+\paragraph{In the following.} Sections~\ref{sec:charge_wave}--\ref{sec:layer_screening} use these definitions in the
+simplest setting: charges confined to a plane (Sec.~\ref{sec:charge_wave}), a substrate described by a dielectric
+constant (Sec.~\ref{sec:image}) and a layer without local fields (Sec.~\ref{sec:layer_screening}). Each in-plane wave
+vector can then be treated separately and the kernels become numbers. The substrate changes the bare interaction
+between the charges of the layer, $v \to \vt$, and the chain $\chi_0 \to \chi \to \varepsilon \to W$ of this section
+is built with $\vt$ in place of $v$.
+
 \section{Charges in a plane: charge waves and their potential}
 \label{sec:charge_wave}
 
 This section describes a charge distribution confined to a plane, and its Coulomb potential, in terms of in-plane
-wave vectors, the language used in the rest of these notes. We work in the quasi-static limit (retardation
-neglected, valid for in-plane wave vectors $Q \gg \omega/c$). The electrostatics is written in SI form,
-$\nabla^2\phi = -\rho/\varepsilon_0$. The Hartree atomic units of the many-body part follow from
-$e = m = \hbar = 4\pi\varepsilon_0 = 1$, that is from the replacement $1/\varepsilon_0 \to 4\pi$.
+wave vectors, the language used in the rest of these notes.
 
 A layer is a sheet of macroscopic size. To expand its charge in plane waves we take a finite sheet of area $A$, with
 periodic (Born--von K\'arm\'an) boundary conditions at its edges: the in-plane wave vectors $\Qv$ allowed by these
@@ -400,8 +632,7 @@ and on a metal. The transverse mode is at $\omega_0$ in all cases.}
   binding energy.
 \end{itemize}
 
-% No citations at present: restore with the first \cite (planned GW section).
-% \bibliographystyle{unsrt}
-% \bibliography{biblio}
+\bibliographystyle{unsrt}
+\bibliography{biblio}
 
 \end{document}
