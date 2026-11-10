@@ -97,8 +97,18 @@ computational procedure (possibly a code implementation).
   r-space kernels delta +/- int v chi (chi0), delta = external potential, integral = Hartree of the induced charge;
   eps eps^-1 = 1 checked with Dyson; inverse kernels); W = eps^-1 v = v + v chi v = v + v chi0 W (eq:W), Sigma = iGW,
   dynamics, G0W0 = G0 and W from chi0; summary table (booktabs + array, ragged last column; rows G0, chi0, chi,
-  eps, W); periodic systems (matrices in G, G', v(q+G),
-  local fields, to be written when needed); "In the following" (Secs. 2-4 = same chain with v -> vt, no local fields).
+  eps, W); periodic systems (extended 2026-11-10 at the user's request, to see the dependence on w, q, G and
+  bands, also in view of the chi0 split layer/substrate): expansion convention eq:A_qG
+  A(r,r') = (1/V) sum_q sum_GG' e^{i(q+G)r} A_GG'(q) e^{-i(q+G')r'} (V = N_k Omega; products -> matrix products in
+  G,G' at each q, w; v diagonal, v(k) = 1/(eps0 k^2)); Bloch states with plane-wave coefficients c_nk(G); G0 in the
+  Bloch basis (eq:G0_bloch, diagonal in n k, plus G0_GG'(k,w) = sum_n c c* G0_nk); chi0_GG'(q,w) (eq:chi0_qG,
+  (e^2/V) sum_k sum_nm (f_nk - f_mk+q) rho_nm(k,q,G) rho*_nm(k,q,G') / (hbar w - (e_mk+q - e_nk) + i eta),
+  rho_nm = <nk|e^{-i(q+G)r}|m k+q>; derived here from eq:chi0_KS with this convention) with bullets on w, q (momentum
+  conservation, pair at k and k+q), G (Fourier components of the transition density), bands (summed, empty bands =
+  convergence parameter); eps_GG', eps^-1_GG', W_GG' (eq:eps_W_qG) with bullets (matrix inversion per q, w; local
+  fields; eps_M = 1/eps^-1_00 from Gatti slide 16; W has no band index; head diverges as 1/q^2; truncation for a
+  layer in a supercell). Yambo's own storage convention (e.g. symmetrized v^1/2 chi v^1/2) NOT written: to verify on
+  the Lumen source; "In the following" (Secs. 2-4 = same chain with v -> vt, no local fields).
   Sec. 2 "Charges in a plane: charge waves and their potential" (`sec:charge_wave`; read and found clear by the
   user): intro (units now in Sec. 1), finite sheet of area A with Born-von Karman conditions (discrete Q,
   limit A -> inf), lattice periodicity (N_c cells, Q = q + G_par, lattice fixes G_par and BZ, sheet size fixes the q

@@ -277,12 +277,82 @@ $W$ & $W = \varepsilon^{-1}v = v + v\chi v$ &
 \end{center}
 
 \paragraph{Periodic systems.} In a crystal the kernels do not change when $\bm{r}$ and $\bm{r}'$ are translated
-together by a lattice vector. In a basis of plane waves they become matrices, such as
-$\chi_{\bm{G}\bm{G}'}(\bm{q},\omega)$, labelled by a wave vector $\bm{q}$ in the Brillouin zone and by two reciprocal
-lattice vectors, and the products of this section become products of matrices. The bare interaction is diagonal,
-$v(\bm{q} + \bm{G}) = 1/(\varepsilon_0|\bm{q} + \bm{G}|^2)$ ($4\pi/|\bm{q} + \bm{G}|^2$ in atomic units); the
-off-diagonal elements of the response functions (local fields) describe the variation of the response within the
-unit cell. These forms will be written when needed.
+together by a lattice vector $\bm{R}$, $A(\bm{r} + \bm{R},\bm{r}' + \bm{R}) = A(\bm{r},\bm{r}')$. They are then
+expanded in plane waves whose wave vectors differ only by reciprocal lattice vectors:
+\begin{equation}
+A(\bm{r},\bm{r}';\omega) = \frac{1}{V}\sum_{\bm{q}\in\mathrm{BZ}}\sum_{\bm{G},\bm{G}'}
+e^{i(\bm{q} + \bm{G})\cdot\bm{r}}\,A_{\bm{G}\bm{G}'}(\bm{q},\omega)\,e^{-i(\bm{q} + \bm{G}')\cdot\bm{r}'} ,
+\label{eq:A_qG}
+\end{equation}
+with $V = N_k\Omega$ the volume of the crystal, made of $N_k$ cells of volume $\Omega$, as many as the $\bm{q}$ points
+of the Brillouin zone (BZ). A perturbation at $\bm{q} + \bm{G}'$ induces a response at $\bm{q} + \bm{G}$ for every
+$\bm{G}$, but only at the same $\bm{q}$: different $\bm{q}$ do not mix, and at each $\bm{q}$ and $\omega$ the products
+of this section become products of matrices in $\bm{G},\bm{G}'$, with $1 \to \delta_{\bm{G}\bm{G}'}$. The bare
+interaction is diagonal, $v_{\bm{G}\bm{G}'}(\bm{q}) = v(\bm{q} + \bm{G})\,\delta_{\bm{G}\bm{G}'}$ with
+$v(\bm{k}) = 1/(\varepsilon_0 k^2)$ ($4\pi/k^2$ in atomic units). The Kohn--Sham states are Bloch states
+$\psi_{n\bm{k}}(\bm{r}) = V^{-1/2}\sum_{\bm{G}} c_{n\bm{k}}(\bm{G})\,e^{i(\bm{k} + \bm{G})\cdot\bm{r}}$, labelled by a
+band index $n$ and a wave vector $\bm{k}$ in the BZ.
+
+\emph{Green's function.} With $n \to n\bm{k}$, Eq.~\eqref{eq:G0} reads
+\begin{equation}
+G_0(\bm{r},\bm{r}';\omega) = \sum_{n\bm{k}} \psi_{n\bm{k}}(\bm{r})\,\psi_{n\bm{k}}^*(\bm{r}')\,G_{0,n\bm{k}}(\omega) ,
+\qquad
+G_{0,n\bm{k}}(\omega) = \frac{1}{\hbar\omega - \epsilon_{n\bm{k}} + i\eta\,\mathrm{sgn}(\epsilon_{n\bm{k}} - \mu)} ,
+\label{eq:G0_bloch}
+\end{equation}
+and, in the plane-wave form~\eqref{eq:A_qG} (with $\bm{k}$ in place of $\bm{q}$),
+$G_{0,\bm{G}\bm{G}'}(\bm{k},\omega) = \sum_n c_{n\bm{k}}(\bm{G})\,c_{n\bm{k}}^*(\bm{G}')\,G_{0,n\bm{k}}(\omega)$. In
+the basis of the Kohn--Sham states $G_0$ is diagonal: each band at each $\bm{k}$ propagates on its own, with a single
+pole at its energy, and the wave vector $\bm{k}$ of the electron or hole is conserved.
+
+\emph{Response function.} Inserting the Bloch states in Eq.~\eqref{eq:chi0_KS} and using
+Eq.~\eqref{eq:A_qG},
+\begin{gather}
+\chi_{0,\bm{G}\bm{G}'}(\bm{q},\omega) = \frac{e^2}{V}\sum_{\bm{k}\in\mathrm{BZ}}\sum_{n,m}
+\left(f_{n\bm{k}} - f_{m\bm{k}+\bm{q}}\right)
+\frac{\rho_{nm}(\bm{k},\bm{q},\bm{G})\,\rho_{nm}^*(\bm{k},\bm{q},\bm{G}')}
+{\hbar\omega - (\epsilon_{m\bm{k}+\bm{q}} - \epsilon_{n\bm{k}}) + i\eta} ,
+\nonumber \\
+\rho_{nm}(\bm{k},\bm{q},\bm{G}) = \int_V d^3r\;\psi_{n\bm{k}}^*(\bm{r})\,e^{-i(\bm{q} + \bm{G})\cdot\bm{r}}\,
+\psi_{m\bm{k}+\bm{q}}(\bm{r}) .
+\label{eq:chi0_qG}
+\end{gather}
+\begin{itemize}
+\item $\omega$ enters only through the denominators: the poles are at the transition energies
+  $\epsilon_{m\bm{k}+\bm{q}} - \epsilon_{n\bm{k}}$.
+\item $\bm{q}$ is the wave vector given by the perturbation, and it is conserved: the potential takes an electron from
+  $n\bm{k}$ to $m\bm{k}+\bm{q}$, leaving a hole at $\bm{k}$; in the language of Eq.~\eqref{eq:chi0_G0}, one
+  propagator at $\bm{k}$ and one at $\bm{k} + \bm{q}$. For $\bm{q} \to 0$ the transitions are vertical.
+\item $\bm{G},\bm{G}'$ enter only through $\rho_{nm}$, the Fourier components of the transition density
+  $\psi_{n\bm{k}}^*\psi_{m\bm{k}+\bm{q}}$: they describe how the induced charge varies within the unit cell.
+\item The bands appear only in the sum over the pairs (occupied $n$, empty $m$, through $f$), weighted by
+  $|\rho_{nm}|^2$ and by the energy denominators: $\chi_0$ carries no band index, and the number of empty bands is a
+  convergence parameter.
+\end{itemize}
+
+\emph{Dielectric function and screened interaction.} Eqs.~\eqref{eq:eps} and~\eqref{eq:W} become
+\begin{gather}
+\varepsilon_{\bm{G}\bm{G}'}(\bm{q},\omega) = \delta_{\bm{G}\bm{G}'} - v(\bm{q} + \bm{G})\,\chi_{0,\bm{G}\bm{G}'}(\bm{q},\omega) ,
+\qquad
+\varepsilon^{-1}_{\bm{G}\bm{G}'}(\bm{q},\omega) = \delta_{\bm{G}\bm{G}'} + v(\bm{q} + \bm{G})\,\chi_{\bm{G}\bm{G}'}(\bm{q},\omega) ,
+\nonumber \\
+W_{\bm{G}\bm{G}'}(\bm{q},\omega) = \varepsilon^{-1}_{\bm{G}\bm{G}'}(\bm{q},\omega)\,v(\bm{q} + \bm{G}')
+= v(\bm{q} + \bm{G})\,\delta_{\bm{G}\bm{G}'}
++ v(\bm{q} + \bm{G})\,\chi_{\bm{G}\bm{G}'}(\bm{q},\omega)\,v(\bm{q} + \bm{G}') .
+\label{eq:eps_W_qG}
+\end{gather}
+\begin{itemize}
+\item $\varepsilon^{-1}(\bm{q},\omega)$ is the inverse of the matrix $\varepsilon(\bm{q},\omega)$ in
+  $\bm{G},\bm{G}'$, one inversion for each $\bm{q}$ and $\omega$ (the Dyson equation in matrix form): each of its
+  elements depends on the whole matrix $\chi_0$. The off-diagonal elements (local fields) make
+  $\varepsilon^{-1}_{\bm{G}\bm{G}} \neq 1/\varepsilon_{\bm{G}\bm{G}}$; the macroscopic dielectric function is
+  $\varepsilon_M(\omega) = 1/\varepsilon^{-1}_{\bm{0}\bm{0}}(\bm{q} \to 0,\omega)$.
+\item $W$ depends on $\bm{q}$, $\bm{G}$, $\bm{G}'$ and $\omega$, like $\chi$, and has its poles; it carries no band
+  index, because the bands are summed in $\chi_0$.
+\item The element $\bm{G} = \bm{G}' = 0$ (the head) of $v$ and $W$ diverges as $1/q^2$ for $\bm{q} \to 0$ and needs a
+  separate treatment; for a layer in a supercell, the bare interaction is also truncated between the periodic
+  replicas.
+\end{itemize}
 
 \paragraph{In the following.} Sections~\ref{sec:charge_wave}--\ref{sec:layer_screening} use these definitions in the
 simplest setting: charges confined to a plane (Sec.~\ref{sec:charge_wave}), a substrate described by a dielectric
