@@ -66,20 +66,29 @@ computational procedure (possibly a code implementation).
   limit A -> inf), lattice periodicity (N_c cells, Q = q + G_par, lattice fixes G_par and BZ, sheet size fixes the q
   grid; from here on the layer has a lattice; homogeneous plane = limit A_c -> 0); 1.1 charge waves (rho in charge
   waves, only Q = 0 carries net charge, point charge, periodic density sigma_Q = N_c sigma_G delta_{q,0}); 1.2
-  potential of a charge wave (Poisson per wave, matching conditions, Q = 0 uniform plane and neutrality, Q != 0).
+  potential of a charge wave (Poisson per wave, matching conditions, Q = 0 uniform plane and neutrality, Q != 0;
+  the small-Q expansion of phi_Q and the remark on the 1/Q constant were removed by the user's request, 2026-11-10).
   Sec. 2 "The substrate: dressed Coulomb interaction" (`sec:image`): static local dielectric half-space; terminology
   (user, 2026-11-09): "sheet" = charged plane at z = d, "surface of the substrate" = z = 0; waves independent because
   eps depends only on z (substrate-lattice coupling Q -> Q + G neglected, stated); image construction; sigma_pol on
   the surface (eq:sigma_pol); phi_Q(d) = potential of the wave + that of the polarization charge (eq:phi_sheet);
   vt = v + v_emb with v(Q) = 1/(2 eps0 Q) and v_emb = -beta e^{-2Qd}/(2 eps0 Q), both explained (eq:vt_sheet);
-  eps_env from vt/v; real-space vt from the images (short sentence, simplified by the user's request); limits.
+  eps_env from vt/v; real-space vt from the images (short sentence, simplified by the user's request); limit
+  bullets labelled short/long wavelengths and reduced to the essentials (user, 2026-11-09; real-space constant and
+  metal dipole-dipole tail dropped).
   The (Q;z,z') forms v = e^{-Q|z-z'|}/(2 eps0 Q), v_emb = -beta e^{-Qz} e^{-Qz'}/(2 eps0 Q) were removed (user,
   2026-11-09): introduce them where finite thickness is treated.
-  Sec. 3 "Screening by a polarizable layer on the substrate" (`sec:layer_screening`): 3.1 generic layer response
-  chi0 (no local fields): eps_sh = 1 - vt chi0, W = vt/eps_sh = vt + vt chit vt ("structure of the RPA with v -> vt");
+  Sec. 3 "Screening by a polarizable layer on the substrate" (`sec:layer_screening`): opening rewritten (user,
+  2026-11-09): in Sec. 2 the sheet charges feel vt but do not redistribute, now the layer polarizes too; zero
+  thickness, local fields (Q -> Q + G mixing) neglected; 3.1 chi0 defined explicitly before eq:chi0_layer (response
+  to the total potential, property of the layer alone, independent of the substrate, static chi0 < 0), then the
+  external charge and the self-consistent potential; W = potential of a unit external wave, chit = response to the
+  external potential vt sigma_ext (depends on the substrate); eps_sh = 1 - vt chi0, W = vt/eps_sh = vt + vt chit vt ("structure of the RPA with v -> vt");
   insulating layer chi0 = -Q^2 chi_2D, r0 = chi_2D/(2 eps0), static Keldysh W; 3.2 example: Lorentz oscillators,
-  chi_2D = n alpha, single pole eps^-1 = 1 + Omega_Q^2/(w^2 - w_L^2) = plasmon-pole form (substrate moves pole and
-  weight via eps_env), modes bullets, short "Discreteness" paragraph; 3.3 summary.
+  chi_2D = n alpha, single pole with finite damping eps^-1 = 1 + Omega_Q^2/(w^2 + i gamma w - w_L^2) (user,
+  2026-11-10: no gamma -> 0 discussion), single-pole structure of the PPA (substrate moves position and weight via
+  eps_env, not the width gamma), modes bullets; 3.3 summary. The "Discreteness" paragraph (single-oscillator image shift,
+  lattice sums) and its summary bullet were removed (user, 2026-11-10): no main result depended on them.
   No citations at present: `\bibliographystyle`/`\bibliography` are commented out at the end of main.tex, to be
   restored with the first \cite (biblio.bib kept).
   Planned (user, 2026-11-09, not now): a section that defines chi and all the needed quantities and analyses the
