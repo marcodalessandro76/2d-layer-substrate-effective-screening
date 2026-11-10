@@ -53,7 +53,11 @@ computational procedure (possibly a code implementation).
   notebooks (MPPI).
 
 ## Repository
-- Local git repo (branch `main`, created 2026-11-05). No GitHub remote yet: create it only when the user asks.
+- Git repo (branch `main`, created 2026-11-05), public on GitHub since 2026-11-10:
+  `origin` = github.com/marcodalessandro76/2d-layer-substrate-effective-screening (name chosen by the user; the
+  local folder keeps the name "Effective screening"). Push only when the user asks.
+- `README.md`: public description of goals, approach, status and layout; it evolves with the project. Update its
+  "Status" section (with the date) when the notes or the work reach a new stage.
 - `Notes/`: technical notes, LaTeX, same style as LiF (`main.tex` with `\input{header.tex}`, notation macros in
   `header.tex`, `biblio.bib` with keys from the library catalogue `REFERENCES/_Catalog/library.bib`, bibtex unsrt).
   After each change build `Notes/main.pdf` in place with `latexmk -pdf` and check the log (errors, Overfull \hbox,
@@ -239,3 +243,6 @@ interaction; r0 = 2 pi chi_2D.
 - 2026-11-10: chi0 part of Sec. 1 rewritten (user): Eq. 5 now defines the exact irreducible polarizability P,
   approximated in the RPA by chi0 = -i G0 G0 of non-interacting KS electrons; G0 introduced (relevant to GW and to
   the later substrate analysis); Adler-Wiser form obtained from the G0 G0 integral.
+- 2026-11-10: public GitHub repository created at the user's request, name chosen by the user:
+  2d-layer-substrate-effective-screening ("effective" kept on purpose); README.md rewritten as the public description
+  of goals, approach and status.
