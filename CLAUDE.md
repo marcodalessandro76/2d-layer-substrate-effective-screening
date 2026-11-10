@@ -75,14 +75,29 @@ computational procedure (possibly a code implementation).
   eq:chain in the electron system, (b) block diagram of the self-consistent loop phi -> chi0 -> rho_ind -> v -> phi,
   referred to in the Dyson paragraph; total potential
   (eq:phi_tot; second term named the Hartree potential of the induced charge and stated to be local, i.e.
-  multiplicative on psi(r), vs the nonlocal exchange / GW self-energy, user's question 2026-11-10); chi0 as response to the total potential (eq:chi0_def) with the Adler-Wiser KS form (eq:chi0_KS,
-  retarded, with e^2 since rho/phi are charge and potential) and bullets (poles, static chi0 < 0, RPA = chi0 as
-  response to phi, retarded vs time-ordered, a.u. rho = -n, phi = -V so d rho/d phi = dn/dV). Eqs. 1-4 are written
+  multiplicative on psi(r), vs the nonlocal exchange / GW self-energy, user's question 2026-11-10); "Response to the
+  total potential" (eq:chi0_def: rho_ind = int chi0 phi directly, user 2026-11-10; text: writing chi0 there is the
+  RPA; the exact response to phi is the irreducible polarizability P, Strinati, which contains exchange and
+  correlation, not the Hartree feedback; relations below valid for P with P in place of chi0; no mention of
+  excitons/BSE here, user 2026-11-10); "Non-interacting Green's function"
+  (eq:G0, time-ordered KS G0 as in Golze Eq. 24, propagation of added electron/hole, poles at KS energies vs QP
+  energies of the interacting G); "Independent-particle response" (motivation in 3 lines, user 2026-11-10:
+  n(1) = -iG(1,1+), first-order delta G = G0 dV G0, so chi0(1,2) = -i G0(1,2) G0(2,1) = Strinati Eq. 3.26 without
+  vertex, checked on the PDF; then eq:chi0_G0: chi0 = -i e^2 hbar int dw'/2pi
+  G0(r,r';w+w') G0(r',r;w'), Golze Eq. 27, trace over spin; electron-hole pair picture; residues -> Adler-Wiser
+  eq:chi0_KS, retarded; contour integral checked by hand: gives e^2 x Golze Eq. 28) and bullets (poles, static
+  chi0 < 0, eq:chi0_G0 time-ordered vs eq:chi0_KS retarded, a.u. rho = -n, phi = -V so d rho/d phi = dn/dV). The
+  split chi0 = chi0^L + chi0^S from a block-diagonal G0 (no hybridization) was proposed but NOT written: keep for
+  the substrate analysis. Eqs. 1-4 are written
   with explicit integrals over r' and the w argument (user, 2026-11-10: to see the structure of the operators); a
   "Compact notation" paragraph after the chi0 bullets then introduces the product shorthand (example chi0 v chi with
   the double integral) used from the Dyson equation on; Dyson (eq:dyson_chi, series as feedback);
-  eps and eps^-1 (eq:eps, inverse kernels); W = eps^-1 v = v + v chi v = v + v chi0 W (eq:W), Sigma = iGW,
-  dynamics; summary table (booktabs + array, ragged last column); periodic systems (matrices in G, G', v(q+G),
+  eps and eps^-1 (eq:eps; derivation spelled out, user 2026-11-10: Eq. 4 with rho_ind = chi phi_ext gives
+  eps^-1 = 1 + v chi, with rho_ind = chi0 phi gives eps = 1 - v chi0, both read in the two directions; explicit
+  r-space kernels delta +/- int v chi (chi0), delta = external potential, integral = Hartree of the induced charge;
+  eps eps^-1 = 1 checked with Dyson; inverse kernels); W = eps^-1 v = v + v chi v = v + v chi0 W (eq:W), Sigma = iGW,
+  dynamics, G0W0 = G0 and W from chi0; summary table (booktabs + array, ragged last column; rows G0, chi0, chi,
+  eps, W); periodic systems (matrices in G, G', v(q+G),
   local fields, to be written when needed); "In the following" (Secs. 2-4 = same chain with v -> vt, no local fields).
   Sec. 2 "Charges in a plane: charge waves and their potential" (`sec:charge_wave`; read and found clear by the
   user): intro (units now in Sec. 1), finite sheet of area A with Born-von Karman conditions (discrete Q,
@@ -209,4 +224,8 @@ interaction; r0 = 2 pi chi_2D.
   later, dedicated section; the reference to v_emb = v chi^S v after eq:vt_sheet and in Sec. 3.1 removed too.
 - 2026-11-10: new Sec. 1 (user's request): schematic definitions of chi0 (KS, IP), chi (Dyson), eps, W in r space,
   with the logic of Strinati's total classical potential and Blase's test charge; k, G forms deferred until needed.
-  The old Secs. 1-3 are now Secs. 2-4. First draft, to be revised with the user.
+  The old Secs. 1-3 are now Secs. 2-4. First draft, to be revised with the user. Committed (cafe2a0) before the
+  chi0/G0 rewrite, at the user's request.
+- 2026-11-10: chi0 part of Sec. 1 rewritten (user): Eq. 5 now defines the exact irreducible polarizability P,
+  approximated in the RPA by chi0 = -i G0 G0 of non-interacting KS electrons; G0 introduced (relevant to GW and to
+  the later substrate analysis); Adler-Wiser form obtained from the G0 G0 integral.

@@ -12,8 +12,9 @@
 \label{sec:response}
 
 This section defines the quantities that describe the screening of an electronic system and that enter the GW
-self-energy and the kernel of the Bethe--Salpeter equation: the independent-particle response function $\chi_0$, the
-response function $\chi$, the dielectric function $\varepsilon$ and the screened interaction $W$. The substrate will
+self-energy and the kernel of the Bethe--Salpeter equation: the non-interacting Green's function $G_0$, the
+independent-particle response function $\chi_0$ built from it, the response function $\chi$, the dielectric function
+$\varepsilon$ and the screened interaction $W$. The substrate will
 be included by modifying these quantities, so we fix their meaning first. As in Ref.~\cite{strinati1988application},
 all the definitions follow from one question: how do the electrons respond when an external charge is placed in the
 system? They move under the potential of that charge, and the charge they move, the induced charge, produces a
@@ -82,7 +83,7 @@ electrons move.
 \node[circle, fill, inner sep=1.4pt, label={below:$\rho^{\mathrm{ind}}(\bm{r},\omega)$}] (C) at (2.4,-0.05) {};
 \draw[->, thick, dashed] (A) -- node[midway, above left] {$v(\bm{r}',\bm{r}'')$} (B);
 \draw[->, thick] (B) -- node[midway, above right] {$\chi(\bm{r},\bm{r}';\omega)$} (C);
-% (b) self-consistent loop of Eqs. (phi_tot) and (chi0_def)
+% (b) self-consistent loop of Eqs. (phi_tot) and (chi0_def), RPA
 \begin{scope}[shift={(4.6,0.35)}]
 \node at (-0.3,0.95) {(b)};
 \node (in) at (0,0) {$\phi^{\mathrm{ext}}$};
@@ -101,9 +102,9 @@ electrons move.
 \caption{(a) The chain of Eq.~\eqref{eq:chain}: the external charge at $\bm{r}''$ produces the potential at $\bm{r}'$
 through the bare Coulomb interaction (dashed, instantaneous), and the electron system responds to it with a charge at
 $\bm{r}$ (solid, response function $\chi$, frequency dependent); all $\bm{r}''$ and $\bm{r}'$ contribute. (b) The
-self-consistent loop of Eqs.~\eqref{eq:phi_tot} and~\eqref{eq:chi0_def}: the independent electrons respond with
-$\chi_0$ to the total potential $\phi$, which contains the Hartree potential $v\rho^{\mathrm{ind}}$ of the induced
-charge. Going around the loop generates the series~\eqref{eq:dyson_chi} for $\chi$.}
+self-consistent loop of Eqs.~\eqref{eq:phi_tot} and~\eqref{eq:chi0_def} in the RPA: the independent electrons respond
+with $\chi_0$ to the total potential $\phi$, which contains the Hartree potential $v\rho^{\mathrm{ind}}$ of the
+induced charge. Going around the loop generates the series~\eqref{eq:dyson_chi} for $\chi$.}
 \label{fig:response}
 \end{figure}
 
@@ -123,33 +124,66 @@ integral over the wavefunction, $\int d^3r'\,\Sigma(\bm{r},\bm{r}')\,\psi(\bm{r}
 $\phi$, and $\phi$ depends in turn on the induced charge: the response to the external potential is a self-consistent
 problem.
 
-\paragraph{Independent-particle response.} The response to the total potential is simpler,
+\paragraph{Response to the total potential.} The response to the total potential, the one that the electrons actually
+feel, is
 \begin{equation}
 \rho^{\mathrm{ind}}(\bm{r},\omega) = \int d^3r'\;\chi_0(\bm{r},\bm{r}';\omega)\,\phi(\bm{r}',\omega) ,
 \label{eq:chi0_def}
 \end{equation}
-because the potential that the electrons actually feel is on the right: $\chi_0$ does not contain the feedback of the
-induced charge on itself. We take for $\chi_0$ the response of independent electrons, the Kohn--Sham electrons
-moving in the potential $\phi$. First-order perturbation theory gives the Adler--Wiser
-form~\cite{golze2019gw,amblard2024static}
+with $\chi_0$ the response function of non-interacting electrons. Writing $\chi_0$ here is the random-phase
+approximation (RPA), the standard approximation of GW calculations and the one used throughout. The exact response to
+$\phi$ is the irreducible polarizability $P$~\cite{strinati1988application}. The potential $\phi$ already contains
+the Hartree potential of the induced charge, so $P$ does not contain this feedback: it contains the rest of the
+interaction between the electrons as they respond, that is, exchange and correlation. The RPA neglects them: the
+electrons respond to $\phi$ as independent particles, coupled to each other only through the Hartree potential
+contained in $\phi$. The relations below hold also for the exact $P$, with $P$ in place of $\chi_0$. The response
+$\chi_0$ is built from the Green's function of the non-interacting electrons.
+
+\paragraph{Non-interacting Green's function.} The non-interacting electrons are those of Kohn--Sham, with
+spin-orbitals $\psi_n$, energies $\epsilon_n$ and occupations $f_n$. Their (time-ordered) Green's function
+is~\cite{golze2019gw}
+\begin{equation}
+G_0(\bm{r},\bm{r}';\omega) = \sum_n \frac{\psi_n(\bm{r})\,\psi_n^*(\bm{r}')}
+{\hbar\omega - \epsilon_n + i\eta\,\mathrm{sgn}(\epsilon_n - \mu)} ,
+\label{eq:G0}
+\end{equation}
+with $\mu$ the chemical potential, between the occupied and the empty levels, and $\eta \to 0^+$.
+$G_0(\bm{r},\bm{r}';\omega)$ describes the propagation between $\bm{r}'$ and $\bm{r}$ of a particle added to the
+system: an electron, placed in an empty state ($\epsilon_n > \mu$), or a hole, left in an occupied state
+($\epsilon_n < \mu$). Its poles are at the Kohn--Sham energies, the energies to add or remove an electron in the
+independent-particle picture; the interacting Green's function of GW has its poles at the quasiparticle energies.
+
+\paragraph{Independent-particle response.} The density is the diagonal of the Green's function,
+$n(1) = -iG(1,1^+)$ in atomic units, with $1 = (\bm{r},t)$~\cite{strinati1988application}. A potential $\delta V$
+acting at $2 = (\bm{r}',t')$ changes the propagation, to first order, by
+$\delta G(1,1) = \int d2\,G_0(1,2)\,\delta V(2)\,G_0(2,1)$: to contribute to the density at 1, the electron goes from
+1 to 2, feels the potential there, and comes back. Hence $\chi_0(1,2) = -iG_0(1,2)\,G_0(2,1)$, which is Eq.~(3.26) of
+Ref.~\cite{strinati1988application} without vertex corrections. The product in time becomes a convolution in
+frequency, and in SI units~\cite{golze2019gw}
+\begin{equation}
+\chi_0(\bm{r},\bm{r}';\omega) = -i\,e^2\hbar\int\frac{d\omega'}{2\pi}\;G_0(\bm{r},\bm{r}';\omega + \omega')\,
+G_0(\bm{r}',\bm{r};\omega') ,
+\label{eq:chi0_G0}
+\end{equation}
+with the factor $e^2$ from $\rho = -en$ and $V = -e\phi$ (with spin, $G_0$ is a $2 \times 2$ matrix in the spin
+components and the product is traced over them). One of the two propagators carries an electron in an empty state,
+the other a hole in an occupied state: the potential at $\bm{r}'$ creates an electron--hole pair, and the energy
+$\hbar\omega$ it gives is shared between the two, hence the integral over $\omega'$. The integral is
+done by residues: it vanishes unless one of the two states is occupied and the other empty, and it gives the
+Adler--Wiser form~\cite{golze2019gw,amblard2024static}, written here for the retarded response,
 \begin{equation}
 \chi_0(\bm{r},\bm{r}';\omega) = e^2\sum_{n,m}\,(f_n - f_m)\,
-\frac{\psi_n^*(\bm{r})\,\psi_m(\bm{r})\;\psi_m^*(\bm{r}')\,\psi_n(\bm{r}')}{\hbar\omega - (\epsilon_m - \epsilon_n) + i\eta} ,
+\frac{\psi_n^*(\bm{r})\,\psi_m(\bm{r})\;\psi_m^*(\bm{r}')\,\psi_n(\bm{r}')}{\hbar\omega - (\epsilon_m - \epsilon_n) + i\eta} .
 \label{eq:chi0_KS}
 \end{equation}
-with $\psi_n$, $\epsilon_n$ and $f_n$ the Kohn--Sham spin-orbitals, their energies and occupations, and
-$\eta \to 0^+$.
 \begin{itemize}
 \item Only pairs of an occupied and an empty state contribute: the potential induces transitions between them, and
   $\chi_0$ has poles at the Kohn--Sham transition energies. In the static limit $\chi_0 < 0$: the electrons gather
   where $\phi$ is high (their potential energy $-e\phi$ is low), so the induced charge has the sign opposite to that of
   the potential and reduces it. This is screening.
-\item Taking $\chi_0$ as the response to $\phi$ is the random-phase approximation (RPA): the electrons respond to the
-  Hartree potential of the induced charge, while the exchange and correlation effects of the induced charge are
-  neglected. The exact response to $\phi$, the irreducible polarizability~\cite{strinati1988application}, contains
-  them. The RPA is the standard approximation of GW calculations, and it is used throughout.
-\item Eq.~\eqref{eq:chi0_KS} is the retarded (causal) response. The time-ordered functions used in the GW
-  self-energy have the same poles and residues, and differ only in the sign of $i\eta$ for the poles at negative
+\item Eq.~\eqref{eq:chi0_G0} gives the time-ordered $\chi_0$, the one used in the GW self-energy;
+  Eq.~\eqref{eq:chi0_KS} is the retarded (causal) one, which gives the induced charge of Eq.~\eqref{eq:chi0_def}. The
+  two have the same poles and residues, and differ only in the sign of $i\eta$ for the poles at negative
   frequency~\cite{golze2019gw,amblard2024static}.
 \item In atomic units the charge density is $\rho = -n$, with $n$ the density of electrons, and the potential is
   $\phi = -V$, with $V$ the potential energy of an electron: the response of $\rho$ to $\phi$ coincides with that of
@@ -166,8 +200,8 @@ $\delta(\bm{r} - \bm{r}')$; for instance,
 = \int d^3r''\,d^3r'''\;\chi_0(\bm{r},\bm{r}'';\omega)\,v(\bm{r}'',\bm{r}''')\,\chi(\bm{r}''',\bm{r}';\omega) .
 \end{equation*}
 Eqs.~\eqref{eq:phi_ext}--\eqref{eq:chi0_def} read $\phi^{\mathrm{ext}} = v\rho^{\mathrm{ext}}$,
-$\rho^{\mathrm{ind}} = \chi\phi^{\mathrm{ext}}$, $\phi = \phi^{\mathrm{ext}} + v\rho^{\mathrm{ind}}$ and
-$\rho^{\mathrm{ind}} = \chi_0\phi$: the relations look like products of matrices, which they become in a basis set.
+$\rho^{\mathrm{ind}} = \chi\phi^{\mathrm{ext}} = \chi v\rho^{\mathrm{ext}}$,
+$\phi = \phi^{\mathrm{ext}} + v\rho^{\mathrm{ind}}$ and $\rho^{\mathrm{ind}} = \chi_0\phi$: the relations look like products of matrices, which they become in a basis set.
 
 \paragraph{Dyson equation.} Eqs.~\eqref{eq:phi_tot} and~\eqref{eq:chi0_def} give
 $\rho^{\mathrm{ind}} = \chi_0\phi^{\mathrm{ext}} + \chi_0 v\rho^{\mathrm{ind}}$, and with Eq.~\eqref{eq:chi_def},
@@ -183,18 +217,29 @@ $\chi_0v\chi_0\phi^{\mathrm{ext}}$, and so on. $\chi = (1 - \chi_0 v)^{-1}\chi_0
 Its poles are the neutral excitations of the system in the RPA, shifted from the Kohn--Sham transitions by the
 feedback; collective modes such as the plasmons have no counterpart in $\chi_0$.
 
-\paragraph{Dielectric function.} The dielectric function relates the two potentials. Eq.~\eqref{eq:phi_tot}, with the
-induced charge written through Eq.~\eqref{eq:chi_def} or through Eq.~\eqref{eq:chi0_def}, gives
+\paragraph{Dielectric function.} The dielectric function relates the two potentials, and the relation can be read in
+both directions. The total potential produced by a given external potential follows from Eq.~\eqref{eq:phi_tot} with
+the induced charge written through $\chi$, Eq.~\eqref{eq:chi_def}: $\phi = \phi^{\mathrm{ext}} + v\chi\phi^{\mathrm{ext}}
+= (1 + v\chi)\,\phi^{\mathrm{ext}}$. The external potential needed to produce a given total potential follows from the
+same equation with the induced charge written through $\chi_0$, Eq.~\eqref{eq:chi0_def}:
+$\phi = \phi^{\mathrm{ext}} + v\chi_0\phi$, that is $\phi^{\mathrm{ext}} = (1 - v\chi_0)\,\phi$. Hence
 \begin{equation}
 \phi = \varepsilon^{-1}\phi^{\mathrm{ext}} , \quad \varepsilon^{-1} = 1 + v\chi ; \qquad
-\phi^{\mathrm{ext}} = \varepsilon\,\phi , \quad \varepsilon = 1 - v\chi_0 .
+\phi^{\mathrm{ext}} = \varepsilon\,\phi , \quad \varepsilon = 1 - v\chi_0 ,
 \label{eq:eps}
 \end{equation}
-$\varepsilon$ is built from $\chi_0$, which is computed directly from Eq.~\eqref{eq:chi0_KS}, while
-$\varepsilon^{-1}$, which gives the screened potential, requires $\chi$. The two are inverse kernels,
-$\varepsilon\,\varepsilon^{-1} = 1$ by the Dyson equation~\eqref{eq:dyson_chi}: computing $\varepsilon^{-1}$ means
-inverting $\varepsilon$. Note that $\varepsilon^{-1}(\bm{r},\bm{r}')$ is not $1/\varepsilon(\bm{r},\bm{r}')$: the total
-potential at $\bm{r}$ depends on the external potential at every point.
+or, with the integrals written out,
+\begin{gather*}
+\varepsilon^{-1}(\bm{r},\bm{r}';\omega) = \delta(\bm{r} - \bm{r}') + \int d^3r''\,v(\bm{r},\bm{r}'')\,\chi(\bm{r}'',\bm{r}';\omega) ,
+\\
+\varepsilon(\bm{r},\bm{r}';\omega) = \delta(\bm{r} - \bm{r}') - \int d^3r''\,v(\bm{r},\bm{r}'')\,\chi_0(\bm{r}'',\bm{r}';\omega) .
+\end{gather*}
+In both, the $\delta$ term is the external potential itself and the integral is the Hartree potential of the induced
+charge. $\varepsilon$ is built from $\chi_0$, which is computed directly from Eq.~\eqref{eq:chi0_KS}, while
+$\varepsilon^{-1}$, which gives the screened potential, requires $\chi$. The two are inverse kernels: with the Dyson
+equation~\eqref{eq:dyson_chi},
+$\varepsilon\,\varepsilon^{-1} = (1 - v\chi_0)(1 + v\chi) = 1 + v\,(\chi - \chi_0 - \chi_0v\chi) = 1$, so that
+computing $\varepsilon^{-1}$ means inverting $\varepsilon$. 
 
 \paragraph{Screened interaction.} Let the external charge be a unit point charge at $\bm{r}'$. Its external potential
 is $v(\bm{r},\bm{r}')$, and the total potential it produces, including that of the charge it induces, is
@@ -206,18 +251,21 @@ $W(\bm{r},\bm{r}';\omega)$ is the Coulomb interaction screened by the electrons:
 charge at $\bm{r}'$ together with its screening cloud $\chi v$~\cite{blase2018introduction}. The last form is the
 Dyson equation for $W$, equivalent to Eq.~\eqref{eq:dyson_chi}. In GW the added charge is an electron or a hole, and
 $W$ is its interaction with the other charges: the self-energy $\Sigma = iGW$ is the exchange term of Hartree--Fock
-with $v$ replaced by $W$. $W$ depends on $\omega$ because the electrons need a time to build the screening cloud, of
+with $v$ replaced by $W$; in the usual $G_0W_0$ scheme, $G$ is the $G_0$ of Eq.~\eqref{eq:G0} and $W$ is built
+from $\chi_0$. $W$ depends on $\omega$ because the electrons need a time to build the screening cloud, of
 the order of the inverse of their excitation energies: $W$ has the poles of $\chi$, and its static limit
 $W(\omega = 0)$ describes the screening of a charge that varies slowly on that time scale.
 
-\paragraph{Summary.} The four quantities and their links are:
+\paragraph{Summary.} The quantities and their links are:
 \begin{center}
 \begin{tabular}{p{0.11\textwidth}p{0.36\textwidth}>{\raggedright\arraybackslash}p{0.43\textwidth}}
 \toprule
 Quantity & Relations & Meaning \\
 \midrule
-$\chi_0$ & $\rho^{\mathrm{ind}} = \chi_0\phi$ &
-  response to the total potential: independent Kohn--Sham electrons (RPA) \\
+$G_0$ & Eq.~\eqref{eq:G0} &
+  propagation of an added electron or hole among non-interacting (Kohn--Sham) electrons \\
+$\chi_0$ & $\rho^{\mathrm{ind}} = \chi_0\phi$, \quad $\chi_0 \propto -iG_0G_0$ &
+  response to the total potential of non-interacting electrons: the irreducible polarizability $P$ in the RPA \\
 $\chi$ & $\rho^{\mathrm{ind}} = \chi\phi^{\mathrm{ext}}$, \quad $\chi = \chi_0 + \chi_0v\chi$ &
   response to the external potential, with the feedback of the induced charge \\
 $\varepsilon$, $\varepsilon^{-1}$ & $\varepsilon = 1 - v\chi_0$, \quad $\varepsilon^{-1} = 1 + v\chi$ &
