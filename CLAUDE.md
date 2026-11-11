@@ -275,6 +275,11 @@ computational procedure (possibly a code implementation).
   k check on the bilayers (k = 6, 12, 18, 24, grids with K and M; user's request): energy converged from k = 12; AB
   gaps stable; AA' gaps drop at k = 24 (-15/-29 meV) because the AA' VBM is off K (0.033 2pi/a towards Gamma, 29 meV
   above K) and the minimum direct gap too (4.709 eV, on M-K): k = 12 kept; compare quantities AT K.
+  Benchmark logic (agreed with the user, 2026-11-11): the effective scheme keeps the KS states of the free-standing
+  layer, so it cannot reproduce the DFT ML -> BL differences (hybridization); its target is the GW correction
+  (QP - KS) from the screening of the second layer, compared at K. AA' and AB: the effective scheme gives almost the
+  same result for both (registry only in the G_par != 0 terms of v chi^S v, ~ e^{-|G_par| d}); AA' = clean test of
+  the scheme, explicit AA' vs AB = size of the stacking/hybridization effect at K that the scheme misses.
 
 ## Roadmap (provisional, to be agreed step by step)
 1. Framing and literature (in progress): the three embedding papers (done, first reading); still to read: Neaton
