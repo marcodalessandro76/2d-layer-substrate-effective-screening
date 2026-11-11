@@ -44,7 +44,16 @@ computational procedure (possibly a code implementation).
 - Convergence protocol for 2D layers (from the MoS2 and germanene notebooks, docs/03 Secs. 3-4): DFT ecut x k, alat
   and buckling, vacuum; GW: HF with RIM, EXXRLvcs = VXCRLvcs, k; PPA NGsBlkXp -> BndsRnXp -> GbndRnge (+ BG
   terminator) -> RandGvecW -> k grid with extrapolation; QP bands per k point.
-- Where the project lives on the cluster (clone of the GitHub repo, data not tracked): to be agreed with the user.
+- Cluster copy: `~/work/2d-layer-substrate-effective-screening` on ismhpc (cloned 2026-11-11; `~/work` is a link to
+  `/work/dalessandro`), remote `git@github.com:...` over SSH as for LiF. Old git there (1.8.3: no `git -C`, use `cd`).
+- Working from the cluster (user, 2026-11-11: in general the work goes on from a Claude Code session on ismhpc, in
+  tmux, driven also from the laptop app through Remote Control): Claude Code CLI in the conda env `tools` (tmux is
+  there too), session started in `~/work/2d-layer-substrate-effective-screening`; commands are then local (no ssh
+  prefix). Claude's memory is per machine: everything that must survive goes in this file. NOT available on the
+  cluster: LaTeX (no latexmk/pdflatex: build `Notes/*.pdf` from a laptop session, or ask the user), the literature
+  library `REFERENCES` (literature checks on the PDFs from the laptop), the laptop paths `D:\...`. Available there:
+  the earlier MoS2 and germanene runs in `~/work/TMDs/MoS2` and `~/work/Xenes/Germanene` (pseudos, inputs, SAVEs),
+  MPPI in `~/Applications/MPPI`, python `~/miniconda3/bin/python`.
 
 ## Framing (details, equations and page references in `docs/01_context_and_literature.md`)
 - Reference works (Blase–Duchemin group): Amblard et al. JCP 159, 164107 (2023); Amblard et al. JCP 160, 154104
@@ -92,9 +101,10 @@ computational procedure (possibly a code implementation).
   `hBN_bilayer/` (first benchmark), later `SnS2_hBN/`, `MoS2_hBN/`, `Germanene_hBN/` (application); common
   `pseudos/`; later the python code that edits the Yambo databases. The earlier MoS2 and germanene studies stay in
   `SIMULATIONS/TMDs/MoS2` and `SIMULATIONS/Xenes/Germanene` (own git repos): reuse their parameters and pseudos.
-- Cluster copy (to be set up later, with the user): a clone WITHOUT spaces in the path, e.g.
-  `~/work/2d-layer-substrate-effective-screening` on ismhpc (MPPI `run_job` uses `os.system('rm ...')`, which breaks
-  on paths with spaces: open item of the MPPI CLAUDE.md). Data stay on the cluster, only notebooks/notes in git.
+- Cluster copy: `/home/dalessandro/work/2d-layer-substrate-effective-screening` on ismhpc (cloned on 2026-11-11 at
+  the user's request; named as the GitHub repo, no spaces: MPPI `run_job` uses `os.system('rm ...')`, which breaks on
+  paths with spaces). Remote over SSH (`git@github.com:marcodalessandro76/2d-layer-substrate-effective-screening.git`).
+  Sync as in LiF: commit/push on one machine, pull on the other. Data stay on the cluster, only notebooks/notes in git.
 - `README.md`: public description of goals, approach, status and layout; it evolves with the project. Update its
   "Status" section (with the date) when the notes or the work reach a new stage.
 - `Notes/`: technical notes, LaTeX, same style as LiF (`main.tex` with `\input{header.tex}`, notation macros in
@@ -359,3 +369,4 @@ interaction; r0 = 2 pi chi_2D.
 - 2026-11-11: project folder moved by the user from THEORY to `SIMULATIONS\2d Layer Substrate Effective Screening`
   (memory copied to the new key); planned layout with one subfolder per system (hBN_bilayer first); cluster clone
   without spaces to be set up later.
+- 2026-11-11: repository cloned on ismhpc in `~/work/2d-layer-substrate-effective-screening` (user's request).
