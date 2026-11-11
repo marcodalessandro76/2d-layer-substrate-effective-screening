@@ -303,6 +303,8 @@ computational procedure (possibly a code implementation).
   Choice (user): EXXRLvcs = VXCRLvcs = all the density G vectors (24949 RL, default): Vxc is then the KS one (not a
   convergence parameter; differs from the MoS2 protocol EXX = VXC); EXX full = EXX 40 Ha within 0.3 meV, 17 s per HF
   run at k = 18. HF gaps (k = 18): K 13.321 eV, Gamma 12.863 eV.
+  HF vs k (ML_bot, full cutoffs, RIM per grid in `ndb_rim_cutoff`): gap at K 13.321 / 13.335 / 13.338 eV, at Gamma
+  12.863 / 12.871 / 12.873 eV for k = 18 / 30 / 42 (3.5 and 2 meV from 30 to 42): HF analysis done.
 
 ## Roadmap (provisional, to be agreed step by step)
 1. Framing and literature (in progress): the three embedding papers (done, first reading); still to read: Neaton
