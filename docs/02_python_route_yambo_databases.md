@@ -49,7 +49,34 @@ BSE: static W (built with vt) in the direct kernel; exchange kernel with the bar
 - how the symmetries rotate the stored matrices;
 - whether yambopy readers (e.g. the static screening database class) can be reused for reading/writing.
 
-## 4. Validation ideas
+## 4. Points to analyse in detail in the computational step (noted 2026-11-11, at the user's request)
+These are flagged now and are to be worked out when the explicit computations start; nothing is decided yet.
+
+**A. Which Coulomb interaction goes where (Notes, Sec. 2.1, last paragraph).** The substitution v -> vt concerns
+the screened interaction W only. The ground state of the layer and the bare exchange Sigma_x = iGv stay those of the
+free-standing layer; the substrate enters the correlation part through W - v = v_emb + vt chit^L vt, where v_emb is
+the polarization of the substrate by the added electron or hole. To analyse in detail (user: "very important"):
+- how Yambo splits Sigma into Sigma_x (bare v) and Sigma_c (W - v), and which database each part reads;
+- how to write W - v with the substrate (v_emb + vt chit^L vt) into the screening databases, consistently with the
+  split of item 2.4 (dynamical part W - vt with PPA, static v_emb as COHSEX with the COH term added explicitly);
+- the same question for the BSE kernel (direct term with W(0); exchange term with v or vt, open point).
+
+**B. Coulomb cutoff of the 2D supercell.** In GW for 2D systems the layer lies in the xy plane of a box of height L_z,
+and the periodic boundary conditions (needed for the plane-wave expansion) create fictitious replicas of the layer at
+z = d + n L_z. The bare interaction is truncated along z (slab cutoff) to remove the interaction between replicas. To
+understand how to combine it, correctly and consistently, with the embedding term:
+- v_emb describes a single substrate below the physical layer: it must not be replicated, nor act between replicas;
+  its representation in the supercell basis (q + G_par, G_z) has to be built for the cell containing the layer only
+  (rank one in G_z at each q + G_par, from v_emb ~ g e^{-Qz} e^{-Qz'});
+- the position of the substrate surface (z = 0) and of the images (at -z') with respect to the box and to the cutoff
+  length (e.g. the image distance 2d versus L_z/2);
+- whether the Dyson equation of the layer is to be solved with vt = v_cut + v_emb, v_cut the truncated interaction;
+- the head and wings at q -> 0 (v_emb ~ 1/Q at small Q changes the head) and the RIM / RIM-W integration with the
+  cutoff (see item 2.6).
+The 2D formulation of Sec. 1 (mixed representation, supercell, truncation, small-q behaviour), the next step of the
+notes, is meant to prepare this analysis.
+
+## 5. Validation ideas
 - Trivial substrate (g = 0): the modified databases must reproduce the original ones bit by bit.
 - Analytic limits: a point-like / Keldysh model of the layer with g = (eps-1)/(eps+1), compare with the simple models.
 - Explicit benchmark: a layer on a few explicit substrate layers in the same cell (small, lattice-matched test system,

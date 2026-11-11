@@ -139,12 +139,13 @@ electrons respond to $\phi$ as independent particles, coupled to each other only
 contained in $\phi$. The relations below hold also for the exact $P$, with $P$ in place of $\chi_0$. The response
 $\chi_0$ is built from the Green's function of the non-interacting electrons.
 
-\paragraph{Non-interacting Green's function.} The non-interacting electrons are those of Kohn--Sham, with
+\paragraph{Non-interacting Green's function.} From here on, in this section, we set $\hbar = e = 1$. The non-interacting electrons
+are those of Kohn--Sham, with
 spin-orbitals $\psi_n$, energies $\epsilon_n$ and occupations $f_n$. Their (time-ordered) Green's function
 is~\cite{golze2019gw}
 \begin{equation}
 G_0(\bm{r},\bm{r}';\omega) = \sum_n \frac{\psi_n(\bm{r})\,\psi_n^*(\bm{r}')}
-{\hbar\omega - \epsilon_n + i\eta\,\mathrm{sgn}(\epsilon_n - \mu)} ,
+{\omega - \epsilon_n + i\eta\,\mathrm{sgn}(\epsilon_n - \mu)} ,
 \label{eq:G0}
 \end{equation}
 with $\mu$ the chemical potential, between the occupied and the empty levels, and $\eta \to 0^+$.
@@ -154,40 +155,32 @@ system: an electron, placed in an empty state ($\epsilon_n > \mu$), or a hole, l
 independent-particle picture; the interacting Green's function of GW has its poles at the quasiparticle energies.
 
 \paragraph{Independent-particle response.} The density is the diagonal of the Green's function,
-$n(1) = -iG(1,1^+)$ in atomic units, with $1 = (\bm{r},t)$~\cite{strinati1988application}. A potential $\delta V$
+$n(1) = -iG(1,1^+)$, with $1 = (\bm{r},t)$~\cite{strinati1988application}. A potential $\delta V$
 acting at $2 = (\bm{r}',t')$ changes the propagation, to first order, by
 $\delta G(1,1) = \int d2\,G_0(1,2)\,\delta V(2)\,G_0(2,1)$: to contribute to the density at 1, the electron goes from
-1 to 2, feels the potential there, and comes back. Hence $\chi_0(1,2) = -iG_0(1,2)\,G_0(2,1)$, which is Eq.~(3.26) of
-Ref.~\cite{strinati1988application} without vertex corrections. The product in time becomes a convolution in
-frequency, and in SI units~\cite{golze2019gw}
+1 to 2, feels the potential there, and comes back. Hence $\chi_0(1,2) = -iG_0(1,2)\,G_0(2,1)$. 
+The product in time becomes a convolution in frequency~\cite{golze2019gw},
 \begin{equation}
-\chi_0(\bm{r},\bm{r}';\omega) = -i\,e^2\hbar\int\frac{d\omega'}{2\pi}\;G_0(\bm{r},\bm{r}';\omega + \omega')\,
+\chi_0(\bm{r},\bm{r}';\omega) = -i\int\frac{d\omega'}{2\pi}\;G_0(\bm{r},\bm{r}';\omega + \omega')\,
 G_0(\bm{r}',\bm{r};\omega') ,
 \label{eq:chi0_G0}
 \end{equation}
-with the factor $e^2$ from $\rho = -en$ and $V = -e\phi$ (with spin, $G_0$ is a $2 \times 2$ matrix in the spin
-components and the product is traced over them). One of the two propagators carries an electron in an empty state,
-the other a hole in an occupied state: the potential at $\bm{r}'$ creates an electron--hole pair, and the energy
-$\hbar\omega$ it gives is shared between the two, hence the integral over $\omega'$. The integral is
-done by residues: it vanishes unless one of the two states is occupied and the other empty, and it gives the
+with spin, $G_0$ is a $2 \times 2$ matrix in the spin components and the product is traced over them. The integral is done by residues: it vanishes unless one of the two states is occupied and the other empty, and it gives the
 Adler--Wiser form~\cite{golze2019gw,amblard2024static}, written here for the retarded response,
 \begin{equation}
-\chi_0(\bm{r},\bm{r}';\omega) = e^2\sum_{n,m}\,(f_n - f_m)\,
-\frac{\psi_n^*(\bm{r})\,\psi_m(\bm{r})\;\psi_m^*(\bm{r}')\,\psi_n(\bm{r}')}{\hbar\omega - (\epsilon_m - \epsilon_n) + i\eta} .
+\chi_0(\bm{r},\bm{r}';\omega) = \sum_{n,m}\,(f_n - f_m)\,
+\frac{\psi_n^*(\bm{r})\,\psi_m(\bm{r})\;\psi_m^*(\bm{r}')\,\psi_n(\bm{r}')}{\omega - (\epsilon_m - \epsilon_n) + i\eta} .
 \label{eq:chi0_KS}
 \end{equation}
 \begin{itemize}
 \item Only pairs of an occupied and an empty state contribute: the potential induces transitions between them, and
   $\chi_0$ has poles at the Kohn--Sham transition energies. In the static limit $\chi_0 < 0$: the electrons gather
-  where $\phi$ is high (their potential energy $-e\phi$ is low), so the induced charge has the sign opposite to that of
+  where $\phi$ is high (their potential energy is low), so the induced charge has the sign opposite to that of
   the potential and reduces it. This is screening.
 \item Eq.~\eqref{eq:chi0_G0} gives the time-ordered $\chi_0$, the one used in the GW self-energy;
   Eq.~\eqref{eq:chi0_KS} is the retarded (causal) one, which gives the induced charge of Eq.~\eqref{eq:chi0_def}. The
   two have the same poles and residues, and differ only in the sign of $i\eta$ for the poles at negative
   frequency~\cite{golze2019gw,amblard2024static}.
-\item In atomic units the charge density is $\rho = -n$, with $n$ the density of electrons, and the potential is
-  $\phi = -V$, with $V$ the potential energy of an electron: the response of $\rho$ to $\phi$ coincides with that of
-  $n$ to $V$, the one of GW codes. In SI units they differ by the factor $e^2$ of Eq.~\eqref{eq:chi0_KS}.
 \end{itemize}
 
 \paragraph{Compact notation.} Eqs.~\eqref{eq:phi_ext}--\eqref{eq:chi0_def} have the same structure: a kernel acts on
@@ -248,13 +241,10 @@ W = \varepsilon^{-1}v = v + v\chi v = v + v\chi_0 W .
 \label{eq:W}
 \end{equation}
 $W(\bm{r},\bm{r}';\omega)$ is the Coulomb interaction screened by the electrons: the potential at $\bm{r}$ of a unit
-charge at $\bm{r}'$ together with its screening cloud $\chi v$~\cite{blase2018introduction}. The last form is the
-Dyson equation for $W$, equivalent to Eq.~\eqref{eq:dyson_chi}. In GW the added charge is an electron or a hole, and
-$W$ is its interaction with the other charges: the self-energy $\Sigma = iGW$ is the exchange term of Hartree--Fock
-with $v$ replaced by $W$; in the usual $G_0W_0$ scheme, $G$ is the $G_0$ of Eq.~\eqref{eq:G0} and $W$ is built
-from $\chi_0$. $W$ depends on $\omega$ because the electrons need a time to build the screening cloud, of
-the order of the inverse of their excitation energies: $W$ has the poles of $\chi$, and its static limit
-$W(\omega = 0)$ describes the screening of a charge that varies slowly on that time scale.
+charge at $\bm{r}'$ together with its screening cloud $\chi v$~\cite{blase2018introduction}. 
+$W$ depends on $\omega$ because the electrons need a time to build the screening cloud, of the order of the inverse of 
+their excitation energies: $W$ has the poles of $\chi$, and its static limit $W(\omega = 0)$ describes the screening 
+of a charge that varies slowly on that time scale.
 
 \paragraph{Summary.} The quantities and their links are:
 \begin{center}
@@ -264,7 +254,7 @@ Quantity & Relations & Meaning \\
 \midrule
 $G_0$ & Eq.~\eqref{eq:G0} &
   propagation of an added electron or hole among non-interacting (Kohn--Sham) electrons \\
-$\chi_0$ & $\rho^{\mathrm{ind}} = \chi_0\phi$, \quad $\chi_0 \propto -iG_0G_0$ &
+$\chi_0$ & $\rho^{\mathrm{ind}} = \chi_0\phi$, \quad $\chi_0 = -iG_0G_0$ &
   response to the total potential of non-interacting electrons: the irreducible polarizability $P$ in the RPA \\
 $\chi$ & $\rho^{\mathrm{ind}} = \chi\phi^{\mathrm{ext}}$, \quad $\chi = \chi_0 + \chi_0v\chi$ &
   response to the external potential, with the feedback of the induced charge \\
@@ -297,7 +287,7 @@ band index $n$ and a wave vector $\bm{k}$ in the BZ.
 \begin{equation}
 G_0(\bm{r},\bm{r}';\omega) = \sum_{n\bm{k}} \psi_{n\bm{k}}(\bm{r})\,\psi_{n\bm{k}}^*(\bm{r}')\,G_{0,n\bm{k}}(\omega) ,
 \qquad
-G_{0,n\bm{k}}(\omega) = \frac{1}{\hbar\omega - \epsilon_{n\bm{k}} + i\eta\,\mathrm{sgn}(\epsilon_{n\bm{k}} - \mu)} ,
+G_{0,n\bm{k}}(\omega) = \frac{1}{\omega - \epsilon_{n\bm{k}} + i\eta\,\mathrm{sgn}(\epsilon_{n\bm{k}} - \mu)} ,
 \label{eq:G0_bloch}
 \end{equation}
 and, in the plane-wave form~\eqref{eq:A_qG} (with $\bm{k}$ in place of $\bm{q}$),
@@ -308,10 +298,10 @@ pole at its energy, and the wave vector $\bm{k}$ of the electron or hole is cons
 \emph{Response function.} Inserting the Bloch states in Eq.~\eqref{eq:chi0_KS} and using
 Eq.~\eqref{eq:A_qG},
 \begin{gather}
-\chi_{0,\bm{G}\bm{G}'}(\bm{q},\omega) = \frac{e^2}{V}\sum_{\bm{k}\in\mathrm{BZ}}\sum_{n,m}
+\chi_{0,\bm{G}\bm{G}'}(\bm{q},\omega) = \frac{1}{V}\sum_{\bm{k}\in\mathrm{BZ}}\sum_{n,m}
 \left(f_{n\bm{k}} - f_{m\bm{k}+\bm{q}}\right)
 \frac{\rho_{nm}(\bm{k},\bm{q},\bm{G})\,\rho_{nm}^*(\bm{k},\bm{q},\bm{G}')}
-{\hbar\omega - (\epsilon_{m\bm{k}+\bm{q}} - \epsilon_{n\bm{k}}) + i\eta} ,
+{\omega - (\epsilon_{m\bm{k}+\bm{q}} - \epsilon_{n\bm{k}}) + i\eta} ,
 \nonumber \\
 \rho_{nm}(\bm{k},\bm{q},\bm{G}) = \int_V d^3r\;\psi_{n\bm{k}}^*(\bm{r})\,e^{-i(\bm{q} + \bm{G})\cdot\bm{r}}\,
 \psi_{m\bm{k}+\bm{q}}(\bm{r}) .
@@ -354,12 +344,171 @@ W_{\bm{G}\bm{G}'}(\bm{q},\omega) = \varepsilon^{-1}_{\bm{G}\bm{G}'}(\bm{q},\omeg
   replicas.
 \end{itemize}
 
-\paragraph{In the following.} Sections~\ref{sec:charge_wave}--\ref{sec:layer_screening} use these definitions in the
-simplest setting: charges confined to a plane (Sec.~\ref{sec:charge_wave}), a substrate described by a dielectric
-constant (Sec.~\ref{sec:image}) and a layer without local fields (Sec.~\ref{sec:layer_screening}). Each in-plane wave
-vector can then be treated separately and the kernels become numbers. The substrate changes the bare interaction
-between the charges of the layer, $v \to \vt$, and the chain $\chi_0 \to \chi \to \varepsilon \to W$ of this section
-is built with $\vt$ in place of $v$.
+\paragraph{In the following.} Section~\ref{sec:embedding} applies these definitions to a layer on a substrate: the
+substrate enters only through a dressed interaction $\vt$ between the charges of the layer, and the chain
+$\chi_0 \to \chi \to \varepsilon \to W$ of this section is built with $\vt$ in place of $v$.
+Sections~\ref{sec:charge_wave}--\ref{sec:layer_screening} study the simplest setting: charges confined to a plane
+(Sec.~\ref{sec:charge_wave}), a substrate described by a dielectric constant (Sec.~\ref{sec:image}) and a layer
+without local fields (Sec.~\ref{sec:layer_screening}). Each in-plane wave vector can then be treated separately and
+the kernels become numbers.
+
+\section{Layer and substrate: separating the responses}
+\label{sec:embedding}
+
+We apply Sec.~\ref{sec:response} to a system made of two parts, the layer (L) and the substrate (S), following the
+embedding scheme of Amblard, Blase and Duchemin~\cite{amblard2024static}. There the environment of the subsystem of
+interest is generic (a molecular crystal, a solvent, a metallic tube); here it is a planar substrate, and this
+simplifies the result (Sec.~\ref{sec:embedding_planar}). The goal is the screened interaction $W$ felt by the electrons
+of the layer, the quantity needed by the GW and BSE calculations of the layer, with the substrate entering only
+through its own response.
+
+\subsection{Separation of the response}
+\label{sec:embedding_general}
+
+\paragraph{Assumptions.}
+\begin{itemize}
+\item No overlap: every Kohn--Sham state belongs to one subsystem, and the occupied states of each subsystem do not
+  overlap with any state, occupied or empty, of the other. This excludes hybridization and charge transfer. Empty
+  states may extend into the vacuum: what matters is that they are negligible where the occupied states of the other
+  subsystem lie. It is the delicate assumption: the tails of the states of a layer physisorbed at a few \AA{} from the
+  substrate overlap a little, and the empty states at high energy of each subsystem reach the other. The transitions
+  between the two subsystems neglected in this way have to be checked on an explicit calculation of the
+  heterostructure.
+\item The Kohn--Sham states of each subsystem are those of the subsystem alone: the substrate does not change the
+  states of the layer, and vice versa.
+\item The RPA, as in Sec.~\ref{sec:response}.
+\end{itemize}
+What matters is the subsystem to which each state belongs, not its energy: the levels of the two subsystems can
+interleave.
+
+\paragraph{The independent-particle response.} Each Kohn--Sham state belongs to one subsystem, so the double sum over
+the pairs of states in the Adler--Wiser form~\eqref{eq:chi0_KS} splits into four blocks, according to where $n$ and
+$m$ lie:
+\begin{equation*}
+\sum_{n,m} = \sum_{n,m\in\mathrm{L}} + \sum_{n,m\in\mathrm{S}} + \sum_{n\in\mathrm{L},\,m\in\mathrm{S}}
++ \sum_{n\in\mathrm{S},\,m\in\mathrm{L}} .
+\end{equation*}
+In the two mixed blocks one of the two states is occupied (otherwise $f_n - f_m = 0$) and does not overlap with the
+other, which belongs to the other subsystem: the transition density $\psi_n^*(\bm{r})\,\psi_m(\bm{r})$ of the pair
+vanishes at every point, there are no transitions from one subsystem to the other, and these blocks give nothing. The other two give
+\begin{equation}
+\chi_0 = \chi_0^{\mathrm{L}} + \chi_0^{\mathrm{S}} , \qquad
+\chi_0^{\mathrm{L}}(\bm{r},\bm{r}';\omega) = \sum_{n,m\in\mathrm{L}}\,(f_n - f_m)\,
+\frac{\psi_n^*(\bm{r})\,\psi_m(\bm{r})\;\psi_m^*(\bm{r}')\,\psi_n(\bm{r}')}{\omega - (\epsilon_m - \epsilon_n) + i\eta} ,
+\label{eq:chi0_split}
+\end{equation}
+and $\chi_0^{\mathrm{S}}$ the same sum over the pairs of the substrate.
+Each subsystem polarizes on its own: the two are coupled only through the Coulomb interaction, as shown below.
+
+\paragraph{The substrate dresses the interaction.} The Dyson equation~\eqref{eq:W}, $W = v + v\chi_0W$, gives
+$W^{-1} = v^{-1} - \chi_0$ for the inverse kernels, and with Eq.~\eqref{eq:chi0_split}~\cite[Eqs.~(8)--(9)]{amblard2024static}
+\begin{equation}
+W^{-1} = \vt^{-1} - \chi_0^{\mathrm{L}} , \qquad \vt^{-1} = v^{-1} - \chi_0^{\mathrm{S}} .
+\label{eq:W_inverse}
+\end{equation}
+$\vt$ is the screened interaction of the substrate alone, the $W$ of Sec.~\ref{sec:response} for a system made of
+the substrate only:
+\begin{equation}
+\vt = v + \vemb , \qquad \vemb = v\,\chiS\,v , \qquad \chiS = \chi_0^{\mathrm{S}} + \chi_0^{\mathrm{S}}\,v\,\chiS ,
+\label{eq:vt_general}
+\end{equation}
+with $\chiS$ the response of the substrate in the absence of the layer. The embedding term $\vemb$, in explicit form
+$\vemb(\bm{r},\bm{r}';\omega) = \int d^3r_1\,d^3r_2\,v(\bm{r},\bm{r}_1)\,\chiS(\bm{r}_1,\bm{r}_2;\omega)\,
+v(\bm{r}_2,\bm{r}')$ with $\bm{r}_1,\bm{r}_2$ in the substrate, where $\chiS$ is non-zero, reads from right to left as
+the chain of Fig.~\ref{fig:response}a: a charge at $\bm{r}'$ in the layer produces a potential in the substrate, the
+substrate responds with an induced charge, including its own screening, and the potential of this charge comes back
+to the layer at $\bm{r}$. It is the reaction field $v_{\mathrm{reac}}$ of Ref.~\cite{amblard2024static}. It depends on
+$\omega$ through $\chiS$, since the substrate responds with its own dynamics; it can be taken as static when the gap
+of the substrate is much larger than that of the layer~\cite{amblard2024static}.
+
+The first of Eqs.~\eqref{eq:W_inverse} is the Dyson equation of the layer with $\vt$ in place of $v$,
+\begin{equation}
+W = \vt + \vt\,\chi_0^{\mathrm{L}}\,W .
+\label{eq:W_layer}
+\end{equation}
+The layer enters only through $\chi_0^{\mathrm{L}}$, computed with its own states, which does not know about the
+substrate; the substrate enters only through $\vt$.
+
+\paragraph{The screened interaction in the layer.} This is the result of the section: the GW and BSE calculations of
+the layer can be done on the layer alone, as for the free-standing layer, with the substrate included through $\vt$.
+The spatial region that matters is selected by products of states of the layer. Each term of $\chi_0^{\mathrm{L}}$
+contains, at $\bm{r}$ and at $\bm{r}'$, an occupied state of the layer, since the pairs are made of an occupied and an
+empty state: $\chi_0^{\mathrm{L}}$ vanishes outside the region of the electrons of the layer, even where its empty
+states extend into the vacuum, and the integrals in Eq.~\eqref{eq:W_layer} extend only over this region. $W$ in this
+region is therefore fixed by $\vt$ and $\chi_0^{\mathrm{L}}$ in the same region~\cite[Eq.~(11)]{amblard2024static}. The same
+products select the region in GW and BSE: the matrix elements of the self-energy and of the BSE kernel contain $W$
+multiplied by products of a state of interest of the layer, occupied or empty but bound, with another state, so they
+need $W$ only there. Solving Eq.~\eqref{eq:W_layer} as in Sec.~\ref{sec:response}~\cite[Eqs.~(15)--(16)]{amblard2024static},
+\begin{gather}
+W = \vt + \vt\,\chiLt\,\vt , \qquad \chiLt = \chi_0^{\mathrm{L}} + \chi_0^{\mathrm{L}}\,\vt\,\chiLt , \qquad
+\tilde{\varepsilon} = 1 - \vt\chi_0^{\mathrm{L}} ,
+\nonumber \\
+\vt = v + \vemb , \qquad \vemb = v\,\chiS\,v ,
+\label{eq:W_LL}
+\end{gather}
+with $W = \tilde{\varepsilon}^{-1}\vt$. The ingredients are two response functions, computed separately:
+$\chi_0^{\mathrm{L}}$ of the layer and $\chiS$ of the substrate.
+Compared with the free-standing layer there are two changes:
+\begin{itemize}
+\item The screening of the layer is built with $\vt$: $\chiLt$ and $\tilde{\varepsilon}$ are the response and the
+  dielectric function of the layer when the interaction between its charges is dressed by the substrate. Unlike
+  $\chi_0^{\mathrm{L}}$ they depend on the substrate; the poles of $\chiLt$ are those of the free-standing layer,
+  shifted by the embedding term.
+\item The screened interaction has $\vt$ in place of $v$ also in its outer factors, $W = \vt + \vt\chiLt\vt$.
+\end{itemize}
+The two subsystems contribute separately:
+\begin{itemize}
+\item the layer alone gives its Kohn--Sham states, hence $G_0^{\mathrm{L}}$ and $\chi_0^{\mathrm{L}}$, the same as
+  for the free-standing layer;
+\item the substrate alone gives its response $\chiS$, which enters only through the embedding term $\vemb = v\chiS v$
+  in the region of the layer: this term contains the whole effect of the substrate.
+\end{itemize}
+Within the RPA and without overlap these relations are exact, whatever $\chiS$. The substitution $v \to \vt$
+concerns the screened interaction, not every Coulomb interaction of the calculation: the ground state of the layer
+and, in the GW self-energy $\Sigma = iGW$, the bare exchange $iGv$ are those of the free-standing layer. The substrate
+enters the correlation part, built from $W - v = \vemb + \vt\chiLt\vt$, in which $\vemb$ describes the polarization
+of the substrate by the added electron or hole.
+
+\subsection{A planar substrate}
+\label{sec:embedding_planar}
+
+The substrate fills the half-space $z < 0$, with its surface at $z = 0$, and the layer lies above it, around
+$z = d$: $\chiS(\bm{r}_1,\bm{r}_2)$ is non-zero only for $z_1, z_2 \le 0$, while the electrons of the layer lie at $z > 0$.
+
+The substrate has its own lattice, in general incommensurate with that of the layer. A potential with in-plane wave
+vector $\Qv$ acting on the substrate induces charge also at $\Qv + \bm{G}^{\mathrm{S}}$, with $\bm{G}^{\mathrm{S}}$
+the reciprocal lattice vectors of its surface; the potential of these components decays away from the surface as
+$e^{-|\Qv + \bm{G}^{\mathrm{S}}|z}$, and at the layer it is negligible when $|\bm{G}^{\mathrm{S}}|d \gg 1$ (of order 10
+for hBN at $d \simeq 3$~\AA). Neglecting these terms, $\chiS$ is invariant under in-plane translations, and the kernels
+are expanded in in-plane waves (Sec.~\ref{sec:charge_density}),
+$K(\bm{r},\bm{r}') = A^{-1}\sum_{\Qv} e^{i\Qv\cdot(\rpar - \rpar')}\,K(\Qv;z,z')$ for a kernel $K$ and the area $A$
+of the sheet, with products that become
+integrals over $z$ at each $\Qv$. The bare interaction is the potential of a charge wave, Eq.~\eqref{eq:phi_free},
+$v(Q;z,z') = e^{-Q|z - z'|}/(2\varepsilon_0 Q)$. For $z > 0 > z_1$ it factorizes,
+$v(Q;z,z_1) = e^{-Qz}\,e^{Qz_1}/(2\varepsilon_0 Q)$, and $\vemb = v\chiS v$ of Eq.~\eqref{eq:vt_general} becomes
+\begin{gather}
+\vemb(\Qv;z,z';\omega) = -\gs(\Qv,\omega)\,\frac{e^{-Qz}\,e^{-Qz'}}{2\varepsilon_0 Q} ,
+\nonumber \\
+\gs(\Qv,\omega) = -\frac{1}{2\varepsilon_0 Q}\int_{-\infty}^{0}\! dz_1\int_{-\infty}^{0}\! dz_2\;
+e^{Qz_1}\,\chiS(\Qv;z_1,z_2;\omega)\,e^{Qz_2} .
+\label{eq:vemb_planar}
+\end{gather}
+\begin{itemize}
+\item $\vemb$ is the product of a function of $z$ and a function of $z'$, at each $\Qv$: whatever its microscopic
+  structure, the substrate enters through a single function $\gs(\Qv,\omega)$, its surface response function. The
+  positions in the layer enter only through the decay $e^{-Qz}$ of the field of a charge wave, so the substrate is
+  felt only at wavelengths larger than about the distance $d$.
+\item In the static limit $\chiS < 0$, hence $\gs > 0$ and $\vemb < 0$: the substrate reduces the interaction.
+\item For the local dielectric half-space of Sec.~\ref{sec:image}, $\gs = \beta = (\varepsilon - 1)/(\varepsilon + 1)$,
+  independent of $Q$ and $\omega$ ($\varepsilon = \varepsilon_\infty$ for the electronic response), and
+  Eq.~\eqref{eq:vemb_planar} at $z = z' = d$ is the embedding term of Eq.~\eqref{eq:vt_sheet}. In general $\gs$
+  depends on $\omega$, through the dynamics of the substrate, and on $Q$; the local value is its limit for wavelengths
+  much longer than the microscopic lengths of the substrate.
+\item $\gs$ is a property of the substrate alone, which can be computed in its own unit cell: no cell common to the
+  layer and the substrate is needed.
+\end{itemize}
+Sections~\ref{sec:image} and~\ref{sec:layer_screening} work out this scheme for a layer of zero thickness at $z = d$
+and a local, static substrate, $\gs = \beta$.
 
 \section{Charges in a plane: charge waves and their potential}
 \label{sec:charge_wave}

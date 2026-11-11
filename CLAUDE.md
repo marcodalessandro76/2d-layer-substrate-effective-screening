@@ -89,14 +89,17 @@ computational procedure (possibly a code implementation).
   total potential" (eq:chi0_def: rho_ind = int chi0 phi directly, user 2026-11-10; text: writing chi0 there is the
   RPA; the exact response to phi is the irreducible polarizability P, Strinati, which contains exchange and
   correlation, not the Hartree feedback; relations below valid for P with P in place of chi0; no mention of
-  excitons/BSE here, user 2026-11-10); "Non-interacting Green's function"
+  excitons/BSE here, user 2026-11-10); "Non-interacting Green's function" (opens with "From here on, in this
+  section, we set hbar = e = 1", user 2026-11-11: units not of interest at this stage; Eqs. 6-8, 13-14 and the
+  table written with hbar = e = 1; SI prefactors were e^2 hbar in eq:chi0_G0 and e^2 in eq:chi0_KS, eq:chi0_qG)
   (eq:G0, time-ordered KS G0 as in Golze Eq. 24, propagation of added electron/hole, poles at KS energies vs QP
   energies of the interacting G); "Independent-particle response" (motivation in 3 lines, user 2026-11-10:
   n(1) = -iG(1,1+), first-order delta G = G0 dV G0, so chi0(1,2) = -i G0(1,2) G0(2,1) = Strinati Eq. 3.26 without
-  vertex, checked on the PDF; then eq:chi0_G0: chi0 = -i e^2 hbar int dw'/2pi
-  G0(r,r';w+w') G0(r',r;w'), Golze Eq. 27, trace over spin; electron-hole pair picture; residues -> Adler-Wiser
-  eq:chi0_KS, retarded; contour integral checked by hand: gives e^2 x Golze Eq. 28) and bullets (poles, static
-  chi0 < 0, eq:chi0_G0 time-ordered vs eq:chi0_KS retarded, a.u. rho = -n, phi = -V so d rho/d phi = dn/dV). The
+  vertex, checked on the PDF; then eq:chi0_G0: chi0 = -i int dw'/2pi
+  G0(r,r';w+w') G0(r',r;w'), Golze Eq. 27, trace over spin; residues -> Adler-Wiser
+  eq:chi0_KS, retarded; contour integral checked by hand: gives Golze Eq. 28; the user trimmed the electron-hole
+  pair sentence, the Strinati-3.26 sentence and the units bullet) and bullets (poles, static chi0 < 0, eq:chi0_G0
+  time-ordered vs eq:chi0_KS retarded). The
   split chi0 = chi0^L + chi0^S from a block-diagonal G0 (no hybridization) was proposed but NOT written: keep for
   the substrate analysis. Eqs. 1-4 are written
   with explicit integrals over r' and the w argument (user, 2026-11-10: to see the structure of the operators); a
@@ -112,21 +115,53 @@ computational procedure (possibly a code implementation).
   A(r,r') = (1/V) sum_q sum_GG' e^{i(q+G)r} A_GG'(q) e^{-i(q+G')r'} (V = N_k Omega; products -> matrix products in
   G,G' at each q, w; v diagonal, v(k) = 1/(eps0 k^2)); Bloch states with plane-wave coefficients c_nk(G); G0 in the
   Bloch basis (eq:G0_bloch, diagonal in n k, plus G0_GG'(k,w) = sum_n c c* G0_nk); chi0_GG'(q,w) (eq:chi0_qG,
-  (e^2/V) sum_k sum_nm (f_nk - f_mk+q) rho_nm(k,q,G) rho*_nm(k,q,G') / (hbar w - (e_mk+q - e_nk) + i eta),
+  (1/V) sum_k sum_nm (f_nk - f_mk+q) rho_nm(k,q,G) rho*_nm(k,q,G') / (w - (e_mk+q - e_nk) + i eta),
   rho_nm = <nk|e^{-i(q+G)r}|m k+q>; derived here from eq:chi0_KS with this convention) with bullets on w, q (momentum
   conservation, pair at k and k+q), G (Fourier components of the transition density), bands (summed, empty bands =
   convergence parameter); eps_GG', eps^-1_GG', W_GG' (eq:eps_W_qG) with bullets (matrix inversion per q, w; local
   fields; eps_M = 1/eps^-1_00 from Gatti slide 16; W has no band index; head diverges as 1/q^2; truncation for a
   layer in a supercell). Yambo's own storage convention (e.g. symmetrized v^1/2 chi v^1/2) NOT written: to verify on
-  the Lumen source; "In the following" (Secs. 2-4 = same chain with v -> vt, no local fields).
-  Sec. 2 "Charges in a plane: charge waves and their potential" (`sec:charge_wave`; read and found clear by the
+  the Lumen source; "In the following" (Sec. 2 = layer + substrate, substrate only through vt; Secs. 3-5 = planar
+  model, no local fields).
+  Sec. 2 "Layer and substrate: separating the responses" (`sec:embedding`, written 2026-11-11 at the user's request,
+  after Amblard 2024 Sec. II B, Eqs. 8-16 checked on the PDF): 2.1 general (`sec:embedding_general`): assumptions
+  (no overlap of any KS state, occupied or empty -- the delicate point, to check on the explicit heterostructure;
+  KS states of each subsystem = those of the subsystem alone; RPA; what matters is the subsystem of each state, not
+  its energy: the user's idea of splitting by band index was discussed and dropped, levels interleave and the split
+  is by pairs incl. empty states); chi0 = chi0^L + chi0^S (eq:chi0_split) derived from the Adler-Wiser sum (user
+  2026-11-11): sum_nm split in four blocks LL, SS, LS, SL; mixed blocks vanish (transition density zero), chi0^L =
+  same sum over pairs of the layer = chi0 of the free-standing layer, nonzero only for r, r' in the layer; G0
+  argument kept as a bullet (the user later removed the bullets after eq:chi0_split); localization made precise
+  (user's question 2026-11-11): each term of chi0^L has an occupied layer state at r and at r', so chi0^L vanishes
+  outside the region of the layer's electrons even if empty states extend into vacuum (stated before eq:W_LL);
+  no-overlap assumption reformulated: occupied states of one subsystem do not overlap with any state of the other; W^-1 = vt^-1 - chi0^L,
+  vt^-1 = v^-1 - chi0^S (eq:W_inverse); vt = v + v_emb, v_emb = v chi^S v, chi^S = substrate alone (eq:vt_general;
+  user 2026-11-11: v_emb defined at once, the separate "embedding term" paragraph and eq:vemb_general merged into the
+  text after it: explicit integral over the substrate, chain reading, = v_reac of Amblard, static if the substrate
+  gap >> layer gap); W = vt + vt chi0^L W (eq:W_layer); W in the layer closed on the layer: W = vt + vt chit^L vt, chit^L = chi0^L +
+  chi0^L vt chit^L, eps~ = 1 - vt chi0^L (eq:W_LL, Amblard Eqs. 11, 15-16). Paragraph rewritten 2026-11-11 (user)
+  as the result of the section: GW and BSE on the layer alone, substrate through vt; two changes vs free-standing
+  (screening built with vt; vt also in the outer factors of W); what comes from each subsystem (layer: KS states,
+  G0^L, chi0^L; substrate: v_emb); v -> vt only in W: ground state and bare exchange iGv unchanged, substrate in the
+  correlation W - v = v_emb + vt chit^L vt. COH static subtlety and BSE exchange kernel (v or vt) deliberately left
+  to the later GW/BSE part. Revised again 2026-11-11 (user): no "points in the layer" wording; the region is selected
+  by products of layer states (occupied states in chi0^L; bound states of interest in the Sigma and BSE matrix
+  elements); eq:W_LL now also shows vt = v + v_emb, v_emb = v chi^S v, so the two ingredients chi0^L and chi^S are
+  visible. Sec. 2.1 makes no geometric assumption (general, as Amblard); geometry enters only in Sec. 2.2. 2.2 planar substrate
+  (`sec:embedding_planar`): substrate z < 0, layer z > 0 around d; substrate Umklapp Q -> Q + G^S neglected (decay
+  e^{-|Q+G^S| z}, |G^S| d ~ 10 for hBN at d ~ 3 A); mixed representation K(Q;z,z'); v(Q;z,z') = e^{-Q|z-z'|}/(2 eps0 Q);
+  v_emb(Q;z,z';w) = -g(Q,w) e^{-Qz} e^{-Qz'}/(2 eps0 Q), g = -(1/(2 eps0 Q)) int int e^{Qz1} chi^S e^{Qz2}
+  (eq:vemb_planar, derived here): rank one at each Q, static g > 0, dielectric half-space g = beta (eps_inf) gives
+  eq:vt_sheet, g computable in the substrate's own cell. Ends by pointing to Secs. 4-5 as the g = beta, zero-thickness
+  case.
+  Sec. 3 "Charges in a plane: charge waves and their potential" (`sec:charge_wave`; read and found clear by the
   user): intro (units now in Sec. 1), finite sheet of area A with Born-von Karman conditions (discrete Q,
   limit A -> inf), lattice periodicity (N_c cells, Q = q + G_par, lattice fixes G_par and BZ, sheet size fixes the q
-  grid; from here on the layer has a lattice; homogeneous plane = limit A_c -> 0); 2.1 charge waves (rho in charge
+  grid; from here on the layer has a lattice; homogeneous plane = limit A_c -> 0); 3.1 charge waves (rho in charge
   waves, only Q = 0 carries net charge, point charge, periodic density sigma_Q = N_c sigma_G delta_{q,0}); 2.2
   potential of a charge wave (Poisson per wave, matching conditions, Q = 0 uniform plane and neutrality, Q != 0;
   the small-Q expansion of phi_Q and the remark on the 1/Q constant were removed by the user's request, 2026-11-10).
-  Sec. 3 "The substrate: dressed Coulomb interaction" (`sec:image`): static local dielectric half-space; terminology
+  Sec. 4 "The substrate: dressed Coulomb interaction" (`sec:image`): static local dielectric half-space; terminology
   (user, 2026-11-09): "sheet" = charged plane at z = d, "surface of the substrate" = z = 0; waves independent because
   eps depends only on z (substrate-lattice coupling Q -> Q + G neglected, stated); image construction; sigma_pol on
   the surface (eq:sigma_pol); phi_Q(d) = potential of the wave + that of the polarization charge (eq:phi_sheet);
@@ -136,18 +171,20 @@ computational procedure (possibly a code implementation).
   metal dipole-dipole tail dropped).
   The (Q;z,z') forms v = e^{-Q|z-z'|}/(2 eps0 Q), v_emb = -beta e^{-Qz} e^{-Qz'}/(2 eps0 Q) were removed (user,
   2026-11-09): introduce them where finite thickness is treated.
-  Sec. 4 "Screening by a polarizable layer on the substrate" (`sec:layer_screening`): opening rewritten (user,
-  2026-11-09): in Sec. 3 the sheet charges feel vt but do not redistribute, now the layer polarizes too; zero
-  thickness, local fields (Q -> Q + G mixing) neglected; 4.1 chi0 defined explicitly before eq:chi0_layer (response
+  Sec. 5 "Screening by a polarizable layer on the substrate" (`sec:layer_screening`): opening rewritten (user,
+  2026-11-09): in Sec. 4 the sheet charges feel vt but do not redistribute, now the layer polarizes too; zero
+  thickness, local fields (Q -> Q + G mixing) neglected; 5.1 chi0 defined explicitly before eq:chi0_layer (response
   to the total potential, property of the layer alone, independent of the substrate, static chi0 < 0), then the
   external charge and the self-consistent potential; W = potential of a unit external wave, chit = response to the
   external potential vt sigma_ext (depends on the substrate); eps_sh = 1 - vt chi0, W = vt/eps_sh = vt + vt chit vt ("structure of the RPA with v -> vt");
-  insulating layer chi0 = -Q^2 chi_2D, r0 = chi_2D/(2 eps0), static Keldysh W; 4.2 example: Lorentz oscillators,
+  insulating layer chi0 = -Q^2 chi_2D, r0 = chi_2D/(2 eps0), static Keldysh W; 5.2 example: Lorentz oscillators,
   chi_2D = n alpha, single pole with finite damping eps^-1 = 1 + Omega_Q^2/(w^2 + i gamma w - w_L^2) (user,
   2026-11-10: no gamma -> 0 discussion), single-pole structure of the PPA (substrate moves position and weight via
-  eps_env, not the width gamma), modes bullets; 4.3 summary. The "Discreteness" paragraph (single-oscillator image shift,
+  eps_env, not the width gamma), modes bullets; 5.3 summary. The "Discreteness" paragraph (single-oscillator image shift,
   lattice sums) and its summary bullet were removed (user, 2026-11-10): no main result depended on them.
-  Sec. 4.1 partly repeats the definitions of Sec. 1 (chi0 as response to the total potential): possible trim, to agree.
+  Sec. 5.1 partly repeats Sec. 1 and Sec. 2 (chi0 as response to the total potential; eps_sh, W with vt = the planar
+  case of eq:W_LL): to be trimmed after the 2D step (agreed order 2026-11-11: embedding -> link with Sec. 4 -> 2D form
+  of Sec. 1 -> revision of the old parts).
   Bibliography restored (2026-11-10) with the first citations (Sec. 1): strinati1988application,
   blase2018introduction, golze2019gw, amblard2024static (entries copied from the catalogue without the
   doctype/keywords/file fields).
@@ -179,6 +216,13 @@ computational procedure (possibly a code implementation).
 - Exchange kernel of the BSE with v or vt.
 - Content and conventions of the Yambo screening databases: to be verified on the Lumen source (cluster) before any
   implementation.
+- TO ANALYSE IN THE COMPUTATIONAL STEP (user, 2026-11-11, "very important"; details in `docs/02_...`, Sec. 4):
+  (A) which Coulomb interaction goes where: v -> vt only in W; ground state and Sigma_x = iGv of the free-standing
+  layer; substrate in the correlation W - v = v_emb + vt chit^L vt (last paragraph of Notes Sec. 2.1); how this maps
+  onto Yambo's Sigma_x / Sigma_c split, the PPA and the static COH of v_emb, and the BSE kernel. (B) the Coulomb
+  cutoff of the 2D supercell (layer in the xy plane, replicas at z = d + n L_z from the periodic boundary conditions,
+  slab truncation along z): how to combine the truncated v with v_emb (single substrate, not replicated; position of
+  the surface and of the images vs the box and the cutoff; Dyson with vt = v_cut + v_emb; head at q -> 0 and RIM).
 
 ## Rules
 - Step by step, agreeing with the user before moving on. Explicit assumptions, units, limit checks (d -> 0,
@@ -252,3 +296,7 @@ interaction; r0 = 2 pi chi_2D.
 - 2026-11-10: public GitHub repository created at the user's request, name chosen by the user:
   2d-layer-substrate-effective-screening ("effective" kept on purpose); README.md rewritten as the public description
   of goals, approach and status.
+- 2026-11-11: new Sec. 2 (embedding, layer + substrate) written after Sec. 1, at the user's request; old Secs. 2-4 are
+  now Secs. 3-5. Agreed order for the next steps: link of the general v_emb with Sec. 4 (largely done: g = beta), 2D
+  form of Sec. 1 (mixed representation, supercell, truncation, small-q behaviour), then revision of Sec. 5.1 and of
+  the older parts. Sec. 1 now uses hbar = e = 1 in the many-body formulas.
