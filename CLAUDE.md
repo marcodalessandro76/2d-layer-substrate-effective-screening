@@ -297,8 +297,10 @@ computational procedure (possibly a code implementation).
   implementation.
 - Slab cutoff checked on the Lumen source (2026-11-11, docs/02 Sec. 4 B): `cutoff_slab.F` = Ismail-Beigi/Rozzi,
   v_cut = 4pi/|q+G|^2 [1 - e^{-Q L/2} cos(G_z L/2)], truncation in z - z' (translation invariant: no centring issue,
-  layer position in the cell irrelevant); condition: whole system (both layers) within L/2 = 10.6 A for c = 40 bohr
-  (to verify for the bilayer: planar density or GW gap vs L). RIM_W only with slab, refits W = v f v/(1 - v f) near
+  layer position in the cell irrelevant); condition: whole system (both layers) within L/2 = 10.6 A for c = 40 bohr:
+  CHECKED on the planar density (bilayer density < 1e-4 max beyond |z| = 4.7 A; pairs at |z-z'| > L/2 ~ 1e-9): safe.
+  pp.x is NOT compiled on ismhpc (qe-7.0/bin has pw.x, ph.x, ...): planar densities read in python from
+  charge-density.dat (function `planar_density` in DFT_Analysis.ipynb). RIM_W only with slab, refits W = v f v/(1 - v f) near
   q = 0 with the bare v_cut (conflict with a vt-based screening: to analyse). `EpsEnv` input = uniform v -> v/eps_env
   everywhere (also Sigma_x): not our vt.
 - TO ANALYSE IN THE COMPUTATIONAL STEP (user, 2026-11-11, "very important"; details in `docs/02_...`, Sec. 4):
