@@ -300,8 +300,9 @@ computational procedure (possibly a code implementation).
   has only as many elements as the highest corrected band: put the MPI on q and qp (e.g. SX_CPU='8.4.1').
   HF on ML_bot, k = 18 (2026-11-11): Sx converged at 40 Ha (states within 3 meV); with EXXRLvcs = VXCRLvcs the
   results drift above 40 Ha because the TRUNCATED Vxc is cutoff dependent (NFE conduction state at Gamma: 0.2 eV).
-  Choice: EXXRLvcs = 40 Ha, VXCRLvcs = all the density G vectors (24949 RL, default): Vxc is then the KS one (not a
-  convergence parameter; differs from the MoS2 protocol EXX = VXC). HF gaps (k = 18): K 13.321 eV, Gamma 12.863 eV.
+  Choice (user): EXXRLvcs = VXCRLvcs = all the density G vectors (24949 RL, default): Vxc is then the KS one (not a
+  convergence parameter; differs from the MoS2 protocol EXX = VXC); EXX full = EXX 40 Ha within 0.3 meV, 17 s per HF
+  run at k = 18. HF gaps (k = 18): K 13.321 eV, Gamma 12.863 eV.
 
 ## Roadmap (provisional, to be agreed step by step)
 1. Framing and literature (in progress): the three embedding papers (done, first reading); still to read: Neaton
