@@ -291,6 +291,17 @@ computational procedure (possibly a code implementation).
   because the layer is off z = 0 and force_symmorphic drops it; AA1: 12 spatial, D3d).
   GW settings (user, 2026-11-11): CUTGeo='slab z' and RIM on v in every run (RandQpts 5e6, RandGvec 100, from MoS2);
   HF with RIM only; every GW (PPA) run with RIM_W, RandGvecW = 10.
+  SHARED YAMBO DATABASES (user's rule, 2026-11-11): yambo writes new databases only in the FIRST folder of the -J
+  list and reads from all of them. Runs that share databases (RIM/cutoff, HF, screening em1d, dipoles, ...) are
+  organized so that the FIRST run completes alone; then the common databases are moved into a separate folder
+  (e.g. `ndb_rim_cutoff`, `ndb_em1d-ngsblkxp_<x>-bndsrnxp_<n>`) and that folder is passed in the `jobname` list of
+  the other runs; never let two concurrent runs compute the same database. (RIM: a dedicated `yambo -r` run with
+  name/job `ndb_rim_cutoff` writes directly in the shared folder.) HF parallelism: `SX_ROLEs='q.qp.b'`, the role b
+  has only as many elements as the highest corrected band: put the MPI on q and qp (e.g. SX_CPU='8.4.1').
+  HF on ML_bot, k = 18 (2026-11-11): Sx converged at 40 Ha (states within 3 meV); with EXXRLvcs = VXCRLvcs the
+  results drift above 40 Ha because the TRUNCATED Vxc is cutoff dependent (NFE conduction state at Gamma: 0.2 eV).
+  Choice: EXXRLvcs = 40 Ha, VXCRLvcs = all the density G vectors (24949 RL, default): Vxc is then the KS one (not a
+  convergence parameter; differs from the MoS2 protocol EXX = VXC). HF gaps (k = 18): K 13.321 eV, Gamma 12.863 eV.
 
 ## Roadmap (provisional, to be agreed step by step)
 1. Framing and literature (in progress): the three embedding papers (done, first reading); still to read: Neaton
