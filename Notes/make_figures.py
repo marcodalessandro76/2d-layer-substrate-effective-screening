@@ -1,4 +1,4 @@
-"""Figures of the technical notes.
+"""Figures of the technical notes (main.tex) and of the classical models (models.tex).
 
 Run from the Notes folder:  python make_figures.py [name ...]
 Without arguments all the figures of the registry FIGURES are made. Figures are saved as jpeg in Figures/.
@@ -30,7 +30,24 @@ def omega_L(Qd, eps, r0_over_d):
     return np.sqrt(1.0 + r0_over_d * Qd * vt_over_v(Qd, eps))
 
 
+def fig_vt_ratio():
+    """Dressed over bare interaction in a plane above a dielectric half-space (main notes, Sec. 2.3)."""
+    Qd = np.linspace(1e-4, 2.0, 801)
+    fig, ax = plt.subplots(figsize=(4.6, 3.4))
+    for eps in [2.0, 4.0, 10.0, np.inf]:
+        lab = r'metal' if np.isinf(eps) else r'$\varepsilon = %g$' % eps
+        ax.plot(Qd, vt_over_v(Qd, eps), label=lab)
+    ax.set_xlim(0.0, 2.0)
+    ax.set_ylim(0.0, 1.02)
+    ax.set_xlabel(r'$Qd$')
+    ax.set_ylabel(r'$\tilde{v}(Q)/v(Q) = 1/\varepsilon_{\mathrm{env}}(Q)$')
+    ax.legend(frameon=False, fontsize=9)
+    fig.tight_layout()
+    return fig
+
+
 def fig_sheet_modes():
+    """Interaction ratio and longitudinal mode of the oscillator sheet (models notes)."""
     Qd = np.linspace(1e-4, 2.0, 801)
     fig, axs = plt.subplots(1, 2, figsize=(9.0, 3.6))
     ax = axs[0]
@@ -59,7 +76,8 @@ def fig_sheet_modes():
 
 
 FIGURES = {
-    'sheet_modes': fig_sheet_modes,
+    'vt_ratio': fig_vt_ratio,          # main.tex
+    'sheet_modes': fig_sheet_modes,    # models.tex
 }
 
 

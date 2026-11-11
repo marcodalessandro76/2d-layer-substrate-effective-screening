@@ -41,25 +41,29 @@ substrates.
 
 ## Status
 
-*Last update: 2026-11-10.* The project is in the theory phase.
+*Last update: 2026-11-11.* The project is in the theory phase.
 
-Technical notes (`Notes/`, LaTeX):
+Technical notes (`Notes/main.tex`, LaTeX):
 
 - Sec. 1: response functions and screened interaction (G0, chi0 in the RPA, Dyson equation, dielectric function, W),
   in real space and in the plane-wave (q, G) representation.
-- Sec. 2: charges in a plane, described as charge waves, and their potential.
-- Sec. 3: the substrate as a dielectric half-space; the dressed interaction `v~ = v + v_emb` and the effective
-  dielectric function of the environment.
-- Sec. 4: screening by a polarizable layer on the substrate; Keldysh form of W; a sheet of harmonic oscillators as a
-  single-pole example (link with the plasmon-pole approximation).
+- Sec. 2: layer and substrate. Without overlap between their states, chi0 = chi0^L + chi0^S; the substrate enters
+  only through the dressed interaction `v~ = v + v_emb`, with `v_emb = v chi^S v`, and the screened interaction in
+  the layer is built from the response of the free-standing layer and `v~`. For a planar substrate `v_emb` is
+  fixed by a single surface response function g(Q, w). Example: a dielectric half-space (g = (eps-1)/(eps+1)) and
+  an insulating layer (Keldysh form of W).
 
-Next steps: the polarization energy of a charge added to the layer (gap renormalization), the electron-hole pair
-(exciton binding energy), and the GW formulation of the substrate screening.
+Companion notes (`Notes/models.tex`): classical models (charges in a plane, image charges above a dielectric, a sheet
+of harmonic oscillators as a single-pole example of the layer screening).
+
+Next steps: the layer in a supercell (2D formulation, Coulomb truncation, small-q behaviour), then the computational
+procedure with Yambo (how the Coulomb interactions enter the self-energy and the BSE kernel, consistency with the
+slab cutoff).
 
 ## Repository layout
 
-- `Notes/`: technical notes. Build with `latexmk -pdf main.tex` inside `Notes/`; figures from
-  `python make_figures.py`.
+- `Notes/`: technical notes (`main.tex`) and companion classical models (`models.tex`). Build with
+  `latexmk -pdf main.tex` (and `models.tex`) inside `Notes/`; figures from `python make_figures.py`.
 - `docs/`: working notes in markdown (context, literature, plans).
 - Notebooks for the models and the analysis will be added when the numerical work starts.
 

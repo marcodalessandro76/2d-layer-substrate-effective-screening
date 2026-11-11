@@ -1,0 +1,409 @@
+\documentclass[10pt,a4paper]{paper}
+\input{header.tex}
+
+\title{Classical models for the effective substrate screening of 2D layers}
+\author{Marco D'Alessandro}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+These notes collect the classical models that accompany the main notes (\texttt{main.tex}): charges confined to a
+plane and their potential (Sec.~\ref{sec:charge_wave}), the dressed interaction of a plane above a dielectric
+half-space, derived with image charges (Sec.~\ref{sec:image}), and the screening by a polarizable layer, with a sheet
+of harmonic oscillators as a single-pole example (Sec.~\ref{sec:layer_screening}). In the language of the main notes
+they describe a layer of zero thickness on a local, static substrate, whose surface response function is
+$g = \beta = (\varepsilon - 1)/(\varepsilon + 1)$. We work in the quasi-static limit (retardation neglected, valid for
+in-plane wave vectors $Q \gg \omega/c$), with the electrostatics in SI form, $\nabla^2\phi = -\rho/\varepsilon_0$; the
+Hartree atomic units follow from $e = m = \hbar = 4\pi\varepsilon_0 = 1$, that is from $1/\varepsilon_0 \to 4\pi$.
+
+\section{Charges in a plane: charge waves and their potential}
+\label{sec:charge_wave}
+
+This section describes a charge distribution confined to a plane, and its Coulomb potential, in terms of in-plane
+wave vectors, the language used in the rest of these notes.
+
+A layer is a sheet of macroscopic size. To expand its charge in plane waves we take a finite sheet of area $A$, with
+periodic (Born--von K\'arm\'an) boundary conditions at its edges: the in-plane wave vectors $\Qv$ allowed by these
+conditions form a discrete grid, one point per area $(2\pi)^2/A$ of reciprocal space. The finite area is only a way
+to count the wave vectors: the results of interest are those of the limit $A \to \infty$, in which the grid becomes
+dense and the sums over $\Qv$ become integrals.
+
+The layer also has a periodicity of its own, that of the lattice of its atoms, with a unit cell of area $A_c$,
+reciprocal lattice vectors $\bm{G}_{\parallel}$ and a Brillouin zone (BZ) of area $(2\pi)^2/A_c$. The sheet is then
+made of $N_1 \times N_2$ unit cells along the two lattice vectors, $N_c = N_1N_2$ cells in all and $A = N_c A_c$, and
+each allowed wave vector is written in only one way as $\Qv = \bm{q} + \bm{G}_{\parallel}$, with $\bm{q}$ in the BZ.
+The two sets of vectors have different origins: the lattice fixes the $\bm{G}_{\parallel}$ and the BZ, the size of
+the sheet fixes the grid of allowed $\bm{q}$. The BZ therefore contains $[(2\pi)^2/A_c]/[(2\pi)^2/A] = N_c$ allowed
+$\bm{q}$, as many as the cells of the sheet: they form the $N_1 \times N_2$ $\bm{q}$ grid of plane-wave codes. For
+$A \to \infty$, $\bm{q}$ becomes continuous while $\bm{G}_{\parallel}$ stays discrete. 
+
+\subsection{Charge waves}
+\label{sec:charge_density}
+
+Consider a charge distribution confined to the plane $z = 0$, with zero thickness and surface density $\sigma(\rpar)$
+(charge per unit area): $\rho(\bm{r}) = \sigma(\rpar)\,\delta(z)$, with $\bm{r} = (\rpar, z)$. On the sheet the
+surface density is expanded in plane waves:
+\begin{equation}
+\rho(\bm{r}) = \frac{1}{A}\sum_{\Qv}\sigma_{\Qv}\,e^{i\Qv\cdot\rpar}\,\delta(z) , \qquad
+\sigma_{\Qv} = \int_A d^2r_{\parallel}\;\sigma(\rpar)\,e^{-i\Qv\cdot\rpar} .
+\label{eq:rho_waves}
+\end{equation}
+Each term of the sum is a \emph{charge wave} with wave vector $\Qv$, wavelength $\lambda = 2\pi/Q$ and $Q = |\Qv|$.
+\begin{itemize}
+\item The charge is real, so $\sigma_{-\Qv} = \sigma_{\Qv}^*$, and the waves $\pm\Qv$ add up to
+  $(2|\sigma_{\Qv}|/A)\cos(\Qv\cdot\rpar + \theta_{\Qv})$, with $\theta_{\Qv}$ the phase of $\sigma_{\Qv}$: stripes
+  normal to $\Qv$, alternately positive and negative, each of width $\lambda/2$.
+\item Since $\int_A d^2r_{\parallel}\,e^{i\Qv\cdot\rpar} = A\,\delta_{\Qv,\bm{0}}$, a wave with $\Qv \neq 0$ contains
+  as much positive as negative charge. The net charge of the plane is carried by the term $\Qv = 0$ alone:
+  $\sigma_{\bm{0}} = \int_A d^2r_{\parallel}\,\sigma$ is the total charge and $\bar{\sigma} = \sigma_{\bm{0}}/A$ the
+  average surface density. The waves with $\Qv \neq 0$ describe how the charge is distributed in the plane around
+  this average.
+\item A point charge $q$ at the origin, $\sigma = q\,\delta(\rpar)$, has $\sigma_{\Qv} = q$ for every $\Qv$. The
+  term $\Qv = 0$ spreads the charge uniformly over the area $A$; the other waves, which add up in phase at the origin
+  and cancel elsewhere, gather it into a point.
+\item A density with the periodicity of the lattice, such as the ground-state density of the layer, has only the
+  components $\bm{q} = 0$: $\sigma_{\Qv} = N_c\,\sigma_{\bm{G}_{\parallel}}\,\delta_{\bm{q},\bm{0}}$, with
+  $\sigma_{\bm{G}_{\parallel}}$ the same integral over one cell. The term $\bm{G}_{\parallel} = 0$ is its average and
+  those with $\bm{G}_{\parallel} \neq 0$ its modulation within the unit cell. Components with $\bm{q} \neq 0$
+  describe perturbations without the periodicity of the lattice, such as an added charge or an induced density wave.
+\end{itemize}
+For a large area the sums become integrals,
+$A^{-1}\sum_{\Qv} \to \int d^2Q/(2\pi)^2 = \sum_{\bm{G}_{\parallel}}\int_{\mathrm{BZ}} d^2q/(2\pi)^2$.
+
+\subsection{The potential of a charge wave}
+\label{sec:potential_wave}
+
+\paragraph{Poisson equation for each wave.} The potential is expanded in the same way,
+\begin{equation}
+\phi(\bm{r}) = \frac{1}{A}\sum_{\Qv}\phi_{\Qv}(z)\,e^{i\Qv\cdot\rpar} .
+\end{equation}
+The two factors of each term depend on separate coordinates, so $\partial_z^2$ acts only on $\phi_{\Qv}(z)$ and the
+in-plane derivatives only on the exponential (there are no mixed terms):
+$\nabla^2[\phi_{\Qv}(z)\,e^{i\Qv\cdot\rpar}] = [\phi''_{\Qv}(z) - Q^2\phi_{\Qv}(z)]\,e^{i\Qv\cdot\rpar}$. Since plane
+waves with different $\Qv$ are linearly independent, the Poisson equation $\nabla^2\phi = -\rho/\varepsilon_0$ splits
+into one ordinary differential equation for each wave vector:
+\begin{equation}
+\phi''_{\Qv}(z) - Q^2\,\phi_{\Qv}(z) = -\frac{\sigma_{\Qv}}{\varepsilon_0}\,\delta(z) .
+\label{eq:poisson_Q}
+\end{equation}
+The potential at wave vector $\Qv$ is produced only by the charge at the same wave vector: the waves are independent.
+This is a consequence of the translational invariance of empty space along the plane, and it holds also in the
+presence of a substrate that is homogeneous in the plane.
+
+\paragraph{Conditions at the plane.} Away from the plane the right-hand side of Eq.~\eqref{eq:poisson_Q} vanishes.
+The plane is crossed by integrating Eq.~\eqref{eq:poisson_Q} over a thin slab $-\eta < z < \eta$:
+\begin{equation}
+\phi'_{\Qv}(\eta) - \phi'_{\Qv}(-\eta) - Q^2\int_{-\eta}^{\eta}\phi_{\Qv}(z)\,dz
+= -\frac{\sigma_{\Qv}}{\varepsilon_0} .
+\end{equation}
+For $\eta \to 0$ the integral of the finite potential vanishes: the $\delta$ function of the charge must be balanced
+by a step of $\phi'_{\Qv}$, while $\phi_{\Qv}$ itself is continuous (a step of $\phi_{\Qv}$ would give a $\delta$ in
+$\phi'_{\Qv}$ and a $\delta'$ in $\phi''_{\Qv}$, the charge of a double layer of dipoles, which is not present). The
+two matching conditions are therefore
+\begin{equation}
+\phi_{\Qv}(0^+) = \phi_{\Qv}(0^-) , \qquad
+\phi'_{\Qv}(0^+) - \phi'_{\Qv}(0^-) = -\frac{\sigma_{\Qv}}{\varepsilon_0} .
+\label{eq:jump}
+\end{equation}
+Their meaning is clearer in terms of the field $\bm{E} = -\nabla\phi$, whose component at wave vector $\Qv$ is
+$\bm{E}_{\Qv}(z) = -i\Qv\,\phi_{\Qv}(z) - \hat{\bm{z}}\,\phi'_{\Qv}(z)$. The first condition says that the
+tangential field is continuous across the plane. The second says that the normal field jumps by the surface charge,
+$E_{z,\Qv}(0^+) - E_{z,\Qv}(0^-) = \sigma_{\Qv}/\varepsilon_0$, or, summing over $\Qv$,
+$E_z(\rpar,0^+) - E_z(\rpar,0^-) = \sigma(\rpar)/\varepsilon_0$ at every point of the plane. This is Gauss's law for
+a flat box enclosing a small piece of the plane: the flux of $\bm{E}$ through its upper and lower faces is the
+enclosed charge divided by $\varepsilon_0$, and the lateral faces do not contribute when the box is thin. Field lines
+start on the positive charges of the plane and end on the negative ones; the jump of $\phi'$ measures how many lines
+start or end at each point.
+
+\paragraph{The uniform component, $\Qv = 0$.} For $\Qv = 0$ Eq.~\eqref{eq:poisson_Q} reads
+$\phi''_{\bm{0}} = -(\sigma_{\bm{0}}/\varepsilon_0)\,\delta(z)$, so the potential is linear in $z$ on each side of
+the plane. The conditions~\eqref{eq:jump} give $\phi_{\bm{0}}(z) = c - \sigma_{\bm{0}}|z|/(2\varepsilon_0)$, with
+$c$ an arbitrary constant. With the average surface density $\bar{\sigma} = \sigma_{\bm{0}}/A$
+(Sec.~\ref{sec:charge_density}), the contribution of this component to the potential and to the field is
+\begin{equation}
+\frac{\phi_{\bm{0}}(z)}{A} = \frac{c}{A} - \frac{\bar{\sigma}}{2\varepsilon_0}\,|z| , \qquad
+\bm{E} = \frac{\bar{\sigma}}{2\varepsilon_0}\,\mathrm{sgn}(z)\,\hat{\bm{z}} ,
+\label{eq:phi_uniform}
+\end{equation}
+the field of a uniformly charged infinite plane: uniform on each side, normal to
+the plane and pointing away from it for $\bar{\sigma} > 0$, with half of the flux going up and half going down. It
+never decays, the potential grows linearly with the distance, and the constant $c$ cannot be fixed by requiring the
+potential to vanish far away: an infinite charged plane has no finite potential with respect to infinity.
+
+In a neutral layer the charge of the electrons compensates that of the nuclei and $\sigma_{\bm{0}} = 0$: the uniform
+component is absent. This is a consequence of neutrality, not of periodicity (the waves with $\Qv \neq 0$ carry no
+net charge). 
+
+\paragraph{A charge wave, $\Qv \neq 0$.} Away from the plane the solutions are $e^{\pm Qz}$. With no other charges
+the potential must vanish far from the plane, which selects $e^{-Qz}$ above and $e^{Qz}$ below; continuity at
+$z = 0$ requires the same amplitude $C$ on the two sides, so $\phi_{\Qv}(z) = C\,e^{-Q|z|}$. Its derivative jumps
+from $+QC$ at $0^-$ to $-QC$ at $0^+$, and the second condition~\eqref{eq:jump}, $-2QC = -\sigma_{\Qv}/\varepsilon_0$,
+fixes the amplitude:
+\begin{equation}
+\phi_{\Qv}(z) = \frac{\sigma_{\Qv}}{2\varepsilon_0 Q}\,e^{-Q|z|} .
+\label{eq:phi_free}
+\end{equation}
+At the plane the normal field is $E_{z,\Qv}(0^\pm) = \pm\sigma_{\Qv}/(2\varepsilon_0)$: as for the uniform plane,
+half of the field lines go up and half go down. The difference is that the lines leaving a positive stripe end on
+the neighbouring negative stripes, so the field decays as $e^{-Q|z|}$ instead of extending to infinity.
+
+\section{The substrate: dressed Coulomb interaction}
+\label{sec:image}
+
+We now place the sheet at a distance $d$ above a substrate. The substrate is a semi-infinite dielectric that fills
+the half-space $z < 0$, with a static and local dielectric constant $\varepsilon$: it stands for the electronic
+polarization of a wide-gap insulator, whose excitations lie well above those of the layer. Two planes matter from now
+on: the \emph{sheet}, at $z = d$, which carries the charge waves, and the \emph{surface of the substrate}, at
+$z = 0$, which separates the vacuum ($\varepsilon = 1$) from the dielectric.
+
+The dielectric constant depends only on $z$, so the system is still invariant under translations along the plane and,
+as in Sec.~\ref{sec:potential_wave}, different wave vectors do not mix: a charge wave $\Qv$ in the sheet polarizes the
+substrate only at the same $\Qv$. We can then find the potential of one wave at a time and add the waves at the end
+($\Qv \neq 0$, since the uniform component is absent in a neutral layer). A real substrate, with its own atomic
+lattice, would also couple $\Qv$ to $\Qv + \bm{G}$, with $\bm{G}$ the reciprocal vectors of that lattice; these terms
+are neglected here.
+Between the two planes and on either side of them the potential satisfies $\phi''_{\Qv} - Q^2\phi_{\Qv} = 0$, so we
+write
+\begin{equation}
+\phi_{\Qv}(z) = \frac{\sigma_{\Qv}}{2\varepsilon_0 Q}\times
+\begin{cases}
+e^{-Q|z-d|} + R\,e^{-Q(z+d)} & z > 0 , \\
+T\,e^{Q(z-d)} & z < 0 ,
+\end{cases}
+\label{eq:phi_sub_ansatz}
+\end{equation}
+which already contains the charge wave of the sheet, Eq.~\eqref{eq:phi_free}, and decays for $z \to \pm\infty$. On
+the surface of the substrate there is no free charge: the potential (tangential field) and the normal displacement
+field $D_z = -\varepsilon_0\varepsilon\,\partial_z\phi$ (with $\varepsilon = 1$ in the vacuum) are continuous across
+$z = 0$, which gives $1 + R = T$ and $1 - R = \varepsilon T$, so that
+\begin{equation}
+R = -\beta , \qquad T = 1 - \beta = \frac{2}{\varepsilon + 1} , \qquad
+\beta = \frac{\varepsilon - 1}{\varepsilon + 1} .
+\label{eq:image_coefficients}
+\end{equation}
+In the vacuum ($z > 0$) the potential is that of the charge wave plus an \emph{image} charge wave
+$-\beta\sigma_{\Qv}$ in the plane $z = -d$, the mirror image of the sheet. The image is the field of the polarization
+charge induced on the surface of the substrate. The normal field $E_z$, unlike $D_z$, jumps at $z = 0$, and the second
+condition~\eqref{eq:jump}, which holds for any charge confined to a plane, gives the charge responsible for the jump:
+\begin{equation}
+\sigma^{\mathrm{pol}}_{\Qv} = -\varepsilon_0\left[\partial_z\phi_{\Qv}(0^+) - \partial_z\phi_{\Qv}(0^-)\right]
+= -\beta\,e^{-Qd}\,\sigma_{\Qv} .
+\label{eq:sigma_pol}
+\end{equation}
+The induced charge is proportional to the field of the wave at the surface of the substrate, hence to $e^{-Qd}$, and
+has the opposite sign.
+
+In the plane of the sheet the potential has two sources: the charge wave itself, which lies in that plane, and the
+polarization charge~\eqref{eq:sigma_pol}, which lies at the distance $d$. Each is a charge wave in a plane, with the
+potential of Eq.~\eqref{eq:phi_free}, so that
+\begin{equation}
+\phi_{\Qv}(d) = \frac{\sigma_{\Qv}}{2\varepsilon_0 Q} + \frac{\sigma^{\mathrm{pol}}_{\Qv}}{2\varepsilon_0 Q}\,e^{-Qd}
+= \vt(Q)\,\sigma_{\Qv} ,
+\label{eq:phi_sheet}
+\end{equation}
+the same result as that of the image wave $-\beta\sigma_{\Qv}$ at the distance $2d$. The coefficient $\vt(Q)$ is the
+potential produced in the sheet by a charge wave of unit amplitude of the sheet, including the field of the
+polarization that the wave induces in the substrate: it is the Coulomb interaction between two charges of the sheet,
+dressed by the substrate. Its two terms are
+\begin{equation}
+\vt(Q) = v(Q) + \vemb(Q) , \qquad
+v(Q) = \frac{1}{2\varepsilon_0 Q} , \qquad
+\vemb(Q) = -\beta\,\frac{e^{-2Qd}}{2\varepsilon_0 Q} .
+\label{eq:vt_sheet}
+\end{equation}
+\begin{itemize}
+\item $v(Q)$ ($2\pi/Q$ in atomic units) is the bare Coulomb interaction: the potential of the charge wave in its own
+  plane without the substrate.
+\item $\vemb(Q)$ is the embedding term, the contribution of the substrate: the potential that the polarization
+  charge induced by the wave produces back in the sheet. It is negative, because the polarization charge has the
+  opposite sign, and it contains $e^{-Qd}$ twice, once for the field of the wave that reaches the substrate and once
+  for the field of the polarization charge that comes back to the sheet.
+\end{itemize}
+The ratio $\vt/v = 1 - \beta e^{-2Qd} \equiv 1/\epsenv(Q)$ defines the effective dielectric function of the
+environment, $\vt(Q) = 1/[2\varepsilon_0 Q\,\epsenv(Q)]$: the factor by which the substrate reduces the interaction
+at each wave vector.
+
+Since every wave has its image in the plane $z = -d$, so does a point charge in the sheet: an image charge $-\beta$
+times its own, at the mirror position. In real space the dressed interaction is therefore
+\begin{equation}
+\vt(\rpar) = \frac{1}{4\pi\varepsilon_0}\left[\frac{1}{|\rpar|} - \frac{\beta}{\sqrt{|\rpar|^2 + 4d^2}}\right] :
+\label{eq:vt_real}
+\end{equation}
+a charge in the sheet interacts with another charge and with its image.
+
+The ratio $\vt/v = 1/\epsenv$ is shown in Fig.~\ref{fig:sheet_modes}(a). The limits are:
+\begin{itemize}
+\item Short wavelengths, $Qd \gg 1$: $\vt \to v$. The field of the wave decays before reaching the substrate,
+  which is invisible.
+\item Long wavelengths, $Qd \ll 1$: $\vt \to v\,2/(\varepsilon + 1)$. The sheet behaves as if it lay on the surface
+  of the substrate, with the average dielectric constant $(1 + \varepsilon)/2$ of the two media.
+\item $\varepsilon \to 1$: $\beta = 0$ and $\vt = v$. Metal, $\varepsilon \to \infty$: $\beta = 1$ and
+  $\vt \to d/\varepsilon_0$ for $Q \to 0$; the sheet and its image form a capacitor, and the long range of the
+  interaction is removed.
+\end{itemize}
+The substrate thus does not act on the charges of the sheet directly: it changes the Coulomb interaction between
+them, only for wavelengths larger than about $d$, and turns $v(Q)$ into a wave-vector dependent screened interaction.
+
+\section{Screening by a polarizable layer on the substrate}
+\label{sec:layer_screening}
+
+In Sec.~\ref{sec:image} the charges of the sheet were given: they feel the dressed interaction $\vt$, but they do not
+redistribute in response to it, and the substrate is the only medium that polarizes. A real layer is polarizable
+too: when a charge is added to it, the other charges of the layer move under its potential, and the induced charge
+screens that potential further. In this section we add the response of the layer to that of the substrate and compute
+$W$, the screened interaction between two charges of the layer, first for a generic response and then for the
+simplest example, a sheet of charged harmonic oscillators.
+
+The layer is still a plane of zero thickness, and we neglect local fields. In a crystal a potential with wave vector
+$\Qv$ induces charge also at $\Qv + \bm{G}_{\parallel}$, because the response varies within the unit cell; without
+this effect the induced charge has the same $\Qv$ as the potential, and each wave vector can be treated separately.
+
+\subsection{Response of the layer and screened interaction}
+\label{sec:screened_W}
+
+We describe the layer by its linear response. A potential wave $\phi_{\Qv}\,e^{-i\omega t}$ in the plane of the layer
+moves its charges and induces a charge wave with the same $\Qv$, proportional to the potential when this is small:
+\begin{equation}
+\sigma^{\mathrm{ind}}_{\Qv} = \chi_0(Q,\omega)\,\phi_{\Qv} .
+\label{eq:chi0_layer}
+\end{equation}
+The coefficient $\chi_0$ is the density response function of the layer, the induced charge per unit area per unit
+potential.
+\begin{itemize}
+\item $\phi_{\Qv}$ is the total potential acting on the charges of the layer, including that of the induced charge
+  itself: $\chi_0$ describes how the charges respond to the force they actually feel, and is a property of the layer
+  alone.
+\item The substrate acts on the layer only through the potential (no charge transfer, no hybridization), and this
+  is already contained in $\phi_{\Qv}$: $\chi_0$ is the same with and without the substrate.
+\item In the static limit $\chi_0 < 0$: the induced charge has the sign opposite to that of the potential, which it
+  therefore reduces. This is screening.
+\end{itemize}
+Explicit forms of $\chi_0$ are given below, for an insulating layer and for a sheet of oscillators.
+
+Let now an external charge wave $\sigma^{\mathrm{ext}}_{\Qv}\,e^{-i\omega t}$ be placed in the plane of the layer.
+The total potential is that of all the charges in the plane, external and induced, each dressed by the substrate:
+$\phi_{\Qv} = \vt(Q)\,[\sigma^{\mathrm{ext}}_{\Qv} + \sigma^{\mathrm{ind}}_{\Qv}]$, from Eq.~\eqref{eq:phi_sheet}.
+Since the induced charge depends in turn on $\phi_{\Qv}$ through Eq.~\eqref{eq:chi0_layer}, the potential is fixed
+self-consistently:
+\begin{equation}
+\phi_{\Qv} = W(Q,\omega)\,\sigma^{\mathrm{ext}}_{\Qv} , \qquad
+W = \frac{\vt}{\varepsilon_{\mathrm{sh}}} , \qquad
+\varepsilon_{\mathrm{sh}}(Q,\omega) = 1 - \vt(Q)\,\chi_0(Q,\omega) .
+\label{eq:eps_sheet}
+\end{equation}
+$W$ is the potential produced in the plane by an external charge wave of unit amplitude, screened by the substrate
+and by the layer: the screened interaction between two charges of the layer. Equivalently,
+$\sigma^{\mathrm{ind}}_{\Qv} = \tilde{\chi}\,\vt\,\sigma^{\mathrm{ext}}_{\Qv}$ and $W = \vt + \vt\,\tilde{\chi}\,\vt$,
+with $\tilde{\chi} = \chi_0/(1 - \vt\chi_0)$ the response of the layer to the external potential
+$\vt\sigma^{\mathrm{ext}}_{\Qv}$; unlike $\chi_0$, $\tilde{\chi}$ depends on the substrate. This is the structure of
+the RPA with the bare interaction replaced by $\vt$: the response of the layer is unchanged, the substrate enters
+only through the interaction between its charges, and the screening of the layer has to be built with $\vt$, not
+with $v$.
+
+\paragraph{Insulating layer.} In an insulating layer the induced charge comes, at long wavelengths, from an in-plane
+polarization $\bm{P}_{\Qv} = \chi_{2\mathrm{D}}(\omega)\,\bm{E}_{\Qv}$, with $\chi_{2\mathrm{D}}$ the polarizability
+per unit area. A polarization wave carries the charge $\sigma_{\Qv} = -i\Qv\cdot\bm{P}_{\Qv}$ (from
+$\sigma = -\nabla_{\parallel}\cdot\bm{P}$) and the in-plane field is $\bm{E}_{\Qv} = -i\Qv\,\phi_{\Qv}$, so that
+\begin{equation}
+\chi_0(Q,\omega) = -Q^2\chi_{2\mathrm{D}}(\omega) , \qquad
+\varepsilon_{\mathrm{sh}}(Q,\omega) = 1 + \frac{r_0(\omega)\,Q}{\epsenv(Q)} , \qquad
+r_0(\omega) = \frac{\chi_{2\mathrm{D}}(\omega)}{2\varepsilon_0}
+\label{eq:eps_insulator}
+\end{equation}
+($r_0 = 2\pi\chi_{2\mathrm{D}}$ in atomic units). In the static limit, with $r_0 = r_0(0)$,
+\begin{equation}
+W(Q) = \frac{1}{2\varepsilon_0 Q\left[\epsenv(Q) + r_0Q\right]} .
+\label{eq:W_keldysh}
+\end{equation}
+This is the Keldysh form of the screened interaction in a thin layer, with the environment described by $\epsenv(Q)$
+and the screening of the layer by the length $r_0$. For $Qr_0 \ll \epsenv$, at distances larger than about
+$r_0/\epsenv$, the layer does not screen and $W \simeq \vt$; for $Qr_0 \gg \epsenv$ the screening of the layer
+dominates, $W \simeq 1/(2\varepsilon_0 r_0Q^2)$, and $W$ no longer depends on the substrate. $W$ is the interaction
+felt by a charge added to the layer, which is the subject of the GW problem. A metallic or Dirac layer has a
+different $\chi_0$, but the same structure~\eqref{eq:eps_sheet}.
+
+\subsection{Example: a sheet of harmonic oscillators}
+\label{sec:oscillators}
+
+The sheet contains $n$ oscillators per unit area. Each is a particle of charge $e$ and mass $m$, bound to its site
+by a harmonic force of frequency $\omega_0$, with damping $\gamma$, and free to move in the plane. In the continuum
+(mean-field) description the displacement $\bm{u}$ obeys
+\begin{equation}
+m\left(\ddot{\bm{u}} + \gamma\dot{\bm{u}} + \omega_0^2\bm{u}\right) = e\,\bm{E}(\rpar, t) ,
+\label{eq:eom}
+\end{equation}
+where $\bm{E}$ is the in-plane field in the sheet. For fields $\propto e^{-i\omega t}$ the polarization
+$\bm{P} = ne\bm{u}$ is $n\alpha(\omega)\bm{E}$, so that
+\begin{equation}
+\chi_{2\mathrm{D}}(\omega) = n\,\alpha(\omega) , \qquad
+\alpha(\omega) = \frac{e^2/m}{\omega_0^2 - \omega^2 - i\gamma\omega} ,
+\label{eq:alpha}
+\end{equation}
+with static polarizability $\alpha(0) = e^2/(m\omega_0^2)$ and $r_0 = n\alpha(0)/(2\varepsilon_0)$. Only the
+longitudinal component of $\bm{P}$ (along $\Qv$) carries charge; the transverse one, in the quasi-static limit,
+produces no field.
+
+\paragraph{A single pole.} Eqs.~\eqref{eq:eps_insulator} and~\eqref{eq:alpha} give
+$\varepsilon_{\mathrm{sh}} = (\omega_L^2 - \omega^2 - i\gamma\omega)/(\omega_0^2 - \omega^2 - i\gamma\omega)$, that is
+\begin{equation}
+\begin{gathered}
+\varepsilon_{\mathrm{sh}}^{-1}(Q,\omega) = 1 + \frac{\Omega_Q^2}{\omega^2 + i\gamma\omega - \omega_L^2(Q)} , \qquad
+\Omega_Q^2 = \omega_L^2 - \omega_0^2 , \\
+\omega_L^2(Q) = \omega_0^2\left[1 + \frac{r_0\,Q}{\epsenv(Q)}\right]
+= \omega_0^2 + \frac{n e^2}{2\varepsilon_0 m}\,\frac{Q}{\epsenv(Q)} .
+\end{gathered}
+\label{eq:omegaL}
+\end{equation}
+The screened interaction $W = \vt\,\varepsilon_{\mathrm{sh}}^{-1}$ has a single pole, at the frequency $\omega_L$ of
+the longitudinal mode of the sheet and with width $\gamma$, and the static limit
+$\varepsilon_{\mathrm{sh}}^{-1}(Q,0) = \omega_0^2/\omega_L^2$ of Eq.~\eqref{eq:W_keldysh}. This is the single-pole
+structure assumed by the plasmon-pole approximation of GW codes, exact here: the substrate changes the position and
+the weight of the pole through $\epsenv(Q)$, not its width. The transverse mode stays at
+$\omega_T = \omega_0$. Fig.~\ref{fig:sheet_modes}(b) shows $\omega_L(Q)$ for $r_0 = 5d$.
+\begin{itemize}
+\item $Q \to 0$: $\omega_L \to \omega_0$ for any substrate. The uniform mode is not shifted, because a uniformly
+  polarized sheet produces no field outside and does not polarize the substrate. Optical absorption probes
+  $Q \simeq \omega/c$, many orders of magnitude below $1/d$: the resonance of the sheet on the substrate stays at
+  $\omega_0$. The substrate changes the measured absorption only through the field it reflects onto the sheet
+  (a retardation effect outside this model), not through a shift of the resonance.
+\item Finite $Q$: the splitting $\omega_L^2 - \omega_T^2 = \omega_0^2\,r_0Q/\epsenv(Q)$ comes from the Coulomb
+  coupling between the oscillators, and the substrate reduces it by the factor $1/\epsenv(Q)$, which goes from
+  $2/(1 + \varepsilon)$ at $Qd \ll 1$ to 1 at $Qd \gg 1$. The longitudinal mode is softened at wavelengths larger
+  than $d$.
+\item Metal: $1/\epsenv \simeq 2Qd$ at small $Q$ and $\omega_L^2 \simeq \omega_0^2(1 + 2r_0dQ^2)$: the dispersion
+  becomes quadratic, because the coupling between the oscillators is now short ranged.
+\item Free charges, $\omega_0 \to 0$: $\omega_L^2 = ne^2Q/(2\varepsilon_0 m\,\epsenv)$, the two-dimensional plasmon,
+  with the known factor $(1 + \varepsilon)/2$ of a sheet on a substrate at long wavelengths. This is a check of
+  Eq.~\eqref{eq:omegaL}.
+\end{itemize}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\textwidth]{Figures/sheet_modes.jpeg}
+\caption{(a) Ratio between the dressed and the bare Coulomb interaction in the plane of the sheet,
+Eq.~\eqref{eq:vt_sheet}, for several substrates. (b) Longitudinal mode of the sheet of oscillators,
+Eq.~\eqref{eq:omegaL}, for $r_0 = 5d$: free-standing ($\varepsilon = 1$), on a dielectric with $\varepsilon = 4$
+and on a metal. The transverse mode is at $\omega_0$ in all cases.}
+\label{fig:sheet_modes}
+\end{figure}
+
+\subsection{What the model shows}
+\label{sec:layer_summary}
+
+\begin{itemize}
+\item The substrate does not change the response of the layer: it changes the Coulomb interaction between its
+  charges, $v \to \vt$, and only for wavelengths larger than about $d$. The screening of the layer is built with
+  $\vt$, $\varepsilon_{\mathrm{sh}} = 1 - \vt\chi_0$ and $W = \vt/\varepsilon_{\mathrm{sh}}$, whatever $\chi_0$.
+\item For an insulating layer the static $W$ has the Keldysh form, with the environment in $\epsenv(Q)$ and the
+  screening of the layer in the length $r_0$.
+\item With a single resonance of the layer, $W$ has a single pole, the form of the plasmon-pole approximation. The
+  uniform (optical) mode is not shifted; the longitudinal modes at finite $Q$ are softened.
+\item Unlike the neutral modes, a net charge in the layer interacts with its own image, an effect of order $e^2/(4\pi\varepsilon_0 d)$
+  (the constant $-\beta/(8\pi\varepsilon_0 d)$ of Eq.~\eqref{eq:vt_real} at short distance), screened by the layer
+  through Eq.~\eqref{eq:W_keldysh}. Charged excitations, and pairs of opposite charges at a finite distance, are not
+  described by this model: they are needed to see the renormalization of the quasiparticle gap and of the exciton
+  binding energy.
+\end{itemize}
+
+\end{document}
