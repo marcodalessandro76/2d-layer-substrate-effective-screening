@@ -295,6 +295,12 @@ computational procedure (possibly a code implementation).
 - Exchange kernel of the BSE with v or vt.
 - Content and conventions of the Yambo screening databases: to be verified on the Lumen source (cluster) before any
   implementation.
+- Slab cutoff checked on the Lumen source (2026-11-11, docs/02 Sec. 4 B): `cutoff_slab.F` = Ismail-Beigi/Rozzi,
+  v_cut = 4pi/|q+G|^2 [1 - e^{-Q L/2} cos(G_z L/2)], truncation in z - z' (translation invariant: no centring issue,
+  layer position in the cell irrelevant); condition: whole system (both layers) within L/2 = 10.6 A for c = 40 bohr
+  (to verify for the bilayer: planar density or GW gap vs L). RIM_W only with slab, refits W = v f v/(1 - v f) near
+  q = 0 with the bare v_cut (conflict with a vt-based screening: to analyse). `EpsEnv` input = uniform v -> v/eps_env
+  everywhere (also Sigma_x): not our vt.
 - TO ANALYSE IN THE COMPUTATIONAL STEP (user, 2026-11-11, "very important"; details in `docs/02_...`, Sec. 4):
   (A) which Coulomb interaction goes where: v -> vt only in W; ground state and Sigma_x = iGv of the free-standing
   layer; substrate in the correlation W - v = v_emb + vt chit^L vt (last paragraph of Notes Sec. 2.1); how this maps

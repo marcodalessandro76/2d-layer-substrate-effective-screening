@@ -76,6 +76,39 @@ understand how to combine it, correctly and consistently, with the embedding ter
 The 2D formulation of Sec. 1 (mixed representation, supercell, truncation, small-q behaviour), the next step of the
 notes, is meant to prepare this analysis.
 
+**B, checked on the Lumen source (2026-11-11, branch `bug-fixes`, `~/Applications/Lumen/src`, commit 5ec7644).**
+- `CUTGeo='slab z'` -> `src/coulomb/cutoff_slab.F` (called by `cutoff_driver.F`, from `col_driver.F`): bare_qpg
+  (= |q+G|, v = 4pi/bare_qpg^2) is divided by sqrt(prefactor), i.e.
+  v_cut(q+G) = 4pi/|q+G|^2 [1 - e^{-|q_par+G_par| L/2} cos((q_z+G_z) L/2)],  L = cell height (alat(idir(1)), z here).
+  This is the Ismail-Beigi / Rozzi slab truncation: the Fourier transform over one cell of 1/|r - r'| set to zero for
+  |z - z'| > L/2 (the sin term of the general transform vanishes because q_z + G_z = 2pi n/L). The truncation acts on
+  the RELATIVE coordinate z - z' only: it is translation invariant along z, so there is NO centring of the cutoff
+  with respect to the cell origin and the position of the layers in the cell (our bilayer at z = +-d/2) does not
+  matter. Condition of validity: all the charge of the system (occupied densities, and the transition densities
+  phi_occ phi_empty that enter chi0) within a window of width L/2 along z, so that within one cell |z - z'| < L/2 and
+  every replica is at |z - z'| > L/2. For the bilayer with c = L = 40 bohr: L/2 = 10.6 A vs an extent of about
+  d + 2 x (density tail) ~ 9-10 A [estimate, not checked]: to be verified on the planar-averaged density (pp.x) or by
+  a convergence of the GW gap with L before production.
+- q -> 0 (iq = 1, G = 0) without RIM: bare_qpg(1,1) from an analytic average of v_cut over a disc of area equal to
+  the q-cell (series in R_circle * L/2). With RIM: `rim_integrate_v.F` integrates the same v_cut over random points.
+- RIM_W (`rim_integrate_w.F`): implemented ONLY with the slab cutoff (error otherwise). It integrates
+  v f v / (1 - v f) over the q-cell, with sqrt(v_cut) of the same form and f a quadratic-in-q fit of the screening
+  (coefficients `f_coeff` built in `qp/QP_interpolate_W.F` from vX of the em1d database; "eq. 14 + 16 of npj Comput.
+  Mater. 9, 44 (2023)", Guandalini et al. [reference as written in the source comment]). Relevant for us: RIM_W
+  rebuilds W near q = 0 from the stored screening assuming W = v/(1 - v f) with the bare v_cut, so a vt-based screening
+  written in the databases would be partly overwritten in the q-cell around Gamma unless RIM_W is adapted or
+  switched off -> to analyse with item A.
+- Existing environment option: input variable `EpsEnv` (verbosity RL, default 1; `INIT_load.F`): in `col_driver.F`
+  bare_qpg *= sqrt(eps_env) and RIM_qpg /= eps_env, i.e. v -> v/eps_env UNIFORMLY (all q, G, also in the bare exchange
+  and in the screening); the analogous rescaling in `rim_integrate_w.F` and `QP_interpolate_W.F` is commented out.
+  This is a constant, q-independent dielectric rescaling of the whole Coulomb interaction, not our vt = v + v_emb
+  (which acts only in W and depends on Q and z, z'): not usable as is, but it shows where the code changes v.
+- Consequence for the effective scheme: since v_cut depends only on z - z', the term v_cut chi^S v_cut built with the
+  chi0 of the "substrate" monolayer computed in the same box (ML_bot) gives the same interlayer interaction as in the
+  explicit bilayer, with the same truncation; the replicas of both layers are removed in the same way. The cutoff
+  condition must hold for the WHOLE bilayer (layer + substrate), not for the layer alone. For a semi-infinite
+  substrate (planar formula, g(Q, w)) the question of B remains open.
+
 ## 5. Validation ideas
 - Trivial substrate (g = 0): the modified databases must reproduce the original ones bit by bit.
 - Analytic limits: a point-like / Keldysh model of the layer with g = (eps-1)/(eps+1), compare with the simple models.
