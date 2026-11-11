@@ -28,7 +28,10 @@ planar formula of Sec. 2.2 also holds for a finite slab below the layer).
 Plan (to be detailed and agreed before any run):
 1. DFT of monolayer and bilayer (AA', AB) with the same alat, box, cutoffs; compare the bands. Notebook
    `hBN_bilayer/DFT_Analysis.ipynb` (2026-11-11): SG15 ONCV PBE SR, no SOC, a = 2.504 A (experimental, fixed),
-   d = 3.33 A (fixed), bilayer at z = +-d/2, monolayer at z = +d/2 (top layer).
+   d = 3.33 A (fixed), bilayer at z = +-d/2, monolayers in the position of each layer. Done 2026-11-11: ecut 80 Ry,
+   k 12, c = 40 bohr; PBE gaps ML 4.714 (K-K), AA' 4.541 (K-M, direct at K 4.765), AB 4.536 (K-M, direct 4.585).
+   States at K degenerate in AA' (no hybridization), strongly split at M and Gamma (pi*, NFE): the explicit vs
+   effective comparison must target the QP corrections at K; AA' is the clean case.
 2. Explicit GW of the bilayer (Yambo, slab cutoff, PPA or full frequency).
 3. Effective GW of the monolayer: (a) full matrix, chi0^S = translated monolayer chi0 in the same basis (no-overlap
    only, Umklapp included; equivalent to Guo's chi_eff-sum); (b) planar formula with g(Q, w) (Umklapp neglected).
