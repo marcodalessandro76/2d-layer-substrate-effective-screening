@@ -25,6 +25,27 @@ computational procedure (possibly a code implementation).
 - Literature library: `D:\RICERCA\DFT AND MANY BODY\REFERENCES` (catalogue and reading notes in `_Catalog/`, own
   CLAUDE.md). Key folders: `03 Equilibrium MBPT - GW and BSE`, `11 2D materials`.
 
+## Computational workflow (MPPI, clusters) -- details in `docs/03_mppi_workflow_and_2D_convergence.md`
+- MPPI (`D:\Projects\Research\MPPI`, v1.3; on ismhpc `~/Applications/MPPI`, editable install, git pull only):
+  PwInput/YamboInput -> QeCalculator/YamboCalculator(RunRules) -> Dataset(run, fetch_results, PostProcessing) ->
+  parsers. Patterns, variable names and parallelization roles in docs/03, Sec. 1.
+- Key rules: nscf for p2y with `force_symmorphic=True` (otherwise Lumen yambo silently runs nothing); SAVE with
+  `Tools.init_yambo_dir(yambo_dir, input_dir, p2y_command='OMP_NUM_THREADS=1 mpirun -np 1 p2y', yambo_command=...)`
+  (p2y ends with MPI_ABORT but the SAVE works); 2D: `CUTGeo='slab z'` + RIM (RandQpts, RandGvec) + RIM_W
+  (RandGvecW), `LongDrXp=[1,1,0]`; shared databases through the `jobname` list. Current conventions (LiF production
+  notebook, they supersede the older GW notebooks; docs/03 Sec. 1.3): keep `reformat=True` (no `reformat=False`),
+  calculator factory per section, `append_run(..., name=..., jobname=[...], skip=True)`, run names <= 100 chars,
+  restarts with `skip=False, clean_restart=False, activate_BeeOND=False`. ismhpc rules: <= 3 nodes at a time, all12h
+  (slownodes > 12 h), exclude wnode07; default yambo = Lumen `bug-fixes` build since 2026-10-23.
+- ismhpc: QE and yambo need different environments, through `RunRules(pre_processing=
+  '/home/dalessandro/module_script/qe_module' | '.../yambo_module')`; production RunRules in docs/03, Sec. 2
+  (all12h, 32 cores/node, BeeOND). Leonardo (GPU) RunRules in the germanene notebooks. Drive ismhpc from the laptop
+  with `ssh -o BatchMode=yes -o ClearAllForwardings=yes ismhpc '...'`. Ask the user before ANY QE/Yambo/p2y run.
+- Convergence protocol for 2D layers (from the MoS2 and germanene notebooks, docs/03 Secs. 3-4): DFT ecut x k, alat
+  and buckling, vacuum; GW: HF with RIM, EXXRLvcs = VXCRLvcs, k; PPA NGsBlkXp -> BndsRnXp -> GbndRnge (+ BG
+  terminator) -> RandGvecW -> k grid with extrapolation; QP bands per k point.
+- Where the project lives on the cluster (clone of the GitHub repo, data not tracked): to be agreed with the user.
+
 ## Framing (details, equations and page references in `docs/01_context_and_literature.md`)
 - Reference works (Blase–Duchemin group): Amblard et al. JCP 159, 164107 (2023); Amblard et al. JCP 160, 154104
   (2024); Duchemin et al. JCTC 2024 (arXiv:2409.01669). Common exact frame for non-overlapping subsystems:
@@ -66,8 +87,8 @@ computational procedure (possibly a code implementation).
   "Status" section (with the date) when the notes or the work reach a new stage.
 - `Notes/`: technical notes, LaTeX, same style as LiF (`main.tex` with `\input{header.tex}`, notation macros in
   `header.tex`, `biblio.bib` with keys from the library catalogue `REFERENCES/_Catalog/library.bib`, bibtex unsrt).
-  After each change build `Notes/main.pdf` in place with `latexmk -pdf` and check the log (errors, Overfull \hbox,
-  undefined references); the PDF is not tracked. Do not refer to sections that do not exist yet.
+  After each change build `Notes/main.pdf` (and `Notes/models.pdf` if models.tex changed) in place with
+  `latexmk -pdf` and check the log (errors, Overfull \hbox, undefined references); the PDFs are not tracked. Do not refer to sections that do not exist yet.
   Figures: `Notes/make_figures.py` (registry `FIGURES`, run from `Notes/` with the miniconda python, saves jpeg in
   `Notes/Figures/`, included with `\includegraphics{Figures/<name>.jpeg}`).
   State (2026-11-10; no introduction, by the user's request):
@@ -152,8 +173,16 @@ computational procedure (possibly a code implementation).
   e^{-|Q+G^S| z}, |G^S| d ~ 10 for hBN at d ~ 3 A); mixed representation K(Q;z,z'); v(Q;z,z') = e^{-Q|z-z'|}/(2 eps0 Q);
   v_emb(Q;z,z';w) = -g(Q,w) e^{-Qz} e^{-Qz'}/(2 eps0 Q), g = -(1/(2 eps0 Q)) int int e^{Qz1} chi^S e^{Qz2}
   (eq:vemb_planar, derived here): rank one at each Q, static g > 0, dielectric half-space g = beta (eps_inf) gives
-  eq:vt_sheet, g computable in the substrate's own cell. Ends by pointing to Secs. 4-5 as the g = beta, zero-thickness
-  case.
+  eq:vt_sheet, g computable in the substrate's own cell; made self-contained on 2026-11-11 (in-plane expansion and
+  v(Q;z,z') stated in place, no reference to the moved sections). 2.3 "Example: a dielectric half-space and an
+  insulating layer" (`sec:embedding_example`, 2026-11-11, from the old Secs. 4-5): image construction in one sentence
+  (details in models.tex), v_emb = -beta e^{-Q(z+z')}/(2 eps0 Q), i.e. g = beta; vt(Q) and eps_env (eq:vt_sheet);
+  real-space vt with the image (eq:vt_real, the user's "Eq. 34", kept on purpose); limit bullets; Fig. `vt_ratio`;
+  insulating layer: zero thickness, chi0^L(Q;z,z') = chi0(Q) delta(z-d) delta(z'-d), eq:W_LL reduces to numbers,
+  chi0 = -Q^2 chi_2D, eps~ = 1 + r0 Q/eps_env, static Keldysh W (eq:W_keldysh).
+  `Notes/models.tex` (companion notes, standalone, same header.tex, built separately with `latexmk -pdf models.tex`;
+  created 2026-11-11 by moving the old Secs. 3-5 of main.tex unchanged, plus a short intro with units and the link
+  g = beta to the main notes; numbering there: 1 = old Sec. 3, 2 = old Sec. 4, 3 = old Sec. 5). Its content:
   Sec. 3 "Charges in a plane: charge waves and their potential" (`sec:charge_wave`; read and found clear by the
   user): intro (units now in Sec. 1), finite sheet of area A with Born-von Karman conditions (discrete Q,
   limit A -> inf), lattice periodicity (N_c cells, Q = q + G_par, lattice fixes G_par and BZ, sheet size fixes the q
@@ -182,20 +211,24 @@ computational procedure (possibly a code implementation).
   2026-11-10: no gamma -> 0 discussion), single-pole structure of the PPA (substrate moves position and weight via
   eps_env, not the width gamma), modes bullets; 5.3 summary. The "Discreteness" paragraph (single-oscillator image shift,
   lattice sums) and its summary bullet were removed (user, 2026-11-10): no main result depended on them.
-  Sec. 5.1 partly repeats Sec. 1 and Sec. 2 (chi0 as response to the total potential; eps_sh, W with vt = the planar
-  case of eq:W_LL): to be trimmed after the 2D step (agreed order 2026-11-11: embedding -> link with Sec. 4 -> 2D form
-  of Sec. 1 -> revision of the old parts).
+  (End of the models.tex content.) The repetition of Secs. 1-2 in the old Sec. 5.1 is resolved by the move: main.tex
+  keeps only the planar example (Sec. 2.3). The next step of main.tex is the 2D form (layer in a supercell: in-plane
+  waves and box counting, to be taken back from models.tex Sec. 1 as needed; mixed representation; slab truncation;
+  small-q behaviour).
   Bibliography restored (2026-11-10) with the first citations (Sec. 1): strinati1988application,
   blase2018introduction, golze2019gw, amblard2024static (entries copied from the catalogue without the
   doctype/keywords/file fields).
   Planned (user, 2026-11-09, not now): the analysis of the effect of the substrate in the GW language (v_emb =
   v chi^S v, link with the Blase-Duchemin papers and their "reaction field"), building on Sec. 1; the removed
   introduction (goal of the notes, chi0 = chi0^L + chi0^S, eq. vt = v + v chi^S v) is recoverable from git history.
-  Figures: `fig:response` (TikZ, Sec. 1) and `sheet_modes` (make_figures.py). Removed on 2026-11-09 at the user's request (recoverable from git history): figures
+  Figures: main.tex `fig:response` (TikZ, Sec. 1) and `vt_ratio` (make_figures.py, Sec. 2.3); models.tex
+  `sheet_modes` (make_figures.py, both panels). Removed on 2026-11-09 at the user's request (recoverable from git history): figures
   `charge_wave_field` and `sheet_potential` (potential profiles of a charge wave above the substrate); the old section on the Coulomb interaction in the plane (point-charge Fourier
   transform, mixed representation, bullets on range, long wavelengths and polarization waves).
 - `docs/`: working notes in markdown (context, literature, plans); `01_context_and_literature.md`,
-  `02_python_route_yambo_databases.md`.
+  `02_python_route_yambo_databases.md` (python route on the Yambo databases; Sec. 4 = points to analyse in the
+  computational step), `03_mppi_workflow_and_2D_convergence.md` (MPPI, clusters, convergence protocol),
+  `04_benchmark_systems.md` (explicit vs effective GW benchmark: bilayer hBN first, other candidates, literature).
 - Notebooks: to be created when the models/analysis start.
 
 ## Roadmap (provisional, to be agreed step by step)
@@ -207,7 +240,8 @@ computational procedure (possibly a code implementation).
    excitons; dependence on eps, d, layer screening r0; static vs dynamic substrate.
 4. DFT: free-standing germanene (SOC); explicit germanene/hBN heterostructure to test the assumptions.
 5. GW with substrate screening via modified Yambo databases (python): study of the database format on the source,
-   then implementation and validation (see `docs/02_python_route_yambo_databases.md`).
+   then implementation and validation (see `docs/02_python_route_yambo_databases.md`). First benchmark (user,
+   2026-11-11): bilayer hBN, explicit GW vs monolayer + second layer as effective substrate (`docs/04_...`).
 6. BSE with the substrate-screened W; optical spectra, binding energies, gap/E_b compensation.
 7. Full procedure, convergence, applications.
 
@@ -300,3 +334,13 @@ interaction; r0 = 2 pi chi_2D.
   now Secs. 3-5. Agreed order for the next steps: link of the general v_emb with Sec. 4 (largely done: g = beta), 2D
   form of Sec. 1 (mixed representation, supercell, truncation, small-q behaviour), then revision of Sec. 5.1 and of
   the older parts. Sec. 1 now uses hbar = e = 1 in the many-body formulas.
+- 2026-11-11: commit faae171 before restructuring (user). Old Secs. 3-5 moved unchanged to `Notes/models.tex`
+  (companion classical models); main.tex now = Sec. 1 + Sec. 2 with a new example Sec. 2.3 (dielectric half-space,
+  eq:vt_sheet, eq:vt_real, eps_env, limits, Keldysh W of an insulating layer); figure split: `vt_ratio` (main),
+  `sheet_modes` (models). Sec. 2.2 made self-contained; it will be analysed in detail together with the computational
+  step (user).
+- 2026-11-11: move to the computational analysis (user). Benchmark candidates searched in the literature
+  (docs/04): bilayer hBN chosen as the first test (cheap, same lattice, explicit QE+Yambo reference by Guo et al. 2020;
+  the static limit does not hold there, which the user accepts: test of the general, dynamical scheme); then SnS2/hBN
+  or MoS2/hBN; MoS2/SiO2 only as an application with g = beta. MPPI usage and the 2D convergence protocol of the
+  user's MoS2 and germanene notebooks recorded in docs/03 (account names of Leonardo not copied: public repo).
