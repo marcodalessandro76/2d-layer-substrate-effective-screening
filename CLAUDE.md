@@ -77,12 +77,24 @@ computational procedure (possibly a code implementation).
 - Git repo (branch `main`, created 2026-11-05), public on GitHub since 2026-11-10:
   `origin` = github.com/marcodalessandro76/2d-layer-substrate-effective-screening (name chosen by the user). Push
   only when the user asks.
-- Local folder: `D:\RICERCA\DFT AND MANY BODY\THEORY\2d Layer Substrate Effective Screening` (renamed on 2026-11-10
-  from `...\THEORY\Effective screening`, at the user's request; the Claude memory folder was copied to the new
-  project key `D--RICERCA-DFT-AND-MANY-BODY-THEORY-2d-Layer-Substrate-Effective-Screening`).
-  The old folder no longer exists (checked 2026-11-11). The old memory key
-  `D--RICERCA-DFT-AND-MANY-BODY-THEORY-Effective-screening` is kept for now (it holds the transcripts of the sessions
-  started there): delete it only if the user asks.
+- Local folder (laptop): `D:\RICERCA\DFT AND MANY BODY\SIMULATIONS\2d Layer Substrate Effective Screening`.
+  History: created as `...\THEORY\Effective screening`, renamed on 2026-11-10 to `...\THEORY\2d Layer Substrate
+  Effective Screening`, MOVED BY THE USER on 2026-11-11 to `SIMULATIONS` (the project now runs calculations;
+  SIMULATIONS is organized by material, this project is a cross-material one with one subfolder per system).
+  The Claude memory was copied to the key of the new path,
+  `D--RICERCA-DFT-AND-MANY-BODY-SIMULATIONS-2d-Layer-Substrate-Effective-Screening`. The old memory keys
+  (`...-THEORY-Effective-screening`, `...-THEORY-2d-Layer-Substrate-Effective-Screening`) are kept for now (they
+  hold the transcripts of the sessions started there): delete them only if the user asks. At the first session in
+  the new folder, check that `...\THEORY\2d Layer Substrate Effective Screening` no longer exists (or is an
+  identical, clean copy that the user wants removed).
+- Planned layout for the calculations (agreed 2026-11-11): one subfolder per system, each with its notebooks
+  (DFT_Analysis, GW_Analysis, Embedding_Analysis, ...) and run folders (DFT_analysis/, MB_analysis/, not tracked):
+  `hBN_bilayer/` (first benchmark), later `SnS2_hBN/`, `MoS2_hBN/`, `Germanene_hBN/` (application); common
+  `pseudos/`; later the python code that edits the Yambo databases. The earlier MoS2 and germanene studies stay in
+  `SIMULATIONS/TMDs/MoS2` and `SIMULATIONS/Xenes/Germanene` (own git repos): reuse their parameters and pseudos.
+- Cluster copy (to be set up later, with the user): a clone WITHOUT spaces in the path, e.g.
+  `~/work/2d-layer-substrate-effective-screening` on ismhpc (MPPI `run_job` uses `os.system('rm ...')`, which breaks
+  on paths with spaces: open item of the MPPI CLAUDE.md). Data stay on the cluster, only notebooks/notes in git.
 - `README.md`: public description of goals, approach, status and layout; it evolves with the project. Update its
   "Status" section (with the date) when the notes or the work reach a new stage.
 - `Notes/`: technical notes, LaTeX, same style as LiF (`main.tex` with `\input{header.tex}`, notation macros in
@@ -344,3 +356,6 @@ interaction; r0 = 2 pi chi_2D.
   the static limit does not hold there, which the user accepts: test of the general, dynamical scheme); then SnS2/hBN
   or MoS2/hBN; MoS2/SiO2 only as an application with g = beta. MPPI usage and the 2D convergence protocol of the
   user's MoS2 and germanene notebooks recorded in docs/03 (account names of Leonardo not copied: public repo).
+- 2026-11-11: project folder moved by the user from THEORY to `SIMULATIONS\2d Layer Substrate Effective Screening`
+  (memory copied to the new key); planned layout with one subfolder per system (hBN_bilayer first); cluster clone
+  without spaces to be set up later.
