@@ -280,6 +280,17 @@ computational procedure (possibly a code implementation).
   (QP - KS) from the screening of the second layer, compared at K. AA' and AB: the effective scheme gives almost the
   same result for both (registry only in the G_par != 0 terms of v chi^S v, ~ e^{-|G_par| d}); AA' = clean test of
   the scheme, explicit AA' vs AB = size of the stacking/hybridization effect at K that the scheme misses.
+  NSCF + SAVEs (2026-11-11, user's choices): ML_bot k = 18, 30, 42 with 250 bands; AA1, AB k = 18 with 400 bands
+  (other grids and ML_top_* after the first GW runs); prefix `kpoints_<k>-nbnds_<n>-<system>`; diagonalization `cg`
+  (Davidson stopped with "S matrix not positive definite"; cg leaves 1-5 eigenvalues per k slightly above the very
+  tight threshold, gap at K identical on the three grids). Band windows: 250 bands reach ~100 eV above the VBM, 400 in
+  the bilayer ~130 eV (at high energy the states are vacuum NFE states, set by the cell VOLUME, the same for ML and BL:
+  the bilayer does NOT need twice the bands for the same window, only 4 more). SAVEs in `MB_analysis/<prefix>/` built
+  by `GW_Analysis.ipynb` with `Tools.init_yambo_dir`, p2y + setup directly on the login node, 1 MPI 1 OMP (user;
+  `srun p2y` hangs at start-up). Yambo symmetries: 12 for all (ML_bot and AB: 6 spatial + T-rev, the ML sigma_h is lost
+  because the layer is off z = 0 and force_symmorphic drops it; AA1: 12 spatial, D3d).
+  GW settings (user, 2026-11-11): CUTGeo='slab z' and RIM on v in every run (RandQpts 5e6, RandGvec 100, from MoS2);
+  HF with RIM only; every GW (PPA) run with RIM_W, RandGvecW = 10.
 
 ## Roadmap (provisional, to be agreed step by step)
 1. Framing and literature (in progress): the three embedding papers (done, first reading); still to read: Neaton
