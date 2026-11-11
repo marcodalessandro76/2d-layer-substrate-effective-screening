@@ -87,10 +87,10 @@ notes, is meant to prepare this analysis.
   matter. Condition of validity: all the charge of the system (occupied densities, and the transition densities
   phi_occ phi_empty that enter chi0) within a window of width L/2 along z, so that within one cell |z - z'| < L/2 and
   every replica is at |z - z'| > L/2. For the bilayer with c = L = 40 bohr: L/2 = 10.6 A vs an extent of about
-  d + 2 x (density tail). CHECKED (2026-11-11, DFT_Analysis.ipynb, planar-averaged valence density from the
-  G_par = 0 components of charge-density.dat; pp.x is not compiled on ismhpc): bilayer density < 1e-4 of its maximum
+  d + 2 x (density tail). CHECKED (2026-11-11, DFT_Analysis.ipynb, planar-averaged valence density from pp.x +
+  average.x): bilayer density < 1e-4 of its maximum
   for |z| > 4.7 A (width 9.4 A), < 1e-5 for |z| > 5.4 A; charge outside the L/2 window 3e-6; weight of the charge
-  pairs at |z - z'| > L/2 ~ 1e-9. With c = 40 bohr the slab cutoff is safe for bilayers and monolayers.
+  pairs at |z - z'| > L/2 ~ 1e-10. With c = 40 bohr the slab cutoff is safe for bilayers and monolayers.
 - q -> 0 (iq = 1, G = 0) without RIM: bare_qpg(1,1) from an analytic average of v_cut over a disc of area equal to
   the q-cell (series in R_circle * L/2). With RIM: `rim_integrate_v.F` integrates the same v_cut over random points.
 - RIM_W (`rim_integrate_w.F`): implemented ONLY with the slab cutoff (error otherwise). It integrates
