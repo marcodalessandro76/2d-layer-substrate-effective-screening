@@ -1,4 +1,4 @@
-# Effective screening — 2D layer on a bulk substrate (DFT -> GW+BSE): notes for Claude Code
+# 2D layer on a substrate: effective screening (DFT -> GW+BSE): notes for Claude Code
 
 The user (Marco D'Alessandro) writes in Italian: reply in Italian. Files (this CLAUDE.md, notes, code, docstrings,
 commit messages) are in English, as in the user's other projects. Living document: update it at every step
@@ -54,8 +54,14 @@ computational procedure (possibly a code implementation).
 
 ## Repository
 - Git repo (branch `main`, created 2026-11-05), public on GitHub since 2026-11-10:
-  `origin` = github.com/marcodalessandro76/2d-layer-substrate-effective-screening (name chosen by the user; the
-  local folder keeps the name "Effective screening"). Push only when the user asks.
+  `origin` = github.com/marcodalessandro76/2d-layer-substrate-effective-screening (name chosen by the user). Push
+  only when the user asks.
+- Local folder: `D:\RICERCA\DFT AND MANY BODY\THEORY\2d Layer Substrate Effective Screening` (renamed on 2026-11-10
+  from `...\THEORY\Effective screening`, at the user's request; the Claude memory folder was copied to the new
+  project key `D--RICERCA-DFT-AND-MANY-BODY-THEORY-2d-Layer-Substrate-Effective-Screening`).
+  The old folder no longer exists (checked 2026-11-11). The old memory key
+  `D--RICERCA-DFT-AND-MANY-BODY-THEORY-Effective-screening` is kept for now (it holds the transcripts of the sessions
+  started there): delete it only if the user asks.
 - `README.md`: public description of goals, approach, status and layout; it evolves with the project. Update its
   "Status" section (with the date) when the notes or the work reach a new stage.
 - `Notes/`: technical notes, LaTeX, same style as LiF (`main.tex` with `\input{header.tex}`, notation macros in
