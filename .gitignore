@@ -16,3 +16,6 @@ Notes/*.blg
 Notes/*.fls
 Notes/*.fdb_latexmk
 Notes/*.synctex.gz
+# Run folders of the calculations (data stay on the cluster)
+*/DFT_analysis/
+*/MB_analysis/

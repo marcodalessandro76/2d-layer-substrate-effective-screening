@@ -76,7 +76,7 @@ Standard imports of the notebooks:
       def yambo_code(nodes=1, partition='all12h', executable='yambo'):
           rr = C.RunRules(scheduler='slurm', partition=partition, memory='125000', nodes=nodes,
                           ntasks_per_node=32, cpus_per_task=1, omp_num_threads=1,
-                          pre_processing=module, exclude='wnode07')
+                          pre_processing=module)
           return C.YamboCalculator(rr, executable=executable, activate_BeeOND=True)
 
   Each notebook section starts with the cell that defines its calculator and run folder, so sections are independent;
@@ -107,7 +107,7 @@ Standard imports of the notebooks:
   tiny tests; never heavy runs there.
   Cluster rules from the LiF project (2026-10): at most three nodes in use at the same time (datasets of 1-node runs
   with `num_tasks` <= 3, counting the other running jobs); always `all12h` (also for tests; `debug` not used);
-  `slownodes` (2 days) for runs longer than 12 h; exclude `wnode07` (it silently corrupted some yambo_nl runs); home
+  `slownodes` (2 days) for runs longer than 12 h; home
   quota 19.5 GB (runs on the BeeOND scratch). Since 2026-10-23 the default yambo in the PATH is the Lumen `bug-fixes`
   build (`~/Applications/Lumen/bug-fixes-gcc_10.2`: yambo, ypp, p2y, yambo_nl; yambo_rt still from the master build;
   details in `~/sysadmin/CLAUDE.md` on ismhpc): restart shells/kernels after PATH changes. SAVE setup databases written

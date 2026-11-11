@@ -26,7 +26,9 @@ planar formula of Sec. 2.2 also holds for a finite slab below the layer).
   ground state (assumption 2 of Sec. 2.1) before any GW.
 
 Plan (to be detailed and agreed before any run):
-1. DFT of monolayer and bilayer (AA', AB) with the same alat, box, cutoffs; compare the bands.
+1. DFT of monolayer and bilayer (AA', AB) with the same alat, box, cutoffs; compare the bands. Notebook
+   `hBN_bilayer/DFT_Analysis.ipynb` (2026-11-11): SG15 ONCV PBE SR, no SOC, a = 2.504 A (experimental, fixed),
+   d = 3.33 A (fixed), bilayer at z = +-d/2, monolayer at z = +d/2 (top layer).
 2. Explicit GW of the bilayer (Yambo, slab cutoff, PPA or full frequency).
 3. Effective GW of the monolayer: (a) full matrix, chi0^S = translated monolayer chi0 in the same basis (no-overlap
    only, Umklapp included; equivalent to Guo's chi_eff-sum); (b) planar formula with g(Q, w) (Umklapp neglected).
