@@ -272,6 +272,9 @@ computational procedure (possibly a code implementation).
   CBM moves to M): the bilayer gap reduction is a DFT hybridization effect. => The no-overlap assumption holds at K
   (AA'), fails for conduction states at M/Gamma: compare explicit vs effective GW on the QP corrections at K, AA'
   first. AB dipole 0.0155 D/cell, dipole correction changes gaps by 5-8 meV: negligible, databases without it.
+  k check on the bilayers (k = 6, 12, 18, 24, grids with K and M; user's request): energy converged from k = 12; AB
+  gaps stable; AA' gaps drop at k = 24 (-15/-29 meV) because the AA' VBM is off K (0.033 2pi/a towards Gamma, 29 meV
+  above K) and the minimum direct gap too (4.709 eV, on M-K): k = 12 kept; compare quantities AT K.
 
 ## Roadmap (provisional, to be agreed step by step)
 1. Framing and literature (in progress): the three embedding papers (done, first reading); still to read: Neaton
