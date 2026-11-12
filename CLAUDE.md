@@ -305,6 +305,20 @@ computational procedure (possibly a code implementation).
   run at k = 18. HF gaps (k = 18): K 13.321 eV, Gamma 12.863 eV.
   HF vs k (ML_bot, full cutoffs, RIM per grid in `ndb_rim_cutoff`): gap at K 13.321 / 13.335 / 13.338 eV, at Gamma
   12.863 / 12.871 / 12.873 eV for k = 18 / 30 / 42 (3.5 and 2 meV from 30 to 42): HF analysis done.
+  GW PPA (GW_Analysis.ipynb, 2026-11-12): input from `yambo -r -rw -k hartee -dyson n -gw0 p -V all` (the RIM_W
+  runlevel MUST be in the command: with `inp.activate_RIM_W()` only, the MPPI reformat drops RIM_W and RandGvecW;
+  RandGvec/RandGvecW rounded by yambo to 101/11 RL); LongDrXp [1,1,0]; PPAPntXp default 27.2 eV; parallel
+  X_and_IO_CPU 1.1.4.8.1 (q.g.k.c.v), DIP_CPU 4.8.1, SE_CPU 2.2.8 (q.qp.b). The PPA screening database is `ndb.pp`
+  (+ fragments), not `ndb.em1d`: shared folders `ndb_pp-ngsblkxp_<x>-bndsrnxp_<n>` hold `ndb.pp*` and `ndb.RIM_W`.
+  RULE (user, 2026-11-12): in every convergence run the QP corrections are computed ONLY at the checked points
+  (Gamma and K, bands 4-5: two `QPkrange` rows, `inp['variables']['QPkrange'] = [[[1,1,4,5],[37,37,4,5]], '']`);
+  full-IBZ QP only for production runs (Sigma for the 74 IBZ states was 71 of the 93 min of the 6 Ha run).
+  NGsBlkXp scan (BndsRnXp = GbndRnge = 250, k = 18): gap at K 7.228 / 7.221 / 7.263 / 7.265 eV, at Gamma
+  7.795 / 8.010 / 8.161 / 8.182 eV for 2 / 4 / 6 / 8 Ha (K converged from 6 Ha; Gamma moves by 21 meV 6 -> 8 Ha
+  through the deep valence state; Ec(Gamma), NFE, within 1 meV; indirect K -> Gamma ~6.54 eV). Choice (user):
+  NGsBlkXp = 6 Ha (bands still to be raised; 10 Ha run cancelled, 12 Ha only if needed). Next: BndsRnXp = 100, 150,
+  200, 250 at 6 Ha, GbndRnge = 250 (running), then GbndRnge with/without BG; both limited to 250 by the nscf (MoS2
+  needed ~400 in GbndRnge): if not flat at 250, new nscf at k = 18 with more bands.
 
 ## Roadmap (provisional, to be agreed step by step)
 1. Framing and literature (in progress): the three embedding papers (done, first reading); still to read: Neaton
@@ -332,8 +346,11 @@ computational procedure (possibly a code implementation).
   Method (user, 2026-11-11: QE tools, one clean way): pp.x (plot_num 0) + average.x (dir 3), driven from
   DFT_Analysis.ipynb (`run_density_profiles` writes inputs and a slurm job, `sbatch --wait`, skips existing
   `avg_<system>.dat`; `read_density_profile`), folder `hBN_bilayer/DFT_analysis/density_profile/`. QE PP tools built
-  2026-11-11 at the user's request (~/sysadmin/CLAUDE.md); with Intel MPI use `average.x -inp`, window > 0. RIM_W only with slab, refits W = v f v/(1 - v f) near
-  q = 0 with the bare v_cut (conflict with a vt-based screening: to analyse). `EpsEnv` input = uniform v -> v/eps_env
+  2026-11-11 at the user's request (~/sysadmin/CLAUDE.md); with Intel MPI use `average.x -inp`, window > 0. RIM_W only with slab; it replaces the static W - v
+  for EVERY q and G, G' <= RandGvecW by the q-cell average of v f v/(1 - v f) (bare v_cut, f = element-wise chi0
+  extracted from the database), also in the BSE (checked 2026-11-12, docs/02 Sec. 4 B). Fine for explicit runs and for
+  a database in standard form with chi0 = chi0^L + chi0^S in the same cell (hBN benchmark); inconsistent with a
+  vt-based database (planar g(Q) substrate): there RIM_W off + q average in python, or an equivalent chi0^S. `EpsEnv` input = uniform v -> v/eps_env
   everywhere (also Sigma_x): not our vt.
 - TO ANALYSE IN THE COMPUTATIONAL STEP (user, 2026-11-11, "very important"; details in `docs/02_...`, Sec. 4):
   (A) which Coulomb interaction goes where: v -> vt only in W; ground state and Sigma_x = iGv of the free-standing
