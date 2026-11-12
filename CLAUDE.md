@@ -200,7 +200,8 @@ computational procedure (possibly a code implementation).
   v(Q;z,z') stated in place, no reference to the moved sections). 2.3 "Example: a dielectric half-space and an
   insulating layer" (`sec:embedding_example`, 2026-11-11, from the old Secs. 4-5): image construction in one sentence
   (details in models.tex), v_emb = -beta e^{-Q(z+z')}/(2 eps0 Q), i.e. g = beta; vt(Q) and eps_env (eq:vt_sheet);
-  real-space vt with the image (eq:vt_real, the user's "Eq. 34", kept on purpose); limit bullets; Fig. `vt_ratio`;
+  real-space vt with the image (eq:vt_real, the user's "Eq. 34", kept on purpose; the sentence after it names the
+  two terms as v and v_emb = v chi^S v = image term, i.e. the vt of eq:W_LL, user 2026-11-12); limit bullets; Fig. `vt_ratio`;
   insulating layer: zero thickness, chi0^L(Q;z,z') = chi0(Q) delta(z-d) delta(z'-d), eq:W_LL reduces to numbers,
   chi0 = -Q^2 chi_2D, eps~ = 1 + r0 Q/eps_env, static Keldysh W (eq:W_keldysh).
   `Notes/models.tex` (companion notes, standalone, same header.tex, built separately with `latexmk -pdf models.tex`;
