@@ -356,9 +356,24 @@ computational procedure (possibly a code implementation).
   NGsBlkXp scan (BndsRnXp = GbndRnge = 250, k = 18): gap at K 7.228 / 7.221 / 7.263 / 7.265 eV, at Gamma
   7.795 / 8.010 / 8.161 / 8.182 eV for 2 / 4 / 6 / 8 Ha (K converged from 6 Ha; Gamma moves by 21 meV 6 -> 8 Ha
   through the deep valence state; Ec(Gamma), NFE, within 1 meV; indirect K -> Gamma ~6.54 eV). Choice (user):
-  NGsBlkXp = 6 Ha (bands still to be raised; 10 Ha run cancelled, 12 Ha only if needed). Next: BndsRnXp = 100, 150,
-  200, 250 at 6 Ha, GbndRnge = 250 (running), then GbndRnge with/without BG; both limited to 250 by the nscf (MoS2
-  needed ~400 in GbndRnge): if not flat at 250, new nscf at k = 18 with more bands.
+  NGsBlkXp = 6 Ha (10 Ha run cancelled, 12 Ha only if needed).
+  BndsRnXp scan (6 Ha, GbndRnge 250): gap at K 7.278 / 7.265 / 7.264 / 7.263 eV for 100 / 150 / 200 / 250 (converged
+  from 150; single QP energies at K still shift ~18 meV 200 -> 250, cancelling in the gap). Choice (user): 200.
+  GbndRnge scan (BndsRnXp 200; 100-250): without terminator the gap at K grows by 16 meV 200 -> 250 (slow 1/N); with
+  the BG terminator (`GTermKind='BG'`, default GTermEn) it converges from above: 7.362 / 7.344 / 7.337 / 7.335 eV,
+  2.6 meV 200 -> 250, consistent with the a + b/N extrapolation (7.32-7.33) of the runs without terminator: no nscf
+  with more bands needed. Choice (user): GbndRnge = 200 + BG. Runs that only change Sigma read the screening from
+  `ndb_pp-ngsblkxp_6.0-bndsrnxp_200` (2-5 min each, two at a time).
+  RandGvecW scan (1, 10, 20, 30 -> 1, 11, 25, 37 RL): 10 converged (< 0.5 meV to 30), 1 RL (head only) off by 60 meV.
+  Yambo reuses a shared `ndb.RIM_W` with MORE components than requested (first components; element-wise integral, so
+  exact: checked) and recomputes it in the run folder (`*ERR* Screening RL components`) when MORE are requested.
+  k grid (nscf at k = 24 added, 6 min): GW gap at K 7.337 / 7.334 / 7.336 eV, at Gamma 8.315 / 8.313 / 8.315 eV for
+  k = 18 / 24 / 30 (no trend, no extrapolation; single QP energies at K within 2-4 meV; HF gap +14 meV 18 -> 30,
+  compensated by the correlation): k = 18 is enough with RIM_W, 42 not needed. Costs (1 node): GW 27 min (k = 18),
+  1 h 14 min (24), 2 h 30 min (30), dominated by Xo ~ N_q(IBZ) x N_k(BZ). HF at k = 24: gap at K 13.329 eV.
+  CONVERGED GW PARAMETERS (ML_bot, 2026-11-12): k = 18, NGsBlkXp = 6 Ha, BndsRnXp = 200, GbndRnge = 200 + BG,
+  RandGvecW = 10 RL, RIM 5e6/100, EXXRLvcs = VXCRLvcs = all G; GW gap at K 7.337 eV (KS 4.714), at Gamma 8.315 eV,
+  indirect K -> Gamma 6.668 eV. Run of reference: `kpoints_18-nbnds_250-ML_bot/pp-ngsblkxp_6.0-bndsrnxp_200-gbndrnge_200-bg`.
 
 ## Roadmap (provisional, to be agreed step by step)
 1. Framing and literature (in progress): the three embedding papers (done, first reading); still to read: Neaton
