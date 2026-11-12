@@ -354,8 +354,9 @@ Section~\ref{sec:embedding_example} works out the simplest example, a dielectric
 
 We apply Sec.~\ref{sec:response} to a system made of two parts, the layer (L) and the substrate (S), following the
 embedding scheme of Amblard, Blase and Duchemin~\cite{amblard2024static}. There the environment of the subsystem of
-interest is generic (a molecular crystal, a solvent, a metallic tube); here it is a planar substrate, and this
-simplifies the result (Sec.~\ref{sec:embedding_planar}). The goal is the screened interaction $W$ felt by the electrons
+interest is generic (a molecular crystal, a solvent, a metallic tube), and the relations of
+Sec.~\ref{sec:embedding_general} hold for any geometry; the planar geometry of a layer on a substrate enters only in
+Sec.~\ref{sec:embedding_planar}. The goal is the screened interaction $W$ felt by the electrons
 of the layer, the quantity needed by the GW and BSE calculations of the layer, with the substrate entering only
 through its own response.
 
@@ -466,44 +467,183 @@ and, in the GW self-energy $\Sigma = iGW$, the bare exchange $iGv$ are those of 
 enters the correlation part, built from $W - v = \vemb + \vt\chiLt\vt$, in which $\vemb$ describes the polarization
 of the substrate by the added electron or hole.
 
-\subsection{A planar substrate}
+\subsection{Planar geometry}
 \label{sec:embedding_planar}
 
-The substrate fills the half-space $z < 0$, with its surface at $z = 0$, and the layer lies above it, around
-$z = d$: $\chiS(\bm{r}_1,\bm{r}_2)$ is non-zero only for $z_1, z_2 \le 0$, while the electrons of the layer lie at $z > 0$.
+\paragraph{What we compute.} By Sec.~\ref{sec:embedding_general} the substrate enters the screening of the layer only
+through the dressed interaction $\vt = v + \vemb$ of Eq.~\eqref{eq:vt_general}: the potential produced in the layer by
+a charge of the layer when the substrate polarizes and the layer does not. At this stage the layer is a set of given
+charges; its own polarization is added afterwards, by $\chi_0^{\mathrm{L}}$ in Eq.~\eqref{eq:W_LL}. We decompose the
+charge of the layer in plane waves in the plane, $e^{i\Qv\cdot\rpar}$ with $\rpar$ the in-plane position: the charge
+waves of the layer. For the layer in its periodic cell $\Qv = \bm{q} + \bm{G}_{\parallel}$, with $\bm{q}$ in the
+Brillouin zone of the layer and $\bm{G}_{\parallel}$ its in-plane reciprocal lattice vectors: the $\bm{q} + \bm{G}$ of
+Eq.~\eqref{eq:A_qG}, restricted to the plane. The question of this section is how the potential of a charge wave of
+the layer changes in the presence of the substrate: in vacuum the wave produces the potential given by $v$, and the
+substrate adds $\vemb$, the potential of the charge that the wave induces in it. When the layer and the substrate
+extend indefinitely in the plane, one above the other, the answer is simple, and the whole substrate enters through a single function of $\Qv$ and $\omega$.
 
-The substrate has its own lattice, in general incommensurate with that of the layer. A potential with in-plane wave
-vector $\Qv$ acting on the substrate induces charge also at $\Qv + \bm{G}^{\mathrm{S}}$, with $\bm{G}^{\mathrm{S}}$
-the reciprocal lattice vectors of its surface; the potential of these components decays away from the surface as
-$e^{-|\Qv + \bm{G}^{\mathrm{S}}|z}$, and at the layer it is negligible when $|\bm{G}^{\mathrm{S}}|d \gg 1$ (of order 10
-for hBN at $d \simeq 3$~\AA). Neglecting these terms, $\chiS$ is invariant under in-plane translations, and the kernels
-are expanded in in-plane waves of wave vector $\Qv$,
-$K(\bm{r},\bm{r}') = A^{-1}\sum_{\Qv} e^{i\Qv\cdot(\rpar - \rpar')}\,K(\Qv;z,z')$ for a kernel $K$, with $A$ the area
-of the layer (with periodic boundary conditions at its edges); the products become integrals over $z$ at each
-$\Qv$. The bare interaction is then the potential at $z$ of a charge wave of unit amplitude in the plane $z'$, the
-solution of the Poisson equation for each $\Qv$ that decays away from the plane:
-$v(Q;z,z') = e^{-Q|z - z'|}/(2\varepsilon_0 Q)$ ($2\pi e^{-Q|z - z'|}/Q$ in atomic units). For $z > 0 > z_1$ it factorizes,
-$v(Q;z,z_1) = e^{-Qz}\,e^{Qz_1}/(2\varepsilon_0 Q)$, and $\vemb = v\chiS v$ of Eq.~\eqref{eq:vt_general} becomes
+\paragraph{Geometry.} The substrate occupies the slab $-t < z < 0$, with $t$ its thickness: a crystal of finite
+thickness, such as a second layer, or a semi-infinite one, $t \to \infty$. The layer lies above it, around $z = d$
+(Fig.~\ref{fig:planar}a). We assume that the plane $z = 0$ separates the charges of the two subsystems:
+$\chiS(\bm{r}_1,\bm{r}_2;\omega)$ is non-zero only in the region of the electrons of the substrate (by the argument
+given for $\chi_0^{\mathrm{L}}$ in Sec.~\ref{sec:embedding_general}), at $-t < z_1, z_2 < 0$, including the tails of
+their density beyond the outermost atoms, while the electrons of the layer lie at $z > 0$. It is the planar form of the no-overlap assumption. The chain $\vemb = v\chiS v$ of
+Eq.~\eqref{eq:vt_general} then has two points in the layer and two in the substrate: a charge at the height $z'$ in the
+layer produces a potential at the height $z_2$ in the substrate, the substrate responds with a charge at the height
+$z_1$, and the potential of this charge comes back to the height $z$ in the layer.
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[>=stealth, font=\small]
+% (a) geometry and the chain of v_emb = v chi^S v
+\node at (-3.3,3.0) {(a)};
+\fill[gray!12] (-3,-2.5) rectangle (3,0);
+\foreach \x in {-2.7,-2.1,...,2.8} \foreach \y in {-0.35,-0.95,...,-2.4} \fill[gray!45] (\x,\y) circle (0.05);
+\draw[thick] (-3,0) -- (3,0);
+\draw[thick] (-3,-2.5) -- (3,-2.5);
+\fill[gray!35] (-3,1.85) rectangle (3,2.15);
+\node[anchor=west] at (3,0) {$z = 0$};
+\node[anchor=west] at (3,2) {$z = d$};
+\node[anchor=west] at (3,-2.5) {$z = -t$};
+\node[gray!60!black, font=\footnotesize, anchor=south west] at (-3,2.15) {layer};
+\node[gray!60!black, font=\footnotesize, anchor=north west] at (-3,-2.5) {substrate};
+\node[circle, fill, inner sep=1.4pt, label={above:$z'$}] (A) at (-1.9,2) {};
+\node[circle, fill, inner sep=1.4pt, label={[fill=gray!12, inner sep=1pt]left:$z_2$}] (B) at (-0.8,-1.0) {};
+\node[circle, fill, inner sep=1.4pt, label={[fill=gray!12, inner sep=1pt]right:$z_1$}] (C) at (0.8,-1.5) {};
+\node[circle, fill, inner sep=1.4pt, label={above:$z$}] (D) at (1.9,2) {};
+\draw[->, thick, dashed] (A) -- node[midway, left] {$v$} (B);
+\draw[->, thick] (B) -- node[midway, above, fill=gray!12, inner sep=1pt] {$\chiS$} (C);
+\draw[->, thick, dashed] (C) -- node[midway, right] {$v$} (D);
+% (b) potential of a charge wave of the layer along z: bare (incident) and reflected
+\begin{scope}[shift={(7.4,0)}]
+\node at (-2.0,3.0) {(b)};
+\fill[gray!12] (-1.8,-2.5) rectangle (2.8,0);
+\draw[thick] (-1.8,0) -- (2.8,0);
+\draw[thick] (-1.8,-2.5) -- (2.8,-2.5);
+\fill[gray!35] (-1.8,1.85) rectangle (2.8,2.15);
+\draw[->] (0,-2.5) -- (0,3.0) node[above] {$z$};
+\draw[thick, dashed, domain=-2.5:3.0, samples=120] plot ({2.4*exp(-0.35*abs(\x - 2))}, {\x});
+\draw[thick, domain=0:3.0, samples=60] plot ({-2.4*0.7*exp(-0.35*(\x + 2))}, {\x});
+\node[anchor=west] at (1.75,1.0) {$v$};
+\node[anchor=east] at (-0.65,1.0) {$\vemb$};
+\end{scope}
+\end{tikzpicture}
+\caption{(a) Geometry of Sec.~\ref{sec:embedding_planar} and the chain of the embedding term $\vemb = v\chiS v$: a
+charge at the height $z'$ in the layer produces a potential at the height $z_2$ in the substrate (dashed, bare Coulomb
+interaction), the substrate responds with a charge at the height $z_1$ (solid, $\chiS$), and the potential of this
+charge comes back to the height $z$ in the layer (dashed). The substrate occupies $-t < z < 0$, the layer lies
+around $z = d$. (b) Potential along $z$ (horizontal axis, in units of $1/(2\varepsilon_0 Q)$) of a charge wave of unit
+amplitude in the layer, at $z' = d$, sketched for $Qd = 0.7$ and $\gs = 0.7$: the bare potential $v(Q;z,z')$ (dashed),
+which in the substrate is the incident wave $\propto e^{Qz}$, and, above the substrate, the potential of the charge
+induced in it, the reflected wave $\vemb(\Qv;z,z') \propto -\gs\,e^{-Qz}$ (solid).}
+\label{fig:planar}
+\end{figure}
+
+\paragraph{In-plane waves.} The substrate has its own lattice, in general different from that of the layer. We follow
+a charge wave $\Qv$ of the layer through the chain $\vemb = v\chiS v$:
+\begin{itemize}
+\item its potential in the substrate has the same wave vector $\Qv$, since the bare Coulomb interaction, invariant
+  under translations, does not mix wave vectors; it decays towards the substrate as $e^{-Q(z' - z_2)}$, with
+  $Q = |\Qv|$;
+\item the substrate, periodic in the plane, responds with an induced charge at $\Qv$ and at
+  $\Qv + \bm{G}^{\mathrm{S}}$, with $\bm{G}^{\mathrm{S}}$ the reciprocal lattice vectors of its surface, as a crystal
+  responds at $\bm{q} + \bm{G}$ in Eq.~\eqref{eq:A_qG};
+\item each component sends back to the layer a potential that decays as
+  $e^{-|\Qv + \bm{G}^{\mathrm{S}}|(z - z_1)}$.
+\end{itemize}
+For $\bm{G}^{\mathrm{S}} \neq 0$ the decay on the way to the substrate and the one on the way back give together at
+most $e^{-|\bm{G}^{\mathrm{S}}|d}$, since $Q + |\Qv + \bm{G}^{\mathrm{S}}| \ge |\bm{G}^{\mathrm{S}}|$: about
+$10^{-4}$ for hBN, with $|\bm{G}^{\mathrm{S}}| \simeq 2.9$~\AA$^{-1}$, at a distance of 3.3~\AA. The term
+$\bm{G}^{\mathrm{S}} = 0$ is instead of order one at the wavelengths at which the substrate matters, $Qd \lesssim 1$.
+Neglecting the terms $\bm{G}^{\mathrm{S}} \neq 0$, a charge wave of the layer produces, through the substrate, a
+potential in the layer with the same wave vector: the layer sees the substrate as homogeneous in the plane, averaged
+over its surface cell, with its whole structure along $z$. Each charge wave can then be treated on its own, and the
+response of the substrate is diagonal in $\Qv$:
+\begin{equation}
+\chiS(\bm{r}_1,\bm{r}_2;\omega) = \frac{1}{A}\sum_{\Qv} e^{i\Qv\cdot(\bm{r}_{1\parallel} - \bm{r}_{2\parallel})}\,
+\chiS(\Qv;z_1,z_2;\omega) ,
+\label{eq:chiS_Q}
+\end{equation}
+with $A$ the area of the system. This defines $\chiS(\Qv;z_1,z_2;\omega)$, the charge induced at the height $z_1$ of
+the substrate by a potential wave $\Qv$ acting at the height $z_2$: it is the expansion~\eqref{eq:A_qG} in the plane,
+with only the diagonal terms, while the dependence on $z$ stays in real space, since the surface breaks the periodicity
+along $z$. The lattice mismatch, the relative rotation and the registry of the two lattices do not enter: the layer is
+described in its own cell, with its own lattice constant, without the strain needed in an explicit calculation to
+build a cell common to the two lattices. The registry, and the moir\'e pattern of incommensurate lattices, are carried
+only by the neglected terms, which stay small also when the lattices are commensurate.
+
+\paragraph{The embedding term.} The bare interaction, invariant under translations in the plane, has the same
+expansion as Eq.~\eqref{eq:chiS_Q}, with no approximation; its Fourier transform in the plane is
+\begin{equation}
+v(Q;z,z') = \frac{e^{-Q|z - z'|}}{2\varepsilon_0 Q}
+\label{eq:v_Qz}
+\end{equation}
+($2\pi e^{-Q|z - z'|}/Q$ in atomic units), the potential at the height $z$ of a charge wave of unit amplitude in the
+plane $z'$.
+
+The embedding term $\vemb(\bm{r},\bm{r}';\omega) = \int d^3r_1\,d^3r_2\,v(\bm{r},\bm{r}_1)\,
+\chiS(\bm{r}_1,\bm{r}_2;\omega)\,v(\bm{r}_2,\bm{r}')$ of Eq.~\eqref{eq:vt_general} is needed only with both arguments
+$\bm{r}$, $\bm{r}'$ in the layer: in Eq.~\eqref{eq:W_LL} $\vt = v + \vemb$ stands next to $\chi_0^{\mathrm{L}}$ or
+$\chiLt$, which vanish outside the layer, or at the outer arguments of $W$, which are needed only in the layer
+(Sec.~\ref{sec:embedding_general}). The integration points $\bm{r}_1$, $\bm{r}_2$ instead run over the substrate, where
+$\chiS$ is non-zero (Fig.~\ref{fig:planar}a). As a product of three factors diagonal in $\Qv$, $\vemb$ is diagonal
+too, and it is expanded as in Eq.~\eqref{eq:chiS_Q}, with its Fourier transform in the plane
+$\vemb(\Qv;z,z';\omega)$ in place of $\chiS(\Qv;z_1,z_2;\omega)$. Inserting the expansions of the three factors, the
+integrals over the in-plane positions of $\bm{r}_1$ and $\bm{r}_2$ select the same $\Qv$ in all of them, and only the
+integrals over the heights remain:
+\begin{equation}
+\vemb(\Qv;z,z';\omega) = \int_{-t}^{0}\! dz_1\int_{-t}^{0}\! dz_2\; v(Q;z,z_1)\,\chiS(\Qv;z_1,z_2;\omega)\,v(Q;z_2,z') ,
+\label{eq:vemb_chain}
+\end{equation}
+with $z$, $z' > 0$ in the layer and $-t < z_1, z_2 < 0$ in the substrate. Since the layer lies above the substrate,
+$|z - z_1| = z - z_1$ and $v(Q;z,z_1) = e^{-Qz}\,e^{Qz_1}/(2\varepsilon_0 Q)$: the functions of $z$ and $z'$ come out
+of the integrals, and
 \begin{gather}
 \vemb(\Qv;z,z';\omega) = -\gs(\Qv,\omega)\,\frac{e^{-Qz}\,e^{-Qz'}}{2\varepsilon_0 Q} ,
 \nonumber \\
-\gs(\Qv,\omega) = -\frac{1}{2\varepsilon_0 Q}\int_{-\infty}^{0}\! dz_1\int_{-\infty}^{0}\! dz_2\;
-e^{Qz_1}\,\chiS(\Qv;z_1,z_2;\omega)\,e^{Qz_2} .
+\gs(\Qv,\omega) = -\frac{1}{2\varepsilon_0 Q}\int_{-t}^{0}\! dz_1\int_{-t}^{0}\! dz_2\;
+e^{Qz_1}\,\chiS(\Qv;z_1,z_2;\omega)\,e^{Qz_2} ,
 \label{eq:vemb_planar}
 \end{gather}
+where one factor $1/(2\varepsilon_0 Q)$ has been included in $\gs$, the surface response function of the
+substrate~\cite[Eqs.~(230)--(231)]{pitarke2007theory}, defined with a minus sign so that it is positive in the static
+limit. The integral reads along the chain (Fig.~\ref{fig:planar}b). The charge wave at $z'$ produces in the substrate
+a potential with the shape $e^{Qz_2}$, whatever $z'$, which decays into the substrate: an incident wave. The substrate
+responds with a charge, and the potential of this charge in the layer, which lies above it, has the shape $e^{-Qz}$:
+a reflected wave. $\gs$ is the ratio of the two: a potential $e^{Qz}$ acting on the substrate produces above it the
+potential $-\gs\,e^{-Qz}$ of the induced charge. The heights in the layer enter only through the amplitudes
+$e^{-Qz'}$ and $e^{-Qz}$ of the two waves.
+
+This answers the question of the section: the potential at the height $z$ of a charge wave of unit amplitude at the
+height $z'$, in the presence of the substrate, is $\vt(\Qv;z,z';\omega) = v(Q;z,z') + \vemb(\Qv;z,z';\omega)$, with
+the two terms of Eqs.~\eqref{eq:v_Qz} and~\eqref{eq:vemb_planar}. For a layer of zero thickness, $z = z' = d$ and
+\begin{equation*}
+\vt(\Qv,\omega) = \frac{1 - \gs(\Qv,\omega)\,e^{-2Qd}}{2\varepsilon_0 Q} .
+\end{equation*}
 \begin{itemize}
-\item $\vemb$ is the product of a function of $z$ and a function of $z'$, at each $\Qv$: whatever its microscopic
-  structure, the substrate enters through a single function $\gs(\Qv,\omega)$, its surface response function. The
-  positions in the layer enter only through the decay $e^{-Qz}$ of the field of a charge wave, so the substrate is
-  felt only at wavelengths larger than about the distance $d$.
+\item Whatever its microscopic structure and its thickness, the substrate enters through the single function
+  $\gs(\Qv,\omega)$. The heights in the layer enter only through the decay of the field of a charge wave, so the
+  substrate is felt only at wavelengths larger than about $d$, $Qd \lesssim 1$.
 \item In the static limit $\chiS < 0$, hence $\gs > 0$ and $\vemb < 0$: the substrate reduces the interaction.
-\item For a local dielectric half-space $\gs = \beta = (\varepsilon - 1)/(\varepsilon + 1)$, independent of $Q$ and
-  $\omega$ (Sec.~\ref{sec:embedding_example}). In general $\gs$ depends on $\omega$, through the dynamics of the
-  substrate, and on $Q$; the local value is its limit for wavelengths much longer than the microscopic lengths of the
-  substrate.
-\item $\gs$ is a property of the substrate alone, which can be computed in its own unit cell: no cell common to the
-  layer and the substrate is needed.
+\item For a local dielectric half-space ($t \to \infty$) with its surface at $z = 0$,
+  $\gs = \beta = (\varepsilon - 1)/(\varepsilon + 1)$, independent of $Q$ and $\omega$
+  (Sec.~\ref{sec:embedding_example}); for an anisotropic substrate, such as hBN,
+  $\varepsilon \to (\varepsilon_\parallel\varepsilon_\perp)^{1/2}$.
+\item For a dielectric slab of thickness $t$, $\gs = \beta\,(1 - e^{-2Qt})/(1 - \beta^2 e^{-2Qt})$: the half-space
+  value $\beta$ for $Qt \gg 1$, and $\gs \simeq (\varepsilon^2 - 1)\,Qt/(2\varepsilon) \to 0$ for $Qt \ll 1$. A thin
+  substrate does not screen at wavelengths much longer than its thickness, like a 2D layer.
+\item In general $\gs$ depends on $\omega$, through the dynamics of the substrate, and on $Q$; the local values above
+  are its limits for wavelengths much longer than the microscopic lengths of the substrate.
+\item The plane $z = 0$ need not be the top of the substrate: any plane between the charges of the two subsystems
+  will do. Moving it up by $z_0$, with the heights measured from the new plane, leaves $\vemb$ unchanged and changes
+  $\gs$ into $\gs\,e^{-2Qz_0}$; a dielectric half-space with its surface at $z_{\mathrm{s}} < 0$ has
+  $\gs = \beta\,e^{2Qz_{\mathrm{s}}}$. In a real substrate the induced charge is spread over the first atomic layers,
+  so $\gs$ depends on $Q$ already at small $Q$, and the distance that matters for the layer is the one from the plane
+  where the induced charge lies, not from the outermost atoms.
+\item $\gs$ is a property of the substrate alone and can be computed in its own cell: no cell common to the layer and
+  the substrate is needed.
 \end{itemize}
+
 \subsection{Example: a dielectric half-space and an insulating layer}
 \label{sec:embedding_example}
 
@@ -512,8 +652,9 @@ The simplest substrate is a dielectric half-space with a local and static dielec
 outside the dielectric the potential of the polarization charge on its surface is that of an image wave
 $-\beta\sigma_{\Qv}$ in the mirror plane $-z'$, with $\beta = (\varepsilon - 1)/(\varepsilon + 1)$: the image
 construction of electrostatics, which follows from the continuity of the potential and of the normal displacement
-field at $z = 0$ (worked out in the companion notes on classical models). The image gives
-$\vemb(Q;z,z') = -\beta\,e^{-Q(z + z')}/(2\varepsilon_0 Q)$, that is Eq.~\eqref{eq:vemb_planar} with $\gs = \beta$.
+field at $z = 0$ (worked out in the companion notes on classical models). The reflected wave of
+Sec.~\ref{sec:embedding_planar} is the potential of the image, $\vemb(Q;z,z') = -\beta\,e^{-Q(z + z')}/(2\varepsilon_0 Q)$,
+that is Eq.~\eqref{eq:vemb_planar} with $\gs = \beta$.
 For a layer of zero thickness in the plane $z = d$, the dressed interaction in the layer is
 \begin{equation}
 \vt(Q) = v(Q) + \vemb(Q) = \frac{1 - \beta e^{-2Qd}}{2\varepsilon_0 Q} = \frac{1}{2\varepsilon_0 Q\,\epsenv(Q)} , \qquad

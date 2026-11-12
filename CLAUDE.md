@@ -192,12 +192,49 @@ computational procedure (possibly a code implementation).
   by products of layer states (occupied states in chi0^L; bound states of interest in the Sigma and BSE matrix
   elements); eq:W_LL now also shows vt = v + v_emb, v_emb = v chi^S v, so the two ingredients chi0^L and chi^S are
   visible. Sec. 2.1 makes no geometric assumption (general, as Amblard); geometry enters only in Sec. 2.2. 2.2 planar substrate
-  (`sec:embedding_planar`): substrate z < 0, layer z > 0 around d; substrate Umklapp Q -> Q + G^S neglected (decay
-  e^{-|Q+G^S| z}, |G^S| d ~ 10 for hBN at d ~ 3 A); mixed representation K(Q;z,z'); v(Q;z,z') = e^{-Q|z-z'|}/(2 eps0 Q);
-  v_emb(Q;z,z';w) = -g(Q,w) e^{-Qz} e^{-Qz'}/(2 eps0 Q), g = -(1/(2 eps0 Q)) int int e^{Qz1} chi^S e^{Qz2}
-  (eq:vemb_planar, derived here): rank one at each Q, static g > 0, dielectric half-space g = beta (eps_inf) gives
-  eq:vt_sheet, g computable in the substrate's own cell; made self-contained on 2026-11-11 (in-plane expansion and
-  v(Q;z,z') stated in place, no reference to the moved sections). 2.3 "Example: a dielectric half-space and an
+  (`sec:embedding_planar`), REWRITTEN 2026-11-12 at the user's request (no generic kernel K; physical chain; figure):
+  Title "Planar geometry" since 2026-11-12 (user: layer and substrate both infinite in the xy plane; it was "A planar
+  substrate"; label unchanged). The opening of Sec. 2 no longer says that the planar substrate "simplifies the
+  result" (user 2026-11-12): it says that the relations of Sec. 2.1 (eq:W_LL, the ones to implement) hold for any
+  geometry and that the planar geometry enters only in Sec. 2.2. "What we compute" (added 2026-11-12, user: state the goal first; self-contained, without relying on models.tex):
+  by Sec. 2.1 the substrate enters only through vt = v + v_emb = potential produced in the layer by a charge of the
+  layer when the substrate polarizes and the layer does not (the layer's own polarization added afterwards by chi0^L
+  in eq:W_LL); the charge of the layer decomposed in charge waves e^{iQ.r_par}, Q = q + G_par of the layer; question:
+  how the potential of a charge wave changes in the presence of the substrate (v in vacuum, v_emb added); the answer
+  closes the subsection after eq:vemb_planar: vt(Q;z,z';w) = v + v_emb, and for zero thickness
+  vt(Q,w) = [1 - g e^{-2Qd}]/(2 eps0 Q) (displayed, unnumbered; g = beta gives eq:vt_sheet of 2.3);
+  "Geometry" (substrate = slab -t < z < 0 of finite thickness t, e.g. a second layer, t -> inf semi-infinite: user
+  2026-11-12, in view of the applications; it only sets the integration range; layer around z = d; assumption:
+  the plane z = 0 separates the charges, chi^S nonzero only at z1, z2 < 0 incl. density tails = planar form of
+  no-overlap; chain z' (layer) -> z2 -> z1 (substrate) -> z (layer)); Fig. `fig:planar` (TikZ in main.tex: (a)
+  geometry and chain v chi^S v with the points z', z2, z1, z; (b) potential along z of a charge wave at z' = d, bare v
+  dashed = incident wave in the substrate, v_emb solid = reflected wave, sketch Qd = 0.7, g = 0.7); "In-plane waves"
+  (the definition of the charge waves and of Q = q + G_par moved to "What we compute"; chain in three bullets: v keeps Q,
+  substrate answers at Q and Q + G^S, return decay e^{-|Q+G^S|(z-z1)}; G^S != 0 terms <= e^{-|G^S| d} by
+  Q + |Q+G^S| >= |G^S|, ~1e-4 for hBN; layer sees a laterally averaged substrate; numbered eq:chiS_Q = expansion of
+  chi^S diagonal in Q, which DEFINES chi^S(Q;z1,z2;w); then, in prose: mismatch, rotation, registry irrelevant, no
+  strain/common cell; registry and moire only in the neglected terms, small also for commensurate lattices (user's
+  question)); "The embedding term" (rewritten twice on 2026-11-12, user: first the bullets of the "Reflection of a
+  potential wave" version, then the details between the v and g equations were too many): eq:v_Qz first = the in-plane
+  Fourier transform of v, same expansion as eq:chiS_Q, exact (no Poisson derivation, no range discussion);
+  then (user 2026-11-12) a paragraph stating that v_emb(r,r') is needed only with BOTH arguments in the layer (vt in
+  eq:W_LL stands next to chi0^L or chit^L, or at the outer arguments of W, needed only in the layer), the integration
+  points r1, r2 run over the substrate, and v_emb(Q;z,z') is the in-plane Fourier transform of v_emb with the same
+  expansion as eq:chiS_Q (product of three Q-diagonal factors; in-plane integrals over r1, r2 select the same Q);
+  eq:vemb_chain v_emb(Q;z,z') = int_{-t}^0 int_{-t}^0 v chi^S v for z, z' > 0; factorization in one line;
+  eq:vemb_planar (integrals from -t to 0) with g = surface response function, cited as Pitarke et al.
+  Rep. Prog. Phys. 70, 1 (2007) Eqs. (230)-(231) (`pitarke2007theory`; same expressions in a.u.: W = v - (2pi/q)
+  e^{-q(z+z')} g, g = -(2pi/q) int int e^{q(z1+z2)} chi; verified 2026-11-12 on the arXiv version cond-mat/0611257
+  through ar5iv, two reads; equation numbers of the arXiv version; the PDF is NOT in the REFERENCES library); then the
+  incident/reflected-wave reading in prose; zero thickness z = z' = d: v_emb = -g e^{-2Qd}/(2 eps0 Q) (the user asked
+  whether to assume zero thickness: kept general, it costs nothing and is needed for the G_z structure in Yambo);
+  bullets: single function g (any structure and thickness); static g > 0; dielectric half-space g = beta, anisotropic
+  eps -> (eps_par eps_perp)^(1/2) (derived); dielectric slab of thickness t: g = beta (1 - e^{-2Qt})/(1 - beta^2
+  e^{-2Qt}) (derived 2026-11-12), -> beta for Qt >> 1, ~ (eps^2 - 1) Qt/(2 eps) -> 0 for Qt << 1: a thin substrate
+  does not screen at long wavelengths (relevant to the hBN bilayer benchmark: the second layer is a thin substrate);
+  general Q, w dependence; reference plane: z = 0 need not be the top of the substrate, moving it by z0 gives
+  g e^{-2Qz0}, dielectric with surface at z_s has g = beta e^{2Q z_s}, real substrate -> Q dependence at small Q, the
+  distance that matters is from the plane of the induced charge; g computable in the substrate's own cell. 2.3 "Example: a dielectric half-space and an
   insulating layer" (`sec:embedding_example`, 2026-11-11, from the old Secs. 4-5): image construction in one sentence
   (details in models.tex), v_emb = -beta e^{-Q(z+z')}/(2 eps0 Q), i.e. g = beta; vt(Q) and eps_env (eq:vt_sheet);
   real-space vt with the image (eq:vt_real, the user's "Eq. 34", kept on purpose; the sentence after it names the
@@ -241,11 +278,13 @@ computational procedure (possibly a code implementation).
   small-q behaviour).
   Bibliography restored (2026-11-10) with the first citations (Sec. 1): strinati1988application,
   blase2018introduction, golze2019gw, amblard2024static (entries copied from the catalogue without the
-  doctype/keywords/file fields).
+  doctype/keywords/file fields); pitarke2007theory (Sec. 2.2, 2026-11-12) is NOT in the library catalogue: entry
+  written by hand from the arXiv page (DOI 10.1088/0034-4885/70/1/R01); add the PDF to REFERENCES if wanted.
   Planned (user, 2026-11-09, not now): the analysis of the effect of the substrate in the GW language (v_emb =
   v chi^S v, link with the Blase-Duchemin papers and their "reaction field"), building on Sec. 1; the removed
   introduction (goal of the notes, chi0 = chi0^L + chi0^S, eq. vt = v + v chi^S v) is recoverable from git history.
-  Figures: main.tex `fig:response` (TikZ, Sec. 1) and `vt_ratio` (make_figures.py, Sec. 2.3); models.tex
+  Figures: main.tex `fig:response` (TikZ, Sec. 1), `fig:planar` (TikZ, Sec. 2.2) and `vt_ratio` (make_figures.py,
+  Sec. 2.3); models.tex
   `sheet_modes` (make_figures.py, both panels). Removed on 2026-11-09 at the user's request (recoverable from git history): figures
   `charge_wave_field` and `sheet_potential` (potential profiles of a charge wave above the substrate); the old section on the Coulomb interaction in the plane (point-charge Fourier
   transform, mixed representation, bullets on range, long wavelengths and polarization waves).
@@ -442,6 +481,11 @@ interaction; r0 = 2 pi chi_2D.
   eq:vt_sheet, eq:vt_real, eps_env, limits, Keldysh W of an insulating layer); figure split: `vt_ratio` (main),
   `sheet_modes` (models). Sec. 2.2 made self-contained; it will be analysed in detail together with the computational
   step (user).
+- 2026-11-12: Sec. 2.2 rewritten (user: the generic kernels were never introduced and the section was hard to read):
+  physical chain layer -> substrate -> layer, g as the reflection coefficient of potential waves, schematic figure
+  `fig:planar`; Sec. 2.3 now calls the image potential the reflected wave of Sec. 2.2. Same day (user): the embedding
+  term rebuilt explicitly from v chi^S v (no bullets), g cited from Pitarke et al. 2007; substrate of finite thickness
+  t (slab -t < z < 0), with the dielectric-slab g as an example.
 - 2026-11-11: move to the computational analysis (user). Benchmark candidates searched in the literature
   (docs/04): bilayer hBN chosen as the first test (cheap, same lattice, explicit QE+Yambo reference by Guo et al. 2020;
   the static limit does not hold there, which the user accepts: test of the general, dynamical scheme); then SnS2/hBN
