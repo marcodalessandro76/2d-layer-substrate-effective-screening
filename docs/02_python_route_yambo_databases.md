@@ -100,6 +100,20 @@ notes, is meant to prepare this analysis.
   rebuilds W near q = 0 from the stored screening assuming W = v/(1 - v f) with the bare v_cut, so a vt-based screening
   written in the databases would be partly overwritten in the q-cell around Gamma unless RIM_W is adapted or
   switched off -> to analyse with item A.
+  CORRECTED (2026-11-12, re-read of `qp/QP_ppa_cohsex.F`, `qp/QP_interpolate_W.F`, `coulomb/rim_integrate_w.F`):
+  the replacement is NOT limited to Gamma. For EVERY q of the IBZ and for G, G' <= RandGvecW, the PPA residue (static
+  W - v) is replaced by the average over the q-cell of v_G f_GG' v_G' / (1 - v_G f_GG' v_G') (element by element, not a
+  matrix inversion), with v_G = slab-cutoff v at q + q' + G; only the PPA pole energy is replaced at q = 0 alone
+  (RIM_W_E). f is extracted from the database as f_GG' = [vX/(1 + vX)]_GG' / sqrt(v_G v_G') (vX = eps^-1 - 1, bare
+  v_cut), i.e. an element-wise chi0, and fitted quadratically in q over 5 neighbouring q points. The BSE kernel
+  (`bse/K_screened_interaction.F`) uses RIM_W too. Consequences: (i) explicit runs (ML, bilayer): no issue, RIM_W is
+  the standard treatment; (ii) a database that stores the screening in the STANDARD form, W = v + v chi v with bare
+  v_cut and chi0 = chi0^L + chi0^S (both in the same cell: the hBN-bilayer benchmark), is consistent with RIM_W, since
+  RIM_W then extracts f = chi0^L + chi0^S and rebuilds W with v as for any system (exact identity
+  vt + vt chit^L vt = v + v chi v, Sec. 2.1 of the Notes); (iii) a vt-based database (v_emb not representable as
+  v chi^S v in the cell, e.g. the planar g(Q) of a semi-infinite substrate) is inconsistent with RIM_W precisely in the
+  small-G block (G_par = 0, low G_z), where v_emb ~ e^{-2Qd}/Q is largest: there either an equivalent chi0^S in the
+  cell, or RIM_W off and the q-cell average of W done in python.
 - Existing environment option: input variable `EpsEnv` (verbosity RL, default 1; `INIT_load.F`): in `col_driver.F`
   bare_qpg *= sqrt(eps_env) and RIM_qpg /= eps_env, i.e. v -> v/eps_env UNIFORMLY (all q, G, also in the bare exchange
   and in the screening); the analogous rescaling in `rim_integrate_w.F` and `QP_interpolate_W.F` is commented out.
