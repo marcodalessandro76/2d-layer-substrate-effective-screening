@@ -385,7 +385,16 @@ computational procedure (possibly a code implementation).
   (8, 250): BL - ML QP corrections at K v +0.170 / +0.171 / +0.172, c -0.200 / -0.198 / -0.198, gap correction
   -0.370 / -0.369 / -0.369 eV (converged within 2 meV; absolute corrections move by up to 50 meV, equally in BL and ML).
   GW gap at K: AA' 7.018 vs ML 7.337 eV (-0.319 = -0.370 GW + 0.051 KS). Choice: bilayers at 6 Ha, 212 bands, BG.
-  Costs (1 node): 43 min, 1 h 02 min, 1 h 52 min. AB GW (6 Ha, 212) launched 2026-11-13.
+  Costs (1 node): 43 min, 1 h 02 min, 1 h 52 min.
+  AB GW (6 Ha, 212, BG; 53 min): states at K split already in KS (valence 0.113, conduction 0.157 eV); QP corrections
+  at K b7..b10 = -1.118 / -1.127 / +1.062 / +1.083 eV (AA' -1.150 / -1.149 / +1.104 / +1.105, ML -1.320 / +1.304):
+  BL - ML v +0.19/+0.20, c -0.22/-0.24 eV (AA' +0.17, -0.20): the stacking changes the substrate effect on the single
+  corrections by 20-40 meV. GW gap at K: AB 6.774 (KS 4.585), AA' 7.018 (KS 4.765), ML 7.337 (KS 4.714); at Gamma
+  8.010 / 8.064 / 8.315 eV. Gap correction b9 - b8 at K: AB -0.434, AA' -0.370 eV vs ML, but in AB b8 and b9 may
+  belong to different layers: layer character of b7-b10 at K (projwfc.x or wavefunctions) needed before comparing
+  with the effective scheme (AA': degenerate pairs, no issue). Explicit side of the benchmark at k = 18 complete
+  (ML_bot, ML_top_AA1, ML_top_AB, AA', AB). Next (to agree): layer character in AB; embedding, starting from the
+  choice of the Lumen database that gives chi0 of ML_bot and ML_top (docs/02 Sec. 4).
 
 ## Roadmap (provisional, to be agreed step by step)
 1. Framing and literature (in progress): the three embedding papers (done, first reading); still to read: Neaton
