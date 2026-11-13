@@ -390,11 +390,17 @@ computational procedure (possibly a code implementation).
   at K b7..b10 = -1.118 / -1.127 / +1.062 / +1.083 eV (AA' -1.150 / -1.149 / +1.104 / +1.105, ML -1.320 / +1.304):
   BL - ML v +0.19/+0.20, c -0.22/-0.24 eV (AA' +0.17, -0.20): the stacking changes the substrate effect on the single
   corrections by 20-40 meV. GW gap at K: AB 6.774 (KS 4.585), AA' 7.018 (KS 4.765), ML 7.337 (KS 4.714); at Gamma
-  8.010 / 8.064 / 8.315 eV. Gap correction b9 - b8 at K: AB -0.434, AA' -0.370 eV vs ML, but in AB b8 and b9 may
-  belong to different layers: layer character of b7-b10 at K (projwfc.x or wavefunctions) needed before comparing
-  with the effective scheme (AA': degenerate pairs, no issue). Explicit side of the benchmark at k = 18 complete
-  (ML_bot, ML_top_AA1, ML_top_AB, AA', AB). Next (to agree): layer character in AB; embedding, starting from the
-  choice of the Lumen database that gives chi0 of ML_bot and ML_top (docs/02 Sec. 4).
+  8.010 / 8.064 / 8.315 eV. Explicit side of the benchmark at k = 18 complete (ML_bot, ML_top_AA1, ML_top_AB, AA', AB).
+  LAYER CHARACTER (2026-11-13, DFT_Analysis.ipynb, `DFT_analysis/layer_character/`): projwfc.x is unusable (SG15 ONCV
+  pseudos have no atomic wavefunctions); used pp.x plot_num = 7 (|psi_nk|^2, nscf k = 18) + average.x along z,
+  weight in z < 0 (bottom) vs z > 0 (top). AB at K: b7, b9 on the bottom layer, b8, b10 on the top (98-99%): the KS gap
+  b9 - b8 is INTERLAYER; layer gaps at K: bottom b9 - b7 (KS 4.697, GW 6.878), top b10 - b8 (KS 4.741, GW 6.952). AB at
+  Gamma: valence pair b7, b8 on the top layer, NFE conduction states on both. AA': degenerate pairs, 50/50 (equal
+  corrections within 1 meV, any combination has the same correction). Layer-resolved gap correction BL - ML at K:
+  AA' -0.370; AB bottom -0.444 (v +0.202, c -0.242), top -0.414 (v +0.193, c -0.221) eV: stacking effect 45-75 meV,
+  what the effective scheme (same result for both stackings) misses. Next (user, 2026-11-13): QP band structures of
+  the systems; then embedding, starting from the choice of the Lumen database that gives chi0 of ML_bot and ML_top
+  (docs/02 Sec. 4).
 
 ## Roadmap (provisional, to be agreed step by step)
 1. Framing and literature (in progress): the three embedding papers (done, first reading); still to read: Neaton
