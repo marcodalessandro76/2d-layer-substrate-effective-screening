@@ -496,10 +496,10 @@ computational procedure (possibly a code implementation).
   centres), to compare with the effective QP level; (c) plots of the full-system KS and GW bands weighted by the
   projection on the layer, over the ML/effective bands. (4) Expectation from Xuan et al.: agreement within ~0.1 eV at
   K, large deviations at Gamma dominated by the DFT hybridization (outside the scheme by construction).
-  Kept arXiv PDFs (user, 2026-11-13; the others deleted): 1903.01847 (Xuan 2019), 1912.00875 (Liu 2020), 2404.17182
-  (Reho 2024), 1002.4218 (Ku 2010), 1409.5343 (Medeiros 2015), 2505.17292 (Leon...Thygesen 2025), in the session
-  scratchpad `/tmp/claude-1125/-work-dalessandro-2d-layer-substrate-effective-screening/d4b43a65-a94d-4243-bb4f-d8560dfd42f0/scratchpad/pdfs_lit`
-  (temporary, not tracked): the user copies them with scp to the laptop REFERENCES library.
+  PDFs available on the LAPTOP (copied by the user with scp on 2026-11-13 into the REFERENCES area, folder
+  `pdfs_lit`; the cluster copy was deleted): arXiv 1903.01847 (Xuan, Chen, Quek 2019), 1912.00875 (Liu 2020),
+  2404.17182 (Reho et al. 2024), 1002.4218 (Ku, Berlijn, Lee 2010), 1409.5343 (Medeiros et al. 2015), 2505.17292
+  (Leon...Thygesen 2025). Not on the cluster: read them from a laptop session, or download again from arXiv.
 - Physics target (layer and observables): to be defined during the analysis.
 - Exchange kernel of the BSE with v or vt.
 - Content and conventions of the Yambo screening databases: to be verified on the Lumen source (cluster) before any
