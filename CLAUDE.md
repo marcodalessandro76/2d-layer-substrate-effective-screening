@@ -294,6 +294,17 @@ computational procedure (possibly a code implementation).
   `04_benchmark_systems.md` (explicit vs effective GW benchmark: bilayer hBN first, other candidates, literature).
 - `pseudos/` (tracked): SG15 ONCV PBE scalar-relativistic v1.2 `B_ONCV_PBE-1.2.upf`, `N_ONCV_PBE-1.2.upf`
   (downloaded 2026-11-11 from quantum-simulation.org/potentials/sg15_oncv/upf/, no NLCC; user's choice: no SOC).
+- RESULTS vs CALCULATIONS (user, 2026-11-13): the computational notebooks (DFT_Analysis, GW_Analysis, ...) are the
+  lab book (runs, convergence, checks); each ends with an "Export of the reference results" section that writes small
+  JSON files in `<system>/results/` (TRACKED in git; metadata block with description, units, source runs, date;
+  energies in eV rounded to 0.1 meV; helper `write_json` keeps number lists on one line). `<system>/Results.ipynb`
+  (one per system, DFT + MB together) builds its tables and figures ONLY from these JSON files (numpy + matplotlib,
+  no MPPI, no run folders: runs on the laptop too); it is short, physics only, and the base for the notes and for the
+  figures of a paper (the JSON files are the data to share). hBN_bilayer (2026-11-13): `dft_ground_state.json`
+  (parameters, lattice, atoms of the 5 systems, energies, gaps on the k = 12 grid), `dft_bands.json` (KS bands
+  ML_bot/AA1/AB on G-M-K-G, 181 k, from the VBM on the path), `dft_layer_character.json`; Results.ipynb sections:
+  systems/setup + geometry plot, DFT ground state, DFT bands (+ ML vs BL overlay, band edges at G/M/K), layer
+  character, GW bands (pending: export section of GW_Analysis to `gw_*.json` after the full-IBZ runs).
 - `hBN_bilayer/DFT_Analysis.ipynb` (created 2026-11-11, NOT yet run; setup cells dry-checked): calculator factory
   `qe_code()` (all12h, 16 MPI x 2 OMP, qe_module, BeeOND, no exclude), `hbn_positions(system)` for the bilayers
   'AA1' (AA'), 'AB' and the monolayers 'ML' = 'ML_bot' (bottom layer alone), 'ML_top_AA1', 'ML_top_AB' (top layer of

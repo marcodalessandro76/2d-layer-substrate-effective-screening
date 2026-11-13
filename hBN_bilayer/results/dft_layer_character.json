@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "description": "Layer character of the bilayer states 7-10 at Gamma and K: fraction of |psi_nk|^2 in the bottom half of the cell (z < 0, bottom layer at z = -d/2), from pp.x (plot_num 7) + average.x on the nscf at k = 18",
+    "units": "dimensionless (0-1)",
+    "source_notebook": "hBN_bilayer/DFT_Analysis.ipynb",
+    "source_runs": "DFT_analysis/kpoints_18-nbnds_400-<system>, DFT_analysis/layer_character",
+    "code": "Quantum ESPRESSO 7.0 (pw.x), PBE",
+    "date": "2026-11-13"
+  },
+  "k_points": {
+    "Gamma": {
+      "index_k18_grid": 1,
+      "coords_2pi_over_a": [0.0, 0.0, 0.0]
+    },
+    "K": {
+      "index_k18_grid": 37,
+      "coords_2pi_over_a": [0.3333333333333333, 0.5773502691896258, 0.0]
+    }
+  },
+  "systems": {
+    "AA1": {
+      "Gamma": {
+        "7": 0.5,
+        "8": 0.5,
+        "9": 0.499,
+        "10": 0.5
+      },
+      "K": {
+        "7": 0.499,
+        "8": 0.5,
+        "9": 0.499,
+        "10": 0.5
+      }
+    },
+    "AB": {
+      "Gamma": {
+        "7": 0.003,
+        "8": 0.003,
+        "9": 0.565,
+        "10": 0.437
+      },
+      "K": {
+        "7": 0.989,
+        "8": 0.006,
+        "9": 0.977,
+        "10": 0.021
+      }
+    }
+  }
+}

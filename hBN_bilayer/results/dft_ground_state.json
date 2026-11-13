@@ -1,0 +1,139 @@
+{
+  "metadata": {
+    "description": "Converged PBE ground states of monolayer and bilayer hBN: parameters, geometry, total energies and gaps on the k grid of the scf (12x12x1)",
+    "units": "lengths in angstrom (c also in bohr), total energies in Ha, gaps in eV",
+    "source_notebook": "hBN_bilayer/DFT_Analysis.ipynb",
+    "source_runs": "DFT_analysis/gs_converged-<system>",
+    "code": "Quantum ESPRESSO 7.0 (pw.x), PBE",
+    "date": "2026-11-13"
+  },
+  "parameters": {
+    "functional": "PBE",
+    "spin_orbit": false,
+    "pseudopotentials": {
+      "B": "B_ONCV_PBE-1.2.upf",
+      "N": "N_ONCV_PBE-1.2.upf",
+      "family": "SG15 ONCV v1.2, scalar relativistic, no NLCC"
+    },
+    "ecutwfc_Ry": 80,
+    "k_grid": [12, 12, 1],
+    "ibrav": 4,
+    "a": 2.504,
+    "c": 21.1671,
+    "c_bohr": 40.0,
+    "d_interlayer": 3.33
+  },
+  "lattice_vectors": [
+    [2.504, 0.0, 0.0],
+    [-1.252, 2.1685, 0.0],
+    [0.0, 0.0, 21.1671]
+  ],
+  "systems": {
+    "ML_bot": {
+      "description": "monolayer = bottom layer of the bilayers (z = -d/2); layer and substrate of the effective scheme",
+      "n_occupied_bands": 4,
+      "atoms": [
+        {
+          "species": "B",
+          "position": [0.0, 1.4457, -1.665]
+        },
+        {
+          "species": "N",
+          "position": [1.252, 0.7228, -1.665]
+        }
+      ],
+      "total_energy_Ha": -12.880929,
+      "gap": 4.7146,
+      "direct_gap": 4.7146,
+      "gap_Gamma": 6.0871
+    },
+    "ML_top_AA1": {
+      "description": "monolayer = top layer of the AA' bilayer, alone (z = +d/2)",
+      "n_occupied_bands": 4,
+      "atoms": [
+        {
+          "species": "N",
+          "position": [0.0, 1.4457, 1.665]
+        },
+        {
+          "species": "B",
+          "position": [1.252, 0.7228, 1.665]
+        }
+      ],
+      "total_energy_Ha": -12.880929,
+      "gap": 4.7145,
+      "direct_gap": 4.7145,
+      "gap_Gamma": 6.0871
+    },
+    "ML_top_AB": {
+      "description": "monolayer = top layer of the AB bilayer, alone (z = +d/2)",
+      "n_occupied_bands": 4,
+      "atoms": [
+        {
+          "species": "B",
+          "position": [1.252, 0.7228, 1.665]
+        },
+        {
+          "species": "N",
+          "position": [0.0, 0.0, 1.665]
+        }
+      ],
+      "total_energy_Ha": -12.880929,
+      "gap": 4.7144,
+      "direct_gap": 4.7144,
+      "gap_Gamma": 6.087
+    },
+    "AA1": {
+      "description": "bilayer, AA' stacking (bulk hBN; B over N, N over B), D3d",
+      "n_occupied_bands": 8,
+      "atoms": [
+        {
+          "species": "B",
+          "position": [0.0, 1.4457, -1.665]
+        },
+        {
+          "species": "N",
+          "position": [1.252, 0.7228, -1.665]
+        },
+        {
+          "species": "N",
+          "position": [0.0, 1.4457, 1.665]
+        },
+        {
+          "species": "B",
+          "position": [1.252, 0.7228, 1.665]
+        }
+      ],
+      "total_energy_Ha": -25.761078,
+      "gap": 4.5412,
+      "direct_gap": 4.7649,
+      "gap_Gamma": 6.1911
+    },
+    "AB": {
+      "description": "bilayer, AB stacking (top B over bottom N, top N over a hexagon centre), C3v",
+      "n_occupied_bands": 8,
+      "atoms": [
+        {
+          "species": "B",
+          "position": [0.0, 1.4457, -1.665]
+        },
+        {
+          "species": "N",
+          "position": [1.252, 0.7228, -1.665]
+        },
+        {
+          "species": "B",
+          "position": [1.252, 0.7228, 1.665]
+        },
+        {
+          "species": "N",
+          "position": [0.0, 0.0, 1.665]
+        }
+      ],
+      "total_energy_Ha": -25.761102,
+      "gap": 4.5355,
+      "direct_gap": 4.5851,
+      "gap_Gamma": 6.1464
+    }
+  }
+}
