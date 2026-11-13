@@ -447,59 +447,83 @@ computational procedure (possibly a code implementation).
 7. Full procedure, convergence, applications.
 
 ## Open points
-- LAYER-PROJECTED BAND STRUCTURE OF THE FULL SYSTEM (user, 2026-11-13, "fundamental point"): the effective scheme
-  describes ONLY the states of the layer (KS states of the free-standing layer + QP corrections with vt); the full
-  system (bilayer, in general layer + substrate) also has the substrate states. In the bilayer each ML band appears
-  twice, one copy per layer; the splittings between the copies come from hybridization (M, Gamma: 0.5-0.67 eV in DFT)
-  or from inequivalent layers (AB at K: 0.11/0.16 eV in DFT), both ground-state effects outside the scheme by
-  construction. Hence (user): to compare the ML bands corrected with v_emb with the full system, the band structure
-  of the full system must be PROJECTED on the states of the layer. Our assessment (to discuss and verify):
-  (i) justification: under no overlap, Sigma_nn = <n|iGW|n> for a layer state has no contribution from the substrate
-  states of G (overlap densities psi^L* psi^S = 0), so Sigma = i G^L W with W from chi0^L + chi0^S: the scheme is exact
-  (within G0W0 + no overlap) for the layer states, i.e. half of the bilayer bands; not yet written in the notes;
-  (ii) projections: (a) spatial layer weight w_nk = int_layer |psi_nk|^2 along the whole path (fat bands; so far only
-  at G and K, pp.x + average.x); (b) overlap with the ML states in the same cell, P_nk(m) = |<psi^ML_mk|psi^BL_nk>|^2
-  (ML_top_* are computed in the exact position of each layer: same cell, cutoff, k grid; gives also which ML band m
-  each bilayer state comes from); in G0W0 the QP states are the KS ones, so the KS weights also project the QP
-  bands; (iii) for hybridized pairs (weights ~0.5, M and Gamma) the comparable quantity is probably the weighted
-  mean (first moment of the layer-projected spectral function A_L(k,w) = sum_n w_nk delta(w - E_nk)): to verify;
-  (iv) for a real substrate (germanene/hBN, possibly a mismatched supercell) the projection must be combined with
-  band unfolding to the BZ of the layer (Ku, Berlijn, Lee PRL 104, 216401 (2010), read on arXiv; Popescu-Zunger PRB
-  85, 085201 (2012), citation only). Method and implementation (python on the QE wavefunctions vs QE/yambo tools) to
-  decide with the user.
-  Literature (2026-11-13, web search by a sub-agent; the items marked "checked" were read by Claude on the arXiv
-  text): Liu, JCP 152, 054103 (2020) (checked): Eq. 2, <phi_tot|Sigma[G_tot W_tot]|phi_tot> ~ <phi_mol|Sigma[G_tot
-  W_tot]|phi_mol> ("molecular projection", Tamblyn et al. PRB 84, 201402 (2011)) ~ <phi_mol|Sigma[G_mol W~_tot]|phi_mol>
-  (embedding), the last step dropping the substrate terms of G under small overlap = our point (i); interface state
-  identified by the largest |<phi_tot|phi_mol>|^2. Xuan, Chen, Quek, JCTC 15, 3824 (2019) (checked): graphene/hBN,
-  full GW vs the component-wavefunction scheme (XA(noF), our type): at K (states fully on hBN) within 0.1 eV; at Gamma
-  (CBM 66% on hBN) off by 1.3 eV (6.33 vs 7.59 eV), and at short distance most of the error is the DFT gap: same
-  picture as our bilayer (compare at K). Amblard et al. JCP 160, 154104 (2024) (read on the PDF): reference = fully
-  dynamical FRAGMENT-embedded GW, no full-system GW; compared quantities = polarization energies (shift of HOMO/LUMO/
-  gap from the gas phase); for C60 at the crystal surface the fragment scheme gives the PEAK-TO-PEAK gap (centres of
-  the HOMO/LUMO bands, no band formation from overlap) -> supports the first moment for hybridized states. Others
-  (sub-agent, not checked by Claude): Chen-Weinert PRB 98, 245421 (2018) layer k-projection with a z window; Reho et
-  al. PRB 110, 035118 (2024) layer-projected GW bands of MoS2/WS2 with QE+Yambo; Winther-Thygesen G-Delta-W 2D Mater.
-  4, 025059 (2017) and Leon...Thygesen PRB 112, 115128 (2025) add the DFT hybridization of the full system separately
-  (E_DFT(HS) - E_DFT(ML)) to the screening correction; Naik-Jain PRM 2, 084002 (2018) overlaps with the free-standing
-  layer states. Our note: the first moment sum_n |<phi_ML|n>|^2 E_n = <phi_ML|H|phi_ML> exactly (KS), and for QP with
-  Sigma diagonal in the KS basis it is Liu's molecular-projection quantity.
-  CONCLUSIONS AND PLAN (Claude, 2026-11-13, user: "record them"): (1) projection by OVERLAP with the ML states is the
-  method of choice: it maps each full-system state onto the layer state of the effective scheme and gives at the same
-  time the weighted (fat) bands and the comparable quantity also for hybridized states; the spatial z-window weight
-  only as a check; no unfolding for bilayer hBN (lattice matched), needed for germanene/hBN. (2) For the hBN bilayer:
-  overlaps |<psi^ML_mk|psi^BL_nk>|^2 with the states of ML_bot (bottom layer) and ML_top_AA1 / ML_top_AB (top layer),
-  already in the same cell, cutoff and grid (path: bands runs of ML_top_* still to do, QE runs to ask). (3) Benchmark
-  quantities: (a) QP corrections of the states with layer weight ~1 (K): the quantity compared in all the
-  explicit-vs-effective works (Liu, Xuan, Neaton); (b) for hybridized states (M, Gamma) the first moment of the
-  layer-projected spectral function, i.e. <phi_ML|H_QP|phi_ML> (Liu's molecular projection, Amblard's peak-to-peak
-  centres), to compare with the effective QP level; (c) plots of the full-system KS and GW bands weighted by the
-  projection on the layer, over the ML/effective bands. (4) Expectation from Xuan et al.: agreement within ~0.1 eV at
-  K, large deviations at Gamma dominated by the DFT hybridization (outside the scheme by construction).
-  PDFs available on the LAPTOP (copied by the user with scp on 2026-11-13 into the REFERENCES area, folder
-  `pdfs_lit`; the cluster copy was deleted): arXiv 1903.01847 (Xuan, Chen, Quek 2019), 1912.00875 (Liu 2020),
-  2404.17182 (Reho et al. 2024), 1002.4218 (Ku, Berlijn, Lee 2010), 1409.5343 (Medeiros et al. 2015), 2505.17292
-  (Leon...Thygesen 2025). Not on the cluster: read them from a laptop session, or download again from arXiv.
+- LAYER PROJECTION OF THE FULL SYSTEM (user, 2026-11-13, "fundamental point"). Integrated plan, 2026-11-13: analysis
+  of the cluster session + literature check of the laptop session (all 10 papers with keyword substrate-screening in
+  REFERENCES/_Catalog/library.bib, read in full by sub-agents; [V] = verified by Claude on the PDF page). Method and
+  quantities agreed in principle with the user; implementation (python on the QE wavefunctions vs QE/yambo tools) to
+  decide with the user; QE runs to ask.
+  1. PROBLEM. The effective scheme describes ONLY the states of the layer (KS states of the free-standing layer + QP
+     corrections with vt); the full system also has the substrate states. In the bilayer each ML band appears twice,
+     one copy per layer; the splittings between the copies come from hybridization (M, Gamma: 0.5-0.67 eV in DFT) or
+     from inequivalent layers (AB at K: 0.11/0.16 eV in DFT), both ground-state effects outside the scheme by
+     construction. To compare, the bands of the full system must be PROJECTED on the states of the layer.
+  2. WHY IT IS MEANINGFUL. Under no overlap, Sigma_nn = <n|iGW|n> of a layer state gets no contribution from the
+     substrate states of G (overlap densities psi^L* psi^S = 0), so Sigma = i G^L W with W from chi0^L + chi0^S: the
+     scheme is exact (G0W0 + no overlap) for the layer states (not yet written in the notes). Liu, JCP 152, 054103
+     (2020), Eq. 2 [V]: <phi_tot|Sigma[G_tot W_tot]|phi_tot> ~ <phi_mol|Sigma[G_tot W_tot]|phi_mol> ~
+     <phi_mol|Sigma[G_mol Wt_tot]|phi_mol>; the middle term, the "molecular projection" (Tamblyn et al. PRB 84, 201402
+     (2011)), is the correct reference for the effective scheme ("method (B) should be the proper benchmark", p. 6
+     [V]); the last step drops the terms of G with substrate states because the overlap is small = our argument.
+     Xuan, Chen, Quek, JCTC 15, 3824 (2019): W from additive chi (chi^1 + chi^2) with the FULL wavefunctions in Sigma
+     (XAF) reproduces full GW even with hybridization (graphene/hBN, Gamma: 7.65 vs 7.59 eV); the layer-only scheme
+     (XA(noF), our type) is within 0.1 eV at K and off by 1.3 eV at Gamma, mostly from the DFT gap => for hybridized
+     states the error of the scheme is in G (KS states), not in W.
+  3. METHOD: OVERLAP WITH THE ML STATES, P_nk(m) = |<psi^ML_mk|psi^BL_nk>|^2. The most informative choice: for each
+     bilayer state it says from which ML band m it comes (band-by-band correspondence), and it gives both the plot and
+     the quantity to compare (point 4). Formal basis: Ku, Berlijn, Lee PRL 104, 216401 (2010), Eq. 2 [V]: projection of
+     the full spectral function on the states of the UNCOUPLED system, A_kj(w) = sum_KJ |<kj|KJ>|^2 A_KJ(w); Liu's
+     method A [V, p. 5] picks the interface state with the largest |<phi_tot|phi_mol>|^2 (isolated layer in the same
+     cell). For hBN: ML_bot and ML_top_AA1 / ML_top_AB are computed in the exact position of each layer, with the same
+     cell, cutoff and k grid, so the overlaps are direct dot products of the plane-wave coefficients (norm-conserving
+     SG15: no augmentation). In G0W0 the QP states are the KS ones: the KS weights also project the QP bands.
+     Technical points: sum |<.|.>|^2 over degenerate subspaces on both sides (gauge; AA' pairs); the SAME k vector in
+     ML and BL (their IBZ differ: ML 6 spatial ops + T, AA' 12), not just the same star; restrict m to the bound layer
+     bands (with all bands sum_m P = 1 trivially) and check sum_m over the bound bands of the two layers; the ML_bot and
+     ML_top references are not mutually orthogonal (tails, vacuum/NFE states): keep the two projections separate or
+     orthogonalize (Loewdin) if used as one basis. Spatial weight w_nk = int_layer |psi_nk|^2 (pp.x plot_num 7 +
+     average.x, done at Gamma and K) only as a check and as a "spill" diagnostic (Duchemin 2024: errors correlate with
+     the density outside the subsystem): flag the NFE conduction states at Gamma, which neither overlap nor z-window
+     assigns cleanly. Atomic projections (projwfc.x) are not available (SG15 has no atomic wavefunctions) and not needed.
+  4. EXACT RELATION (Claude's observation): sum_n |<phi_ML|n>|^2 E_n = <phi_ML|H|phi_ML> (completeness of the bilayer
+     states n): the first moment of the layer-projected spectral function is the expectation value of H on the ML state;
+     at the QP level it equals Liu's molecular projection if Sigma - Vxc is diagonal in the KS basis, i.e. if the
+     off-diagonal <n|Sigma - Vxc|n'> between bilayer states sharing weight vanish (Yambo G0W0 is diagonal): zero by
+     symmetry for the AA' bonding/antibonding pairs (D3d, inversion: opposite parity), not for AB (to check). Compare
+     the first moment of the CORRECTION, sum_n P_n (E^QP_n - E^KS_n) / sum_n P_n: the first moment of E^KS contains
+     <phi_ML|H^BL|phi_ML> - eps^ML (crystal field of the other layer), which the effective scheme does not have.
+  5. QUANTITIES TO COMPARE (bilayer hBN):
+     (a) at K, states with layer weight ~1: QP - KS corrections, valence and conduction separately (the quantity of all
+         explicit-vs-effective works: Liu, Xuan, Amblard's polarization energies; Amblard 2024: single levels can be off
+         by tenths of eV while the gap is fine); expectation (Xuan): agreement within ~0.1 eV;
+     (b) at M and Gamma, hybridized states: (b1) the correction of the largest-overlap state (Liu A) and (b2) the
+         weighted correction of point 4 (~ Liu B); their spread is the uncertainty of the reference (Liu, Table I: A and
+         B differ by up to 0.6 eV on the broad, hybridized LUMO). Consistent with Amblard et al. JCP 159, 164107 (2023)
+         [V, p. 164107-5]: without hybridization the embedded level is the band CENTRE (peak-to-peak gap);
+     (c) plots of the full-system KS and GW bands weighted by the layer projection, over the ML and effective bands;
+     (d) REVERSE test (Leon et al. PRB 112, 115128 (2025) [V, p. 2]: layer-projected scissors, then the FULL system
+         re-diagonalized so that hybridization is recomputed with the corrected layer levels): diagonalize
+         H_KS^BL(k) + sum_m |psi^ML_m> dE^eff_m <psi^ML_m| with the projectors of both layers and compare the bands with
+         the explicit bilayer GW bands, also at M and Gamma (no projection ambiguity). Leon's projector is different
+         (density matrix in Loewdin-orthogonalized LCAO orbitals of each layer, Eqs. 2-4): not usable with plane waves.
+  6. OPTIONAL (Xuan-type): Sigma with the bilayer G and W from chi0^ML_bot + chi0^ML_top: separates the W error
+     (additivity of chi0) from the G error; needs chi0 databases (same open point as the embedding: ndb.pp is not chi0).
+  7. LATTICE-MISMATCHED SYSTEMS (germanene/hBN). Medeiros et al. PRB 91, 041116 (2015), Eq. 16 [V, p. 3]: the sum over
+     all primitive-cell states at k_i of |psi^pc><psi^pc| is the unfolding projector; plane-wave form (S1)-(S6) [V, SM
+     p. 6] with the plane-wave coefficients only => the overlap with the ML states placed in the supercell already
+     performs the unfolding, band-resolved; unfolding alone does not remove the substrate states (layer filter needed).
+     The ML must be computed in the same strained cell, height and z position as in the heterostructure.
+  8. OTHER LITERATURE: Reho et al. PRB 110, 035118 (2024) (QE + Yambo, MoS2/WS2): layer-projected GW bands shown
+     without a formula (orbital weights, projwfc-type), layer gaps at K compared with ML gaps, z-window for the
+     interlayer/intralayer character of excitons (Eq. 5); Tirimbo et al. WIREs CMS 14, e1734 (2024), review:
+     Mulliken-type assignment at DFT level, compare corrections, substrate screening in both GW and BSE kernel;
+     Duchemin 2024 (spill, above). Not checked by Claude (sub-agent web search): Chen-Weinert PRB 98, 245421 (2018)
+     (layer k-projection with a z window), Winther-Thygesen 2D Mater. 4, 025059 (2017) (G-Delta-W: DFT hybridization of
+     the full system added separately), Naik-Jain PRM 2, 084002 (2018) (overlaps with free-standing layer states).
+     PDFs: on the LAPTOP only, in REFERENCES/03 Equilibrium MBPT - GW and BSE (catalogued, keyword substrate-screening);
+     not on the cluster: read them from a laptop session, or download again from arXiv.
+  9. NEXT STEPS (hBN): overlaps at Gamma, M, K on the nscf k = 18 grids (SAVEs of the 5 systems exist); bands runs of
+     ML_top_* along G-M-K-G for the weighted bands (QE runs to ask; ML_bot, AA1, AB bands runs exist); reader of the QE
+     wavefunctions (python, to decide); quantities 5(a)-(c), then the reverse test 5(d).
 - Physics target (layer and observables): to be defined during the analysis.
 - Exchange kernel of the BSE with v or vt.
 - Content and conventions of the Yambo screening databases: to be verified on the Lumen source (cluster) before any
