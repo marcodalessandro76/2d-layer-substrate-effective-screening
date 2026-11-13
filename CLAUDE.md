@@ -374,6 +374,18 @@ computational procedure (possibly a code implementation).
   CONVERGED GW PARAMETERS (ML_bot, 2026-11-12): k = 18, NGsBlkXp = 6 Ha, BndsRnXp = 200, GbndRnge = 200 + BG,
   RandGvecW = 10 RL, RIM 5e6/100, EXXRLvcs = VXCRLvcs = all G; GW gap at K 7.337 eV (KS 4.714), at Gamma 8.315 eV,
   indirect K -> Gamma 6.668 eV. Run of reference: `kpoints_18-nbnds_250-ML_bot/pp-ngsblkxp_6.0-bndsrnxp_200-gbndrnge_200-bg`.
+  With BG the absolute ML gap at K rises by 20 meV from 6 to 8 Ha (7.339 -> 7.359, 250 bands; without BG +2 meV):
+  ~20 meV uncertainty on absolute gaps, none on BL - ML differences (below).
+  ML_top_AA1, ML_top_AB (2026-11-13): nscf k = 18, 250 bands, SAVE, GW at the converged parameters: reproduce ML_bot
+  within 0.5 meV (geometry check passed); screening in `ndb_pp-ngsblkxp_6.0-bndsrnxp_200` of each folder (database
+  for the embedding still to choose: ndb.pp holds the PPA eps^-1, not chi0).
+  BILAYERS: bands chosen for the SAME energy window as ML (KS states below the mean energy of ML band n at k = 18):
+  ML 200 -> BL 212, ML 250 -> BL 262 (the second layer adds ~8-12 layer bands up to 40-90 eV, not only 4). QP bands
+  7-10 (16 electrons). AA' checks (k = 18, BG): (6 Ha, 212), (6 Ha, 262), (8 Ha, 262) vs ML (6, 200), (6, 250),
+  (8, 250): BL - ML QP corrections at K v +0.170 / +0.171 / +0.172, c -0.200 / -0.198 / -0.198, gap correction
+  -0.370 / -0.369 / -0.369 eV (converged within 2 meV; absolute corrections move by up to 50 meV, equally in BL and ML).
+  GW gap at K: AA' 7.018 vs ML 7.337 eV (-0.319 = -0.370 GW + 0.051 KS). Choice: bilayers at 6 Ha, 212 bands, BG.
+  Costs (1 node): 43 min, 1 h 02 min, 1 h 52 min. AB GW (6 Ha, 212) launched 2026-11-13.
 
 ## Roadmap (provisional, to be agreed step by step)
 1. Framing and literature (in progress): the three embedding papers (done, first reading); still to read: Neaton
