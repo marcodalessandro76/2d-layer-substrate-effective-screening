@@ -601,6 +601,44 @@ computational procedure (possibly a code implementation).
   used here (projection, layer character). The class is generic (one instance = one run; overlaps and transformations
   between instances); the projection (P_mn, degenerate groups, E_m, attribution) stays in the notebooks of this
   project (user, 2026-11-14); a projection class in MPPI only later, once the procedure is stable.
+  STATUS (2026-11-14): DONE in MPPI (commits 410dbc7, 9772c4e, 4f5c3a2, 8a698fb; `~/Applications/MPPI` on ismhpc is
+  already at 8a698fb), so the projection analysis can use it instead of the prototype functions of
+  `hBN_bilayer/Projection_Analysis.ipynb`. Tutorial: MPPI `sphinx_source/tutorials/Tutorial_WfcParser.ipynb`; details in
+  the MPPI CLAUDE.md, same section. Class `mppi.Parsers.WfcParser` (`from mppi.Parsers import WfcParser`); systems
+  WITHOUT spin only (lsda, spinors, gamma_only, hdf5 raise NotImplementedError); k and band indexes 1-based; lengths
+  in bohr, k in bohr^-1, energies in eV; scalar products exact only for norm-conserving pseudopotentials (a warning
+  is printed if the UPF type is not NC/SL).
+  - `wfc = WfcParser.from_qe('<run>.save')` (data-file-schema.xml + wfc<ik>.dat) or `WfcParser.from_yambo('<SAVE>')`
+    (ns.db1 through YamboDftParser + ns.wf and its fragments, single precision); attributes `evals` (nk, nbands, eV),
+    `atoms` ([name, position in bohr]), `lattice`, `reciprocal_lattice` (rows), `kpoints` (cartesian, bohr^-1),
+    `kpoints_crystal`, `nkpoints`, `nbands`, `num_electrons`.
+  - `states = wfc.get_states(ik, bands=None)`: reads only the requested bands of one k point (lazy, fine for the big
+    bilayer saves); dict with 'ik', 'k', 'b', 'mill' (Miller indices), 'bands', 'c' (shape (bands, nG)).
+  - `WfcParser.overlap(s1, s2)`: matrix <phi_m|psi_n>, also between DIFFERENT runs (same cell): G matched by the Miller
+    indices (no +-512 limit), k equal modulo a reciprocal lattice vector, check of the reciprocal lattice.
+  - `WfcParser.transform(states, rotation=None, translation=None, time_reversal=False)`: psi'(r) = psi(R^-1(r - tau))
+    (complex conjugate with time reversal); R cartesian, tau in bohr; checks that R is orthogonal and maps the
+    reciprocal lattice onto itself.
+  - 2D tools (a1, a2 in the xy plane, a3 along +z): `z_profile(states, nz)` -> (z in [-c/2,c/2), p_n(z), int p dz = 1);
+    `z_weight(states, z1, z2)` (analytic weight in a z window, also across the cell edge); `to_real_space(states,
+    grid)` (grid entries None = minimum, e.g. (36, 36, None)); `inplane_map(states, z_window, grid)`; plots
+    `wfc.plot_z_profile(states, bands)` (atomic planes marked) and `wfc.plot_inplane_map(states, band, z_window, grid,
+    ncells)`.
+  Correspondence with the prototype (cells 2 and 6 of Projection_Analysis): `read_xml(save)` -> `wfc.evals`,
+  `wfc.atoms` (same units); `read_wfc(save, ik, nbnd)` -> `wfc.get_states(ik, bands=range(1, nbnd + 1))` (same keys
+  k, b, mill, c); `gkey` + `overlap` -> `WfcParser.overlap`; `top_state`: AB -> `transform(w, translation=tau)` with
+  tau = r_top['B'] - r_bot['B']; AA' -> `transform(w, rotation=C2z, translation=tau, time_reversal=True)` with
+  tau = r_top['B'] - C2z @ r_bot['B'] (the same formula c_top(Gx,Gy,Gz) = e^{-i(k+G).tau} c_bot*(Gx,Gy,-Gz), k unchanged
+  for in-plane k). `degenerate_groups`, P_mn, E_m and the attribution stay in the notebook (user's decision).
+  Suggested next steps here (to agree with the user): (1) rewrite cells 2 and 6 of Projection_Analysis with WfcParser
+  and check that the results do not change (the 4e-6 check vs the ML_top runs at K, P_mn, E_m, the table at Gamma, M,
+  K, layer_projection.json); (2) layer character of single bilayer states with `z_weight(states, 0, c/2)` (fraction on
+  the top layer) and the z profiles, to compare with the pp.x + average.x density profiles and with the 98-99% of AB
+  at K (bands 8 and 10) of DFT_Analysis.
+  Related MPPI fix (2026-11-14): `YamboDftParser.syms` was the inverse of the operations of Yambo (transpose of the
+  netCDF SYMMETRY); now it is the matrix Yambo applies (k' = S k). The BZ points and the weights were right; `sym_index`
+  and the order of `kpoints_bz` change (check any use of them, e.g. for the symmetry mapping of chi0 below). New
+  `PwParser.nsym` / `crystal_syms` (the xml `syms` list also contains the lattice-only symmetries).
 - Physics target (layer and observables): to be defined during the analysis.
 - Exchange kernel of the BSE with v or vt.
 - Content and conventions of the Yambo screening databases: to be verified on the Lumen source (cluster) before any
