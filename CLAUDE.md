@@ -306,9 +306,11 @@ computational procedure (possibly a code implementation).
   systems/setup + 3D perspective plot of the stackings (bottom and top planes with dashed hexagons, one top hexagon projected vertically: AA' B over N and N over B, AB B over N and N over hexagon centres; user 2026-11-13), DFT ground state, DFT bands (+ ML vs BL overlay, band edges at G/M/K), layer
   character, GW bands (user 2026-11-13: one panel per system DFT vs GW with the exact grid points, then GW ML vs AA'
   and ML vs AB, gap table) from `gw_bands.json` (KS and QP bands on the path, zero at the KS VBM of the k = 18 grid,
-  exact QP at the 17 grid points on the path). gw_bands.json written so far (ML, AA') by the code of the future
-  GW_Analysis section, run as a script (scratchpad `gw_export_cells.py`) while nbconvert executes GW_Analysis: insert
-  those cells in GW_Analysis when nbconvert ends and AB is done, re-run, re-export (same content + AB).
+  exact QP at the 18 IBZ points of the grid on the path, M included: its IBZ representative is (0, -1/sqrt3), found
+  through the k + G images), written by the last section of GW_Analysis.ipynb (ML, AA', AB).
+  `Projection_Analysis.ipynb` (2026-11-13, rewritten at the user's request around the final result): writes
+  `layer_projection.json` (top-layer bands 2-5 alone and inside AA'/AB, DFT and GW, kept weight S_m and attributable
+  flag; top-layer fraction of the bilayer bands 3-10); Results.ipynb has a final section "The top layer inside the bilayer" (the target figure).
 - `hBN_bilayer/DFT_Analysis.ipynb` (created 2026-11-11, NOT yet run; setup cells dry-checked): calculator factory
   `qe_code()` (all12h, 16 MPI x 2 OMP, qe_module, BeeOND, no exclude), `hbn_positions(system)` for the bilayers
   'AA1' (AA'), 'AB' and the monolayers 'ML' = 'ML_bot' (bottom layer alone), 'ML_top_AA1', 'ML_top_AB' (top layer of
@@ -428,7 +430,11 @@ computational procedure (possibly a code implementation).
   and 4 meV at Gamma. dE of the conduction bands jumps between pi* (+1.1-1.3 eV) and NFE (+0.5-0.6 eV) states: between
   grid points near crossings the interpolation can be off by 0.2-0.3 eV (plot the exact grid points). Results: ML GW
   gap K 7.338, Gamma 8.312, fundamental K -> Gamma 6.666 eV; AA' K 7.018, Gamma 8.062, fundamental 6.449 eV (VBM near
-  K -> Gamma; in DFT the CBM is at M, GW moves it to the NFE state at Gamma). AB pending (job 60900).
+  K -> Gamma; in DFT the CBM is at M, GW moves it to the NFE state at Gamma); AB K 6.773, Gamma 8.008, fundamental
+  6.386 eV (K -> Gamma; DFT 4.535, K -> M); offset AB 360.7 meV; ypp - yambo at Gamma within 5 meV. MPPI issue
+  (2026-11-13, to fix in the MPPI repo, separate session): `YamboCalculator.run_ended` reads the last line of the slurm
+  `.out` file and raises IndexError when the file exists but is still empty (race at job start): the Dataset lost
+  the ML run (the job itself completed; outputs fine). Re-running the cell with skip=True parses everything.
   Next: embedding, starting from the choice of the Lumen database that gives chi0 of ML_bot and ML_top
   (docs/02 Sec. 4).
 
@@ -477,18 +483,21 @@ computational procedure (possibly a code implementation).
      cell, cutoff and k grid, so the overlaps are direct dot products of the plane-wave coefficients (norm-conserving
      SG15: no augmentation). In G0W0 the QP states are the KS ones: the KS weights also project the QP bands.
      Technical points: sum |<.|.>|^2 over degenerate subspaces on both sides (gauge; AA' pairs); the SAME k vector in
-     ML and BL (their IBZ differ: ML 6 spatial ops + T, AA' 12), not just the same star; restrict m to the bound layer
-     bands (with all bands sum_m P = 1 trivially) and check sum_m over the bound bands of the two layers; the ML_bot and
-     ML_top references are not mutually orthogonal (tails, vacuum/NFE states): keep the two projections separate or
-     orthogonalize (Loewdin) if used as one basis. Spatial weight w_nk = int_layer |psi_nk|^2 (pp.x plot_num 7 +
-     average.x, done at Gamma and K) only as a check and as a "spill" diagnostic (Duchemin 2024: errors correlate with
-     the density outside the subsystem): flag the NFE conduction states at Gamma, which neither overlap nor z-window
-     assigns cleanly. Atomic projections (projwfc.x) are not available (SG15 has no atomic wavefunctions) and not needed.
+     ML and BL, not just the same star (checked 2026-11-13: the five nscf k = 18 runs have the same 37 IBZ k vectors,
+     Gamma = 1, M = 10, K = 37, and the three bands runs the same 181 k: direct dot products); restrict m to the bound
+     layer bands (with all bands sum_m P = 1 trivially) and check sum_m over the bound bands of the two layers; the
+     ML_bot and ML_top references are not mutually orthogonal (tails, vacuum/NFE states): keep the two projections
+     separate or orthogonalize (Loewdin) if used as one basis. Spatial weight w_nk = int_layer |psi_nk|^2 (pp.x
+     plot_num 7 + average.x, done at Gamma and K) only as a check and as a "spill" diagnostic (Duchemin 2024: errors
+     correlate with the density outside the subsystem): flag the NFE conduction states at Gamma, which neither overlap
+     nor z-window assigns cleanly. Atomic projections (projwfc.x) are not available (SG15 has no atomic wavefunctions)
+     and not needed.
   4. EXACT RELATION (Claude's observation): sum_n |<phi_ML|n>|^2 E_n = <phi_ML|H|phi_ML> (completeness of the bilayer
      states n): the first moment of the layer-projected spectral function is the expectation value of H on the ML state;
      at the QP level it equals Liu's molecular projection if Sigma - Vxc is diagonal in the KS basis, i.e. if the
      off-diagonal <n|Sigma - Vxc|n'> between bilayer states sharing weight vanish (Yambo G0W0 is diagonal): zero by
-     symmetry for the AA' bonding/antibonding pairs (D3d, inversion: opposite parity), not for AB (to check). Compare
+     symmetry for the AA' bonding/antibonding pairs at Gamma and M (D3d, inversion in the little group of k: opposite
+     parity; at a generic k only if a layer-swapping C2' leaves k invariant), not for AB (to check). Compare
      the first moment of the CORRECTION, sum_n P_n (E^QP_n - E^KS_n) / sum_n P_n: the first moment of E^KS contains
      <phi_ML|H^BL|phi_ML> - eps^ML (crystal field of the other layer), which the effective scheme does not have.
   5. QUANTITIES TO COMPARE (bilayer hBN):
@@ -521,9 +530,77 @@ computational procedure (possibly a code implementation).
      the full system added separately), Naik-Jain PRM 2, 084002 (2018) (overlaps with free-standing layer states).
      PDFs: on the LAPTOP only, in REFERENCES/03 Equilibrium MBPT - GW and BSE (catalogued, keyword substrate-screening);
      not on the cluster: read them from a laptop session, or download again from arXiv.
-  9. NEXT STEPS (hBN): overlaps at Gamma, M, K on the nscf k = 18 grids (SAVEs of the 5 systems exist); bands runs of
-     ML_top_* along G-M-K-G for the weighted bands (QE runs to ask; ML_bot, AA1, AB bands runs exist); reader of the QE
-     wavefunctions (python, to decide); quantities 5(a)-(c), then the reverse test 5(d).
+  9. NEXT STEPS (hBN): overlaps at Gamma, M, K on the nscf k = 18 grids (wavefunctions available, no run needed:
+     QE 7.0 binary wfcN.dat with Miller indices in the nscf k = 18 saves, 250/400 bands, and in the bands saves, 12/24
+     bands); bands runs of ML_top_* along G-M-K-G for the weighted bands (QE runs to ask; ML_bot, AA1, AB bands runs
+     exist); reader of the QE wavefunctions (python, to decide); quantities 5(a)-(c), then the reverse test 5(d).
+  10. STATUS (2026-11-13). `hBN_bilayer/Projection_Analysis.ipynb`, REWRITTEN at the user's request (the first version,
+     with grid tables, A/B variants and many checks, was too dense: "keep the analysis simple, the fundamental result as
+     the goal, show how the bilayer states are attributed until only half of them remain"; when stable, consider moving
+     it into MPPI). Structure: goal; the idea (P_mn = |<phi_m|psi_n>|^2, three cases ~1/~0/~0.5; reading at fixed n =
+     layer of a bilayer state, step 3; reading at fixed m = the user's criterion of point 13: kept states P_mn >= 0.05
+     among the bilayer bands 1-20, attributable if S_m = their sum >= 0.9 and all have the occupation of m, E_m = weighted
+     mean over them; two-level justification of point 12; degenerate groups averaged); 1. GW bands of the bilayer
+     (bands 3-10); 2. top-layer states built from the ML_bot bands run by symmetry (AB: c(G) e^{-i(k+G).tau}; AA':
+     C2z + time reversal, c_top(Gx,Gy,Gz) = e^{-i(k+G).tau} c_bot*(Gx,Gy,-Gz); one check vs the ML_top runs at K,
+     4e-6) => no QE run needed; 3. bilayer GW bands coloured by the fraction on the top layer (AA' all 50/50; AB:
+     sigma bands on one layer, pi/pi* shared around M and separated around K, zoom); 4. the 4 top-layer bands
+     extracted from the 8 bilayer bands; 5. RESULT: GW bands of the top layer inside the bilayer vs alone (zero = DFT
+     VBM of each system) + table at Gamma, M, K; export. The user's program, confirmed: the effective scheme starts from
+     the GW of the layer alone (blue) and must bring it, by the embedding of the other layer, onto the bands extracted
+     from the explicit bilayer (red). Result (point-13 method): same shape, rigid shift on 90% of the path: valence
+     +0.17/+0.24 eV, pi* conduction -0.15/-0.22 eV (isolated points 0.11-0.32 eV in the valence near band crossings,
+     probably ypp interpolation); GW gap of the top layer at K 7.338 alone, 7.019 in AA', 6.952 in AB (= QP of the bilayer
+     states at K); in DFT inside vs alone within 0.05 eV (valence), 0.01-0.08 eV (pi*); AA' vs AB <= 0.05 eV. Attributable
+     k points of 181: bands 2-4 all, band 5 111 (AA') / 110 (AB). Limits (told to the user): NFE conduction around Gamma
+     not attributable (weight spread, or ~20% on the deep N-2s bilayer states); the small DFT difference is outside the
+     scheme (compare the corrections GW - DFT, not absolute energies); reference ambiguity on hybridized
+     pairs (largest-overlap vs weighted mean up to 0.07 eV, from the first, dropped grid analysis: valence delta +0.17 to
+     +0.24 eV k-independent over the whole IBZ, pi* -0.20/-0.25). Next: the embedding (choice of the Lumen database for
+     chi0 of ML_bot and ML_top); then compare with layer_projection.json.
+  11. SUM RULES OF P_mn (user's question, 2026-11-13; checked on the path G-M-K-G). Row (fixed layer state m, sum over
+     the bilayer states n): exact, sum over all n = 1 (bilayer states orthonormal and complete in the same plane-wave
+     basis); valence m = 2-4: 0.997-1.000 in the window n = 3-8; m = 5: 0.996 over the 24 bilayer bands but only
+     >= 0.75 in the conduction window (up to 24% on bilayer occupied states: the NFE case). Column (fixed n, sum over
+     m of both layers): no rule, the top and bottom ML states are two non-orthogonal sets; occupied (m = 1-4, top + bot)
+     0.90-1.09 for n = 3-8, in pairs 1 +- S (S = <phi_top|phi_bot> ~ 0.1, the overlap neglected by the no-overlap
+     assumption); conduction (m = 1-11) up to 1.9 (empty states of both layers extend into the same vacuum). E_m uses
+     only rows: the n window must just give C_m ~ 1; no fixed ratio between the numbers of n and m (exception: the
+     occupied space, 8 bilayer bands = 4 + 4 by electron count).
+  12. WHY THE WEIGHTED MEAN (user's question, 2026-11-13). One layer state spread over bilayer states of different
+     energy is the hybridization case, frequent on the path: GW examples at M, AA' pi 0.52/0.48 on -2.494/-1.899 eV,
+     pi* 0.53/0.46 on 5.547/6.371 eV; AB pi 0.35/0.65 on -2.439/-2.062, pi* 0.42/0.56 on 5.559/6.204; pi splitting up
+     to ~1.07 eV along K-Gamma; spread > 50 meV on 66% (AA') / 62% (AB) of the path for the top valence band, 97% / 78%
+     for the lowest conduction band. Not at K (AB: one state, P = 1.00; AA': degenerate pair). Two-level model
+     H = [[e_top, t], [t, e_bot]]: sum_n P_n E_n = <phi_top|H|phi_top> = e_top for any weights (AA' equal, AB unequal),
+     i.e. the mean removes the interlayer hopping +-t (first-moment relation, point 4); the largest-overlap state would
+     pick one of the two (0.8 eV ambiguity at M in AA').
+  13. SELECTION BY THE LAYER STATE (user's criterion, 2026-11-13): fix the layer state m, scan all the bilayer states,
+     keep those carrying weight; m is attributable if their weights add up to ~1. Tested on the path (P >= 0.05,
+     sum >= 0.9): same attributable points as the fixed-window method (valence all, lowest conduction 110-111/181 vs
+     112), GW energies within 1-6 meV on average (max ~40 meV where weight is spread), and at K exactly the bilayer QP
+     (top-layer gap 7.019 AA', 6.952 AB vs window 7.029 / 6.958: the window kept <= 1% tails on distant states).
+     A second condition is needed: the kept states must have the same occupation as m (61 path points of the NFE band
+     reach sum 0.93 only through the deep N-2s states n = 1, 2). Adopted in Projection_Analysis.ipynb at the user's
+     request (2026-11-13), replacing the fixed window; layer_projection.json and Results.ipynb regenerated.
+- SYMMETRY MAPPING OF THE LAYER RESPONSE (user, 2026-11-13: keep in mind). The ML_top states are ML_bot states moved by
+  a translation (AB) or a rotation + translation (AA') (Projection_Analysis, step 2); the same holds for chi0, from
+  chi0^top(r,r') = chi0^bot(R^-1(r - tau), R^-1(r' - tau)): chi0^top_GG'(q) = e^{-i(G - G').tau}
+  chi0^bot_{R^-1 G, R^-1 G'}(R^-1 q) (pure translation: only the phase, q unchanged). v_cut (slab, z - z') is invariant,
+  so eps^-1, W and ndb.pp transform the same way and the QP energies are identical (ML_top vs ML_bot GW within 0.5 meV).
+  => One ML calculation is enough in principle; the ML_top runs (all databases available) are the test of the
+  transformation, e.g. on ndb.pp (first exercise in reading the Yambo databases: yambo G ordering, q in the IBZ).
+  Beyond hBN: a z translation is the phase e^{-i(G_z - G'_z) d}, so a layer (or substrate) response computed once can
+  be placed at any distance d inside the same cell and cutoff box, without a new chi0.
+- WAVEFUNCTION TOOLS IN MPPI (user, 2026-11-14: before developing the projection further). One class in
+  `mppi/Parsers` with two constructors (QE save, Yambo SAVE): reading, overlaps, transformations, 2D tools (|psi|^2
+  along z and in the plane, weight in a z window, real space, plots); no k-space tools for now. Full plan, formats
+  (checked: QE xk/b in bohr^-1; yambo G and k in 2pi/alat_i, LATTICE_VECTORS as columns, WFC_GRID 1-based; QE vs yambo
+  states identical, |<qe|yambo>| = 1) and tests (graphene, Si, GaAs-SO data of the MPPI tutorials) in the MPPI
+  CLAUDE.md, section "Next work: wavefunction parser and 2D visualization". To be developed in an MPPI session; then
+  used here (projection, layer character). The class is generic (one instance = one run; overlaps and transformations
+  between instances); the projection (P_mn, degenerate groups, E_m, attribution) stays in the notebooks of this
+  project (user, 2026-11-14); a projection class in MPPI only later, once the procedure is stable.
 - Physics target (layer and observables): to be defined during the analysis.
 - Exchange kernel of the BSE with v or vt.
 - Content and conventions of the Yambo screening databases: to be verified on the Lumen source (cluster) before any
