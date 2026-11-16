@@ -298,8 +298,9 @@ computational procedure (possibly a code implementation).
   lab book (runs, convergence, checks); each ends with an "Export of the reference results" section that writes small
   JSON files in `<system>/results/` (TRACKED in git; metadata block with description, units, source runs, date;
   energies in eV rounded to 0.1 meV; helper `write_json` keeps number lists on one line). `<system>/Results.ipynb`
-  (one per system, DFT + MB together) builds its tables and figures ONLY from these JSON files (numpy + matplotlib,
-  no MPPI, no run folders: runs on the laptop too); it is short, physics only, and the base for the notes and for the
+  (one per system, DFT + MB together) builds its tables and figures ONLY from these JSON files (no run folders; it
+  REQUIRES MPPI since 2026-11-16, user: band plots with `mppi.Utilities.BandStructure`, lattice replicas with
+  `LatticeUtils.build_lattice`; runs on any machine with the repository and MPPI); it is short, physics only, and the base for the notes and for the
   figures of a paper (the JSON files are the data to share). hBN_bilayer (2026-11-13): `dft_ground_state.json`
   (parameters, lattice, atoms of the 5 systems, energies, gaps on the k = 12 grid), `dft_bands.json` (KS bands
   ML_bot/AA1/AB on G-M-K-G, 181 k, from the VBM on the path), `dft_layer_character.json`; Results.ipynb sections:
@@ -308,9 +309,11 @@ computational procedure (possibly a code implementation).
   and ML vs AB, gap table) from `gw_bands.json` (KS and QP bands on the path, zero at the KS VBM of the k = 18 grid,
   exact QP at the 18 IBZ points of the grid on the path, M included: its IBZ representative is (0, -1/sqrt3), found
   through the k + G images), written by the last section of GW_Analysis.ipynb (ML, AA', AB).
-  `Projection_Analysis.ipynb` (2026-11-13, rewritten at the user's request around the final result): writes
-  `layer_projection.json` (top-layer bands 2-5 alone and inside AA'/AB, DFT and GW, kept weight S_m and attributable
-  flag; top-layer fraction of the bilayer bands 3-10); Results.ipynb has a final section "The top layer inside the bilayer" (the target figure).
+  `Projection_Analysis.ipynb` (rewritten 2026-11-16 with the group method, open point LAYER PROJECTION, point 15): writes
+  `layer_projection.json` (k = 18 grid, 37 IBZ points: top-layer bands 2-5 alone and inside AA'/AB, and bottom-layer
+  ones inside, DFT and GW; sigma_min of the valence and conduction groups; attributable flag; grid points on the path
+  with k_index and path coordinate); Results.ipynb has a final section "The top layer inside the bilayer" (GW bands of
+  the top layer inside vs alone at the grid points on the path, and the GW correction inside - alone).
 - `hBN_bilayer/DFT_Analysis.ipynb` (created 2026-11-11, NOT yet run; setup cells dry-checked): calculator factory
   `qe_code()` (all12h, 16 MPI x 2 OMP, qe_module, BeeOND, no exclude), `hbn_positions(system)` for the bilayers
   'AA1' (AA'), 'AB' and the monolayers 'ML' = 'ML_bot' (bottom layer alone), 'ML_top_AA1', 'ML_top_AB' (top layer of
@@ -534,7 +537,8 @@ computational procedure (possibly a code implementation).
      QE 7.0 binary wfcN.dat with Miller indices in the nscf k = 18 saves, 250/400 bands, and in the bands saves, 12/24
      bands); bands runs of ML_top_* along G-M-K-G for the weighted bands (QE runs to ask; ML_bot, AA1, AB bands runs
      exist); reader of the QE wavefunctions (python, to decide); quantities 5(a)-(c), then the reverse test 5(d).
-  10. STATUS (2026-11-13). `hBN_bilayer/Projection_Analysis.ipynb`, REWRITTEN at the user's request (the first version,
+  10. STATUS (2026-11-13; SUPERSEDED 2026-11-16 by the group method of point 15, which replaced the notebook
+     described here). `hBN_bilayer/Projection_Analysis.ipynb`, REWRITTEN at the user's request (the first version,
      with grid tables, A/B variants and many checks, was too dense: "keep the analysis simple, the fundamental result as
      the goal, show how the bilayer states are attributed until only half of them remain"; when stable, consider moving
      it into MPPI). Structure: goal; the idea (P_mn = |<phi_m|psi_n>|^2, three cases ~1/~0/~0.5; reading at fixed n =
@@ -583,6 +587,80 @@ computational procedure (possibly a code implementation).
      A second condition is needed: the kept states must have the same occupation as m (61 path points of the NFE band
      reach sum 0.93 only through the deep N-2s states n = 1, 2). Adopted in Projection_Analysis.ipynb at the user's
      request (2026-11-13), replacing the fixed window; layer_projection.json and Results.ipynb regenerated.
+  14. Z PROFILES OF THE BILAYER STATES (2026-11-16; user: the threshold P_mn >= 0.05 is arbitrary, restart from what
+     the states look like). `WfcParser.plot_z_profile` + `z_weight(states, 0, c/2)` for bilayer bands 1-10 at Gamma, M,
+     K (nscf k = 18; scratch script, not yet in the notebook). AB: at K every state on one layer (98-100%; b7, b9
+     bottom, b8, b10 top); at M sigma/2s bands 1-6 90-98% on one layer, pi (b7, b8) 34/66, pi* (b9, b10) 60/40; at
+     Gamma sigma b5-b6 bottom, b7-b8 top (100%), b1-b4 77/23 and ~50/50, b9-b10 NFE largely in vacuum. AA': EVERY
+     state 50/50 at every k, by symmetry (inversion centre between the layers + time reversal: |psi(r)|^2 =
+     |psi(-r)|^2 for non-degenerate states), not because of strong coupling: e.g. at Gamma the sigma states split by
+     only 17 meV are 50/50, the same states in AB (layers inequivalent, -1.45 vs -1.36 eV) are 100% localized; the z
+     profile measures t vs (e_top - e_bot), not t. Degenerate pairs: diagonalizing the top-half weight inside the pair
+     gives, in AA' at K, 0.00/1.00, 0.001/0.999, 0.011/0.989, 0.022/0.978 (b1-2, b5-6, b7-8, b9-10: two decoupled
+     layers, as AB at K); at Gamma the px/py doublets stay 0.5/0.5. Proposed (to agree): add this section at the start
+     of Projection_Analysis; replace the threshold by a criterion without free parameters.
+  15. GROUPS INSTEAD OF SINGLE STATES (2026-11-16, user's question on the degeneracy of n = 1, 2). Bilayer n = 1, 2 are
+     degenerate ONLY in AA' at K (t = 0 there); elsewhere split up to 145 meV (AA'), 98-172 meV in AB. Gauge-free
+     treatment of the pair: C[n,a] = <psi_n|phi_a>, a = (phi_1^top, phi_1^bot) Loewdin-orthonormalized; on all 37 k,
+     both stackings: sum_{n=1,2} P_an = 1.000 for top and bottom, singular values of C 1.0000 (the two layer states lie
+     entirely in the pair); H_eff = C^+ diag(E_1, E_2) C gives e_top, e_bot (diagonal) and t (off-diagonal), eigenvalues
+     = E_1, E_2 within 1 meV; e_top = the weighted mean E_m within 1.8 meV (difference = Loewdin, S ~ 0.01). AA':
+     e_top = e_bot, |t| 72 meV at Gamma -> 17 at M -> 0 at K; AB: e_top - e_bot = 95-98 meV at every k, |t| 71 meV at
+     Gamma -> 0 at K (hence 77/23 at Gamma, pure at K).
+     ADOPTED 2026-11-16 (user: check on the valence, then rewrite Projection_Analysis without the sections not needed for
+     the thread: the old "GW bands of the bilayer" and "top-layer states by symmetry" sections dropped; the symmetry
+     construction is a check for later). Method: group = layer bands ms of top AND bottom (2L states, from the ML_top
+     and ML_bot nscf runs, Loewdin-orthonormalized); kept = the 2L bilayer states with the largest weight on the group
+     (number fixed by the group); sigma = singular values of C = <layer|kept>; C made unitary (polar decomposition, so
+     that H has exactly the bilayer energies as eigenvalues: with C not unitary the diagonal of C E C^+ depends on the
+     energy zero); H = C E C^+; energies inside = eigenvalues of the top-top (bottom-bottom) block (coupling between the
+     layers switched off); same C for KS and QP. Criterion (user OK 2026-11-16, simpler than sigma): f_a = sum over the
+     kept n of |<phi~_a|psi_n>|^2 (fraction of each layer state inside the kept states), attributable if min f_a >= 0.9
+     (valence >= 0.997; conduction pi* >= 0.95, k 15 0.79 AA' / 0.86 AB, NFE 0.55-0.65; same points as sigma_min >= 0.95).
+     Notebook section 2 = the method in five steps (1 group of layer bands of both layers; 2 Loewdin; 3 kept = 2L largest
+     w_n; 4 check f_a; 5 H in the layer basis -> e_top, e_bot, t, eigenvalues of the top-top block for L > 1, written
+     with the GW energies, the same with DFT energies only for the correction e_GW - e_DFT), worked on AB at M, band 5
+     (GW: e_top 5.948, e_bot 5.816, |t| 0.316 eV, E_9, E_10 = 5.559, 6.204; DFT: 4.868, 4.755, 0.271; GW correction
+     1.079 inside vs 1.299 alone) + a table at Gamma, M, K (GW energies). User's comments (2026-11-16), adopted: (1) a
+     group = a set of layer bands that never crosses the bands outside it (crossings inside allowed): 2s (gap 5.7 eV),
+     valence 2-4 (4.7 eV from the conduction), occupied 1-4; no such set in the conduction (pi*/NFE crossings); larger
+     conduction groups are worse (5-6 attributable at 6-8 k, 5-7 at 0-1, 5-8 at 0): the failure comes from the NFE
+     states (top/bottom overlap 0.48), not only from the group; (2) Loewdin math: S = 1 + Delta, Delta = off-diagonal
+     s = <phi_top|phi_bot>, S^-1/2 ~ 1 - Delta/2, phi~_top ~ phi_top - (s*/2) phi_bot (checked numerically; the earlier
+     text "phi S^-1/2 ... (S/2) phi_bot" mixed the matrix and the scalar); (3) step 6 (GW) merged into step 5.
+     Step 5 rewritten (user, 2026-11-16: "the central point"): the energy of the layer state is e_top, NOT an eigenvalue
+     of H (those give back E_n); KEY SENTENCE (user's wish): e_top is the barycentre of the bilayer levels weighted by
+     the part of phi_top in each (e_top = sum_kept |<phi~_top|psi_n>|^2 E_n; AB M: 0.40 x 5.559 + 0.60 x 6.204 = 5.948
+     GW). Meaning: H phi_top = e_top phi_top + t* phi_bot, t = hopping, e_top = energy with the hopping forbidden; the
+     effective scheme has t = 0 by construction; GW correction of e_top = <phi_top|Sigma - Vxc|phi_top> if Sigma is
+     diagonal in the bilayer states (G0W0); e_top - eps_alone = potential of the other layer on phi_top (DFT, not in the
+     scheme). L > 1: barycentre H_aa of each top state; eigenvalues of the top-top block (used in the code) differ by
+     <= 0.1 meV here (off-diagonal <= 6 meV). Side observation (cause NOT verified): yambo GW energies of states
+     degenerate in DFT differ by 9-13 meV (Gamma: ML m = 3, 4 -2.975 / -2.966; AA' n = 5, 6 -2.767 / -2.754), a noise
+     level on the GW energies (random RIM points breaking the symmetry? to check).
+     SIMPLIFIED (user, 2026-11-16: the 2x2 H and the discussion of t were misleading): the notebook method is now
+     THREE steps: (1) group of L layer bands for both layers, 2L states phi_{l m} (l = top, bot), overlap matrix
+     S = [[1, s], [s^+, 1]] (2L x 2L, s_mm' = <phi_top,m|phi_bot,m'>), Loewdin phi~ = phi S^-1/2; (2) w_n =
+     sum_{l,m} |<phi~_lm|psi_n>|^2, keep the 2L largest, check f_lm = sum_kept |<phi~_lm|psi_n>|^2 >= 0.9 (index a of
+     the earlier text = the pair (l, m)); (3) e_m^top = sum_kept P_mn E_n / sum_kept P_mn (barycentre, weights
+     normalized), with GW and with DFT energies; meaning written below the formula (expectation value of the bilayer
+     Hamiltonian on the top-layer state; equals the bilayer energy where the layers do not mix; GW correction =
+     <phi|Sigma - Vxc|phi> for a diagonal Sigma; DFT part = field of the other layer, outside the scheme). Code:
+     layer_group + layer_energies (no unitary C, no H, no eigenvalues). Normalized barycentres vs the earlier
+     eigenvalue method: <= 0.7 meV on the attributable points; all the results unchanged (gap at K 7.023 / 6.954). The user: "not yet fully
+     clear" -> explain more if asked. layer_projection.json stores f_min (not sigma_min). Done on the k = 18 grid (37 k,
+     exact full-IBZ QP, no ypp interpolation, ML_top states computed directly). Results: valence group m = 2-4 <-> n =
+     3-8 at all 37 k (sigma_min >= 0.998, both stackings); conduction m = 5 <-> n = 9, 10: attributable at 22/37 k
+     (pi*, sigma_min >= 0.973), not at the 14 NFE k points (top/bottom NFE overlap 0.48, sigma_min 0.60-0.71: they
+     share the vacuum, no-overlap assumption fails) and at k 15 (pi* near a bilayer NFE state: 0.82 AA', 0.91 AB); gap
+     0.91-0.97 in sigma_min, so any limit there gives the same points. Note (user's question): single-band blocks indexed
+     by ML band fail where the band is NFE; mirror parity about the layer plane separates pi/pi* (odd) from sigma and
+     the lowest NFE (even), but an odd NFE state exists at Gamma (5.61 eV): parity alone does not isolate pi*. GW
+     correction inside - alone over the IBZ: valence +0.17..+0.23 (AA'), +0.19..+0.25 (AB); pi* -0.20..-0.23 (AA'),
+     -0.22..-0.24 (AB); DFT inside - alone <= 0.04 (valence), 0.02-0.07 (pi*); AB - AA' -0.01..+0.03 (v), -0.02..0 (c);
+     AB bottom - top -0.02..+0.01. Top-layer GW gap at K: 7.338 alone, 7.023 AA', 6.954 AB (bilayer states 7.018,
+     6.952: the 5/2 meV are the pi(one layer)-sigma(other layer) coupling, |H_tb| 0.1-0.2 eV at 7 eV, removed by
+     construction).
 - SYMMETRY MAPPING OF THE LAYER RESPONSE (user, 2026-11-13: keep in mind). The ML_top states are ML_bot states moved by
   a translation (AB) or a rotation + translation (AA') (Projection_Analysis, step 2); the same holds for chi0, from
   chi0^top(r,r') = chi0^bot(R^-1(r - tau), R^-1(r' - tau)): chi0^top_GG'(q) = e^{-i(G - G').tau}
@@ -630,7 +708,15 @@ computational procedure (possibly a code implementation).
   tau = r_top['B'] - r_bot['B']; AA' -> `transform(w, rotation=C2z, translation=tau, time_reversal=True)` with
   tau = r_top['B'] - C2z @ r_bot['B'] (the same formula c_top(Gx,Gy,Gz) = e^{-i(k+G).tau} c_bot*(Gx,Gy,-Gz), k unchanged
   for in-plane k). `degenerate_groups`, P_mn, E_m and the attribution stay in the notebook (user's decision).
-  Suggested next steps here (to agree with the user): (1) rewrite cells 2 and 6 of Projection_Analysis with WfcParser
+  DONE 2026-11-16 (user: replace the notebook tools with MPPI): Projection_Analysis reads and transforms the states
+  with WfcParser (`wfc[s] = WfcParser.from_qe(bands-<s>.save)`, `top_state` via `WfcParser.transform`, P_mn via
+  `WfcParser.overlap`) and plots with BandStructure; check vs ML_top at K 4e-6 (AA') / 3e-6 (AB), attributable counts
+  and table unchanged, layer_projection.json identical except metadata (date, code). Results.ipynb: band plots with
+  BandStructure, 3D view with LatticeUtils.build_lattice (figure byte-identical), all printed numbers unchanged.
+  Still with own helpers (to replace when those notebooks are revised, analysis cells only): GW_Analysis `read_ypp`
+  (MPPI has `BandStructure.from_Ypp` / `parse_Ypp_output`), DFT_Analysis `layer_weights` (pp.x + average.x; MPPI
+  `WfcParser.z_weight` does it from the wavefunctions) and `read_density_profile`; `write_json` (no MPPI equivalent).
+  Old suggested steps: (1) rewrite cells 2 and 6 of Projection_Analysis with WfcParser
   and check that the results do not change (the 4e-6 check vs the ML_top runs at K, P_mn, E_m, the table at Gamma, M,
   K, layer_projection.json); (2) layer character of single bilayer states with `z_weight(states, 0, c/2)` (fraction on
   the top layer) and the z profiles, to compare with the pp.x + average.x density profiles and with the 98-99% of AB
@@ -665,6 +751,10 @@ computational procedure (possibly a code implementation).
   the surface and of the images vs the box and the cutoff; Dyson with vt = v_cut + v_emb; head at q -> 0 and RIM).
 
 ## Rules
+- MPPI IS THE ANALYSIS TOOL (user, 2026-11-16): before writing any reading, post-processing or plotting code (in the
+  computational notebooks AND in Results.ipynb), check whether MPPI already provides it (`~/Applications/MPPI`:
+  Parsers incl. WfcParser, Utilities incl. BandStructure, LatticeUtils, Dos, ...) and use it; write new code only
+  for what MPPI does not have, and propose generic tools for MPPI (separate session). Results.ipynb may assume MPPI.
 - Step by step, agreeing with the user before moving on. Explicit assumptions, units, limit checks (d -> 0,
   eps -> 1, eps -> inf, q -> 0).
 - Notes style (user, 2026-11-06): physical explanations first; elementary math steps in one short clause, full
