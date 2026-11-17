@@ -661,6 +661,37 @@ computational procedure (possibly a code implementation).
      AB bottom - top -0.02..+0.01. Top-layer GW gap at K: 7.338 alone, 7.023 AA', 6.954 AB (bilayer states 7.018,
      6.952: the 5/2 meV are the pi(one layer)-sigma(other layer) coupling, |H_tb| 0.1-0.2 eV at 7 eV, removed by
      construction).
+     Barycentre over ALL the bilayer bands instead of the kept ones (user's question, 2026-11-17; tested, REJECTED,
+     method kept): sum P = 1.000 over 400 bands, but e_all - e_kept = -33..+16 meV (valence), -95..-640 meV (pi*,
+     attributable k), -1.4..-6.4 eV (NFE k): weight 0.5-27% on the deep bilayer states n = 1, 2 (~ -20 eV) from the
+     overlap of phi_top,5 with the 2s states of the other layer (outside the group), multiplied by the energy distance
+     (|delta|^2 x Delta E); Loewdin over bands 1-5 of both layers moves the valence by +0.1 eV instead. Not robust, and
+     impossible in GW (QP only for n = 3-14).
+  16. SMOOTH BANDS OF THE PROJECTED LAYER (user, 2026-11-17; TO DO LATER, not now). The top-layer bands of
+     Projection_Analysis / Results ("The top layer inside the bilayer") are the 18 grid points of the k = 18 grid on
+     G-M-K-G joined by straight lines (BandStructure on the grid points): angular, unlike the ypp GW bands (BOLTZ
+     interpolation, ndb.QP_interpolated). User's plan: write the projected energies into an ndb.QP and rerun ypp.
+     Situation checked 2026-11-17:
+     - Template: the ML_bot full-IBZ run `kpoints_18-nbnds_250-ML_bot/pp-ngsblkxp_6.0-bndsrnxp_200-gbndrnge_200-bg-
+       full_ibz-b2_8/ndb.QP` (bands 2-8, 37 k, 259 states; QP_E, QP_Eo in Ha, zero at the ML KS VBM) with the ML_bot
+       SAVE and the circuit `bands_path-ML_bot` (ypp input as `ypp_bands_qp.in` there). It serves both stackings: the
+       KS eigenvalues of ML_top_AA1 / ML_top_AB equal those of ML_bot within 0.14 / 0.28 meV (bands 1-8, 37 k).
+       NEVER edit the original ndb.QP: copy it into a new folder (e.g. `.../ML_bot/projection_qp-<AA1|AB>/ndb.QP`)
+       and replace QP_E for bands 2-5 (netCDF4; MPPI `Utilities/MergeQPndb.py` shows how to write an ndb.QP,
+       `Parsers/YamboQPParser` reads it). ypp interpolates only dE = QP_E - QP_Eo and adds it to the exact KS bands
+       of the circuit, so the choice of dE fixes the meaning of the curve: (a) dE = e_top^GW - eps_alone (the
+       extracted bands, also the DFT field of the other layer and the zero of the bilayer, to align) or (b) dE =
+       e_top^GW - e_top^DFT (ML KS bands + the GW correction inside: exactly what the effective scheme produces;
+       differs from (a) by the DFT part, <= 0.04 eV valence, 0.02-0.07 eV pi*). To decide with the user.
+     - Problem, band 5: attributable only at 22/37 k (valence bands 2-4 at all 37); ypp needs a value at every IBZ k,
+       and the ML band 5 switches between pi* and NFE along the path (the known 0.2-0.3 eV interpolation errors near
+       the crossings, GW_Analysis). Filling the 15 NFE points would be invented data: smooth bands are safe for the
+       valence; for band 5 keep the grid points, or find a better treatment (to discuss).
+     - Remove the rigid ypp offset as in GW_Analysis (match at K to the exact value). ypp is a yambo-suite run: ask.
+     - Alternative (future, MPPI session): implement the BOLTZ (star-function Fourier) interpolation in MPPI, to
+       interpolate the projected corrections directly in python (masks for the non-attributable points possible),
+       without the ndb.QP round trip. Algorithm (read in the Lumen source), validation data and needs of this project
+       written in the MPPI CLAUDE.md, section "Next work: band interpolation as in ypp BOLTZ" (2026-11-17).
 - SYMMETRY MAPPING OF THE LAYER RESPONSE (user, 2026-11-13: keep in mind). The ML_top states are ML_bot states moved by
   a translation (AB) or a rotation + translation (AA') (Projection_Analysis, step 2); the same holds for chi0, from
   chi0^top(r,r') = chi0^bot(R^-1(r - tau), R^-1(r' - tau)): chi0^top_GG'(q) = e^{-i(G - G').tau}
@@ -727,8 +758,88 @@ computational procedure (possibly a code implementation).
   `PwParser.nsym` / `crystal_syms` (the xml `syms` list also contains the lattice-only symmetries).
 - Physics target (layer and observables): to be defined during the analysis.
 - Exchange kernel of the BSE with v or vt.
-- Content and conventions of the Yambo screening databases: to be verified on the Lumen source (cluster) before any
-  implementation.
+- YAMBO SCREENING DATABASES (checked 2026-11-17 on the Lumen source and on the hBN runs; user: new notebook for the
+  embedding, first goal vt, then the GW of the single layer with the bottom layer as effective substrate; checks
+  first, notebook after agreeing). Scratch scripts `db_checks.py`, `db_symmap.py` (session scratchpad, not kept).
+  - `ndb.pp` (header: X_PARS_1 = ng 591 (6 Ha), bands 1-200 ML / 1-212 BL; X_RL_vecs = the first 591 G of the global
+    list, iku; HEAD_QPT = the 37 IBZ q; X_TDDFT_KERNEL HARTREE = RPA; CUTOFF slab z) + `ndb.pp_fragment_<iq>` with
+    `X_Q_<iq>` (netCDF shape (2 freq, 591, 591, re/im), float32; Fortran X(G,G',w), so transpose the two G axes) and
+    `FREQ_sec_iq<iq>` (0 and i 27.211 eV). Content (`pol_function/X_redux.F`): X = (1 - chi0 v)^-1 chi0, then
+    multiplied by 4 pi/(bare_qpg(G) bare_qpg(G')), i.e. X = v^1/2 chi v^1/2 = eps^-1 - 1 (symmetrized), with v the
+    slab-cut Coulomb: `cutoff_slab.F` divides bare_qpg by sqrt(1 - e^{-Q lcut} cos(q_z lcut)), lcut = c/2;
+    v_cut = 4 pi / bare_qpg^2. `ndb_rim_cutoff/ndb.cutoff` stores CUT_BARE_QPG (12311 G x 37 q, complex).
+  - `ndb.RIM_W` (RIM_W (11, 11, 37, 2, 2) and RIM_W_E (11, 11)) is built by `qp/QP_interpolate_W.F` FROM THE X OF
+    THE SCREENING DATABASE, and is read instead if found with a matching header (the content of X is not checked).
+    => with a modified ndb.pp NEVER pass an old ndb.RIM_W: let yambo recompute it.
+  - Same G list, q list, CUT_BARE_QPG and frequencies in ML_bot, ML_top_AA1, ML_top_AB, AA1, AB; same 12 symmetry
+    matrices in the same order (6 + time reversal) in ML_bot, ML_top_AA1, ML_top_AB and AB (AA1: 12 spatial, D3d).
+    So the symmetrized forms combine without v: chi0~ = v^1/2 chi0 v^1/2 = 1 - (1 + X)^-1.
+  - ADDITIVITY of chi0 (Xuan-type test, no run): X_add = (1 - chi0~top - chi0~bot)^-1 - 1 vs the X of the bilayer:
+    relative Frobenius error 0.3-2.3% at w = 0 (largest at q -> 0), 0.2-0.3% at i 27 eV; head eps^-1_00 at iq 2
+    0.6147 (add) vs 0.6157 (AA') and 0.6148 vs 0.6149 (AB) (single ML 0.7537). The effective W is the bilayer W.
+  - SYMMETRY MAPPING verified: X_top(G,G') = e^{-i(G-G').tau} X_bot(G,G') (AB, tau = r_top - r_bot) and
+    X_top(G,G') = e^{-i(G-G').tau} X_bot(sG', sG) (AA', s = z mirror (Gx,Gy,-Gz), tau = r_top - C2z r_bot; from C2z
+    and the Onsager relation chi_GG'(-q) = chi_-G',-G(q)), relative error 1e-5 (1.5e-4 at q -> 0): one ML
+    calculation is enough in principle. VALIDATED in Embedding_Analysis Sec. 2 (user, 2026-11-17: validate the
+    translation and rotation to avoid one calculation per position/orientation): `move_layer(X, iq, R, tau)` (R^-1 q =
+    +-q only; a general R needs X outside the IBZ from the layer symmetries, not implemented); ||X_moved - X_top|| /
+    ||X_top|| = 1.5-2.1e-5 (w = 0) and 1.0-1.3e-5 (i 27 eV) at q != 0, 1.5-1.7e-4 at q -> 0, on all 37 q, both
+    stackings; controls: layer not moved 1.35-1.41, AA' with the translation only 0.70-0.76. SUBTLETY: at iq = 1 the
+    head/wings are computed at q0 along LongDrXp ([1,1,0]; stored in X_PARS_3[3:6], "Field direction"), so C2z maps
+    q0 -> -q0 and needs the time-reversal branch: treating iq = 1 as q = 0 gave 5e-3 for AA'. 1e-5 = agreement of two
+    independent runs (our reading: FFT-grid position, DFT thresholds; ML_top vs ML_bot GW within 0.5 meV).
+  - vt = v + v chi^S v = v^1/2 (1 + X^S) v^1/2 = W of the substrate alone: read directly from the ML_bot ndb.pp.
+  - `hBN_bilayer/Embedding_Analysis.ipynb` (2026-11-17, PROTOTYPE: user, readers/writer of the databases written in
+    the notebook to see how things work, moved to MPPI once stable, then MPPI is used; generator
+    `make_embedding_nb1.py` in the session scratchpad; runs in ~40 s on the login node). Sections: 1 databases
+    (content, readers read_screening_header / read_X / read_bare_qpg, table of checks); 2 moving a layer (symmetry
+    mapping, above); 3 vt = computational counterpart of Notes Sec. 2.2 (REWRITTEN 2026-11-17 with the user: Q = in-plane
+    vector q + G_par as in Eq. 21, G_par = G_par' blocks only in the plots; real space along z (1/c) sum e^{iGz z} M
+    e^{-iGz' z'}; Eq. 22 bare v = (2 pi/Q) e^{-Q|z-z'|}; Eq. 23 v_emb; Eq. 24 factorized form with g(Q) relative to a
+    reference plane z0 = midpoint 0 (a convention: g -> g e^{-2Qz0}; g keeps its meaning, <= 1 and comparable with
+    beta, if the plane lies between the charges); on the top plane vt/v = 1 - g e^{-2Qd}, d = z_t - z0 = 3.146 bohr,
+    the unnumbered formula after Eq. 24 => g = (1 - vt/v) e^{2Qd}). Figure 1: unit charge wave on the top plane, bare v
+    (dashed, incident) and v_emb (solid, reflected), in units 2 pi/Q, + decay rate -dln|v_emb|/dz in units of Q: = Q
+    within 1-2% for 2.5 < z < 14 bohr (8% at Q = 0.34), -Q below z ~ -7; the slab cutoff (|z - z1| < 20 bohr) leaves
+    this region untouched, deviations only near z_b + c/2 (periodic image of the induced charge: intended effect).
+    Induced charge (not plotted): dipole centred on z_b, lobe at z = -1.45, tail above 5% up to z = 1.8-2.1 (z
+    resolution ~ pi/Gz_max ~ 1 bohr): no plane separates the charges exactly. Figure 2: vt/v and g(Q): vt/v 0.757 /
+    0.826 / 0.851 / 0.901 at Q = 0.085 / 0.148 / 0.170 / 0.225 bohr^-1, 1 within 1% above ~0.5; g static 0.415 /
+    0.441 / 0.435 / 0.409, max 0.44 near Q 0.15, ~0.19 at Q 0.8; at i 27 eV g 0.11-0.135 (3x smaller); one curve in
+    |Q|; g -> 0 at Q -> 0 below the grid (head 0.9999). Eq. 24 check: g at heights h = 2..8 bohr within 1-2%, top
+    plane within 0.1-0.8% of h = 8, h = 1 lower by 1-8% (inside the tail). With z0 on the bottom atoms g would be
+    x e^{2Q 3.146} (> 1 from Q ~ 0.15): same v_emb, plane cutting the induced charge (an earlier statement to the
+    user, "formula not applicable", was corrected). The old left panel (normalized induced charge) was removed
+    (user). SIMPLIFIED again (user, 2026-11-17: only v, v_emb and their dependence on z and Q): figure 1 = one panel
+    (v dashed, v_emb solid, legend = Q only), the decay-rate panel removed (its result stays above); figure 2 = v =
+    2 pi/Q and vt on the top plane in Ha bohr^2 (static, i 27 eV) + g(Q); Eq. 24 check printed as one line (g at h =
+    2, z_t, 5, 8 bohr within 3.2% for the 8 smallest Q); comments trimmed to the thread. REAL SPACE (user, 2026-11-17,
+    added after figure 2, In [7]): point charge on the top plane, v_emb(rho) = -int dQ g(Q) e^{-2Qd} J0(Q rho) (Hankel
+    transform of Eq. 24; g = beta gives Eq. 26 of the notes; the source atom matters only through its height); figure
+    vt = 1/rho + v_emb vs 1/rho and v_emb(rho), static and i 27 eV. Below Q_min = 0.085: sheet fit g = r0Q/(1+r0Q)
+    e^{-2Q delta} on Q < 0.5 (static r0 = 11.9 bohr, delta = 1.25 bohr, i.e. induced charge at z ~ -1.25; i 27 eV r0 =
+    2.0, delta = 1.9), band between g linear to 0 and g constant. vt/v = 0.90 / 0.79 / 0.74 / 0.81 / 0.91 at rho = 2 /
+    5 / 10 / 20 / 40 bohr (i 27 eV 0.97-0.99); v_emb(0) = -1.43 eV (band -1.32 to -1.72; i 27 eV -0.41), 26-43% from
+    Q < Q_min: indicative values (denser grid or RIM-like treatment for quantitative ones). Not the GW correction (in W
+    the substrate is screened by the layer). Possible next: Delta W(rho) = W_eff - W_alone on the plane, the real-space
+    picture relevant for the gap.
+    4 W of the top layer: X_new = (1 - (1 + X^S) chi0~^L)^-1
+    (1 + X^S) - 1, = additive form within 2e-15; vs bilayer X 0.3-2.3% (w = 0), 0.2-0.3% (i 27 eV), top alone ~70%;
+    W/v on the top plane: effective - bilayer <= 0.0035 (w = 0), 0.0003 (i 27 eV) vs substrate effect up to 0.093;
+    AA' and AB the same. => in this benchmark W is not the issue; differences effective vs explicit GW will come
+    from the states (G). FROM ML_bot ONLY (user, 2026-11-17): in Sec. 4 X^L of the top layer = move_layer(X of
+    ML_bot) (AA' and AB), X^S = X of ML_bot; the computed ML_top databases serve only as checks (X_new vs the one with
+    the computed ML_top X: 1.2e-4 at q -> 0, <= 1.4e-5 elsewhere) and as file templates. NEW DATABASES (198 MB each):
+    `MB_analysis/kpoints_18-nbnds_250-ML_top_<AA1|AB>/ndb_pp-ngsblkxp_6.0-bndsrnxp_200-emb_ML_bot/` = ML_top ndb.pp
+    header + 37 fragments (template) with X_Q replaced (float32, read back within 1.5e-8), NO ndb.RIM_W; a fragment is
+    rewritten only if its content differs from X_new by > 1e-7 (rewritten once on 2026-11-17 when switching to
+    ML_bot only; the next execution wrote 0). Prototype pitfall: netCDF files must be closed after reading (`with
+    Dataset(...)`), otherwise reopening them 'r+' in the same process fails with an HDF error.
+    MPPI (user, 2026-11-17): the translation/rotation (move_layer, incl. the q0 subtlety) goes into the future MPPI
+    class that reads and analyses ndb.pp, together with the readers and the writer of this prototype.
+    NEXT (to ask, yambo runs): GW of ML_top_AA1 / ML_top_AB with this folder in the jobname list instead of the
+    original screening folder, RIM_W recomputed; first at Gamma and K, then full IBZ (ask the bands); compare the GW
+    corrections with results/layer_projection.json.
 - Slab cutoff checked on the Lumen source (2026-11-11, docs/02 Sec. 4 B): `cutoff_slab.F` = Ismail-Beigi/Rozzi,
   v_cut = 4pi/|q+G|^2 [1 - e^{-Q L/2} cos(G_z L/2)], truncation in z - z' (translation invariant: no centring issue,
   layer position in the cell irrelevant); condition: whole system (both layers) within L/2 = 10.6 A for c = 40 bohr:
