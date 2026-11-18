@@ -789,9 +789,30 @@ computational procedure (possibly a code implementation).
     q0 -> -q0 and needs the time-reversal branch: treating iq = 1 as q = 0 gave 5e-3 for AA'. 1e-5 = agreement of two
     independent runs (our reading: FFT-grid position, DFT thresholds; ML_top vs ML_bot GW within 0.5 meV).
   - vt = v + v chi^S v = v^1/2 (1 + X^S) v^1/2 = W of the substrate alone: read directly from the ML_bot ndb.pp.
-  - `hBN_bilayer/Embedding_Analysis.ipynb` (2026-11-17, PROTOTYPE: user, readers/writer of the databases written in
-    the notebook to see how things work, moved to MPPI once stable, then MPPI is used; generator
-    `make_embedding_nb1.py` in the session scratchpad; runs in ~40 s on the login node). Sections: 1 databases
+  - `hBN_bilayer/Embedding_Analysis.ipynb` (2026-11-17, first written as a PROTOTYPE with its own readers/writer;
+    REWRITTEN 2026-11-18 on MPPI `YamboScreeningParser` (MPPI commit 17d1271, see the PLAN AGREED paragraph below):
+    `scr[s] = YamboScreeningParser(<screening folder>, <run>/SAVE)`, `bot = scr['ML_bot']`; v from
+    `coul[s] = YamboCoulombParser(<run>/SAVE, cutoff=<run>/ndb_rim_cutoff)` (since MPPI d21db47, see REVISION below;
+    assert in Sec. 1: G of the screening = first ng G of the SAVE, same q);
+    move_layer -> `bot.transform(X, iq, rotation, translation)`; along_z / on_top_plane -> `bot.planar` on
+    `induced(iq, X) = s X s`, s = sqrt(coul['ML_bot'].coulomb(iq, bot.ng)) (= v^1/2 X v^1/2, v_emb for the substrate), blocks ->
+    `bot.inplane_blocks()` (keys = in-plane Miller indexes), Q -> `bot.inplane_Q`; Sec. 4: `embed(chi0_layer, vt)`
+    (Eq. 19, stays in the notebook) with `bot.chi0(iq, Xt)` and `bot.eps_inv(iq, Xb)`, writer
+    `scr['ML_top_<bl>'].write(new_db, callable)`, the new database reopened with the parser as a check;
+    YamboDftParser only for the atoms. Checked: all printed numbers and the 4 figures identical to the prototype
+    version (figures byte-identical), the `..._emb_ML_bot` databases not rewritten (0 written, 37 up to date; files
+    untouched). Generator `make_embedding_nb3.py` in the session scratchpad (nb2 = before the Sec. 3 rewrite); runs in
+    ~100 s on the login node (X_new computed twice: in write and in the checks). Sec. 3 RESTRUCTURED 2026-11-18 (user:
+    clearer, only what matters for the thread): intro = vt from the GENERAL Eq. 18 read from the ML_bot database
+    (nothing solved: v_emb = v^1/2 X^S v^1/2, vt = v^1/2 (1 + X^S) v^1/2 = W of the substrate alone; v = truncated v
+    from ndb.cutoff, the one Yambo used; the full matrix goes into Eq. 19; Eq. 24 only to read the result); 3.1 planar
+    representation (G_par = G_par' blocks = one wave Q, Eq. 21; along z with `planar`; bare part ANALYTIC, Eq. 22,
+    because its cusp at z = z' needs many more G_z than the 45 of the block: from the G sum it is off by 1.5% at Q =
+    0.085 and 12% at Q = 0.68 at z = z', while v_emb converges, < 0.001 v when halving the G_z); charge-wave figure;
+    v and vt on the top plane (one panel); 3.2 g(Q) extracted from vt (Eq. 24 not assumed; height check 3.2%; g
+    figure); 3.3 real space, Eq. 24 used as a model below Q_min (sheet fit parameters no longer printed). All numbers
+    unchanged. Old description, prototype version: generator
+    `make_embedding_nb1.py`; ~40 s). Sections: 1 databases
     (content, readers read_screening_header / read_X / read_bare_qpg, table of checks); 2 moving a layer (symmetry
     mapping, above); 3 vt = computational counterpart of Notes Sec. 2.2 (REWRITTEN 2026-11-17 with the user: Q = in-plane
     vector q + G_par as in Eq. 21, G_par = G_par' blocks only in the plots; real space along z (1/c) sum e^{iGz z} M
@@ -837,6 +858,34 @@ computational procedure (possibly a code implementation).
     Dataset(...)`), otherwise reopening them 'r+' in the same process fails with an HDF error.
     MPPI (user, 2026-11-17): the translation/rotation (move_layer, incl. the q0 subtlety) goes into the future MPPI
     class that reads and analyses ndb.pp, together with the readers and the writer of this prototype.
+    PLAN AGREED (user, 2026-11-18: implement the general tools in MPPI BEFORE the GW runs with the embedding; system-
+    specific things stay in Embedding_Analysis): one MPPI class (proposed name `YamboScreeningParser`) for ndb.em1s /
+    ndb.em1d / ndb.pp (same format, io_X.F): reading (header, X lazily, frequencies), eps^-1 and chi0~ = 1 - (1+X)^-1,
+    v from ndb.cutoff (read, not recomputed: CUT_BARE_QPG = analytic slab formula within 2e-7, but yambo uses q0 at
+    iq = 1, regularizes Q_par and, without RIM, replaces the head; ndb.cutoff is needed only for quantities in physical
+    units: W, chi, profiles along z, g(Q); NOT for moving a layer or for the Dyson of Eq. 19 in symmetrized form),
+    W and chi of the database, `transform` (= move_layer generalized), writer from a template (never ndb.RIM_W), 2D
+    tools (G_par blocks, M(Q; z, z')). NOT in MPPI in this phase (user): the construction of the new W (Eq. 19,
+    X_new = (1 - (1 + X^S) chi0~^L)^-1 (1 + X^S) - 1, in the Eq. 19 form with vt = 1 + X^S, not the additive form: the
+    substrate stays one object vt, which may later come from a planar g(Q) model, user's question 2026-11-18), the
+    choice of layer/substrate, R and tau of hBN, g(Q), real space, comparisons: Embedding_Analysis. Full plan, formats,
+    tests (tutorial Si ndb.pp: symmetry test transform(X, R) = X for the operations with R^-1 q = +-q, 128 cases,
+    6.4e-7) in the MPPI CLAUDE.md, section "Next work: screening database parser" (MPPI commit 935f4af, pushed
+    2026-11-18; development in an MPPI session). DONE 2026-11-18: class implemented in MPPI (commit 17d1271, tutorial
+    `Tutorial_YamboScreeningParser.ipynb`), Embedding_Analysis rewritten on it, numbers unchanged (see above).
+    REVISION DECIDED (user, 2026-11-18: the screening parser must not mix in the Coulomb interaction): v is needed only
+    to go to physical units (W, chi, v_emb in Ha bohr^3), never for eps^-1, chi0~, transform, write, planar ->
+    `cutoff`, bare_qpg, coulomb, W, chi to be removed from YamboScreeningParser (transform checks the invariance of v
+    from the CUTOFF geometry of the header); NEW `YamboCoulombParser` for ndb.cutoff AND ndb.RIM (ndb.RIM = Monte
+    Carlo average over the q cell of the slab-cut 1/|q+G|^2 for the first RandGvec = 101 G, diagonal for the slab,
+    <v>_cell = 4pi RIM_qpg/(2 q_weight), q_weight = (BZ volume/nqbz)/(2pi)^3; geometry only, used by Sigma_x, BSE head
+    and RIM_W, not by the screening; its header CUTOFF says 'none' although the content is slab-cut). Plan in the MPPI
+    CLAUDE.md, section "Next work: Coulomb parser, and the screening parser without v". DONE 2026-11-18: MPPI commits
+    2902acf (YamboCoulombParser, screening parser without v; transform(..., check_cutoff=True) checks R from the
+    header geometry), tutorials up to d21db47; Embedding_Analysis updated (generator `make_embedding_nb4.py`, scratchpad):
+    v from `coul[s]` (cutoff only, ndb.RIM not needed here), `induced` = s X s in the notebook; all printed outputs and
+    the 5 figures byte-identical to the previous version, 0 fragments written. Execution took 11 min (login node with
+    load ~24) instead of ~100 s. Then the GW runs (ask).
     NEXT (to ask, yambo runs): GW of ML_top_AA1 / ML_top_AB with this folder in the jobname list instead of the
     original screening folder, RIM_W recomputed; first at Gamma and K, then full IBZ (ask the bands); compare the GW
     corrections with results/layer_projection.json.
