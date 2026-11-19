@@ -340,6 +340,8 @@ computational procedure (possibly a code implementation).
   (QP - KS) from the screening of the second layer, compared at K. AA' and AB: the effective scheme gives almost the
   same result for both (registry only in the G_par != 0 terms of v chi^S v, ~ e^{-|G_par| d}); AA' = clean test of
   the scheme, explicit AA' vs AB = size of the stacking/hybridization effect at K that the scheme misses.
+  CORRECTED 2026-11-19 by the first effective GW runs (Embedding_Analysis Sec. 6): the scheme does distinguish the
+  stackings (through the G_par != G_par' terms of W) and reproduces ~90% of the AB - AA' difference of the corrections.
   NSCF + SAVEs (2026-11-11, user's choices): ML_bot k = 18, 30, 42 with 250 bands; AA1, AB k = 18 with 400 bands
   (other grids and ML_top_* after the first GW runs); prefix `kpoints_<k>-nbnds_<n>-<system>`; diagonalization `cg`
   (Davidson stopped with "S matrix not positive definite"; cg leaves 1-5 eigenvalues per k slightly above the very
@@ -421,7 +423,8 @@ computational procedure (possibly a code implementation).
   Gamma: valence pair b7, b8 on the top layer, NFE conduction states on both. AA': degenerate pairs, 50/50 (equal
   corrections within 1 meV, any combination has the same correction). Layer-resolved gap correction BL - ML at K:
   AA' -0.370; AB bottom -0.444 (v +0.202, c -0.242), top -0.414 (v +0.193, c -0.221) eV: stacking effect 45-75 meV,
-  what the effective scheme (same result for both stackings) misses.
+  what the effective scheme (same result for both stackings) misses [WRONG, see 2026-11-19: the effective scheme gives
+  AB - AA' = v +0.019, c -0.019, gap correction -0.039 eV vs the bilayer +0.023, -0.021, -0.044].
   QP BAND STRUCTURES (2026-11-13, user: standard method): full-IBZ QP runs at k = 18 (converged parameters, bands
   2-8 ML, 3-14 BL; `<converged name>-full_ibz-b<b0>_<b1>`, SE_CPU 1.32.1; 1 node: ML 3 h 20 min, AA' 4 h 50 min, AB
   ~5 h; Sigma dominates) + ypp `-s b` BOLTZ with `CIRCUIT_E_DB_path` = SAVE of the pw.x bands run made with
@@ -886,9 +889,113 @@ computational procedure (possibly a code implementation).
     v from `coul[s]` (cutoff only, ndb.RIM not needed here), `induced` = s X s in the notebook; all printed outputs and
     the 5 figures byte-identical to the previous version, 0 fragments written. Execution took 11 min (login node with
     load ~24) instead of ~100 s. Then the GW runs (ask).
-    NEXT (to ask, yambo runs): GW of ML_top_AA1 / ML_top_AB with this folder in the jobname list instead of the
-    original screening folder, RIM_W recomputed; first at Gamma and K, then full IBZ (ask the bands); compare the GW
-    corrections with results/layer_projection.json.
+    GW PROCEDURE (2026-11-18, user: understand step by step how the GW is split and where v becomes vt; written in
+    Embedding_Analysis Sec. 5; read in the Lumen source and in the reports of our runs). Order of a yambo GW (PPA)
+    run: RIM + cutoff (bare v) -> dipoles -> screening X (ndb.pp; bare v in the Dyson of the layer) -> HF (Sigma_x =
+    iGv, bare v) -> Dyson solver with RIM_W (QP_interpolate_W.F: element-wise f from X, X = v f/(1 - v f), i.e.
+    f = (b_G b_G'/4pi) X/(1+X), Taylor-interpolated in the small q cell from 5 neighbours, <v f v/(1 - v f)> with the
+    bare v; at every q for G, G' <= RandGvecW; PPA pole energy RIM_W_E at q = 0) -> Sigma_c (QP_ppa_cohsex.F: one pole
+    per (G, G'), Omega = E_PPA / sqrt(X(0)/X(iE_PPA) - 1); residue with gamp = bare v^1/2 v^1/2 incl. RIM) -> QP. v
+    NEVER changes inside yambo: vt enters only through X (Dyson of the layer redone with vt in python, X_new =
+    v^-1/2 W v^-1/2 - 1; yambo rebuilds v^1/2 (1 + X_new) v^1/2 = W_eff, eps_eff^-1 = v^-1 W_eff; Sigma_x bare, the
+    substrate only in W_eff - v = v_emb + vt chit^L vt, as in Notes Sec. 2.1). Split: (1) yambo, layer alone, up to
+    X (chi0~^L = 1 - (1 + X^L)^-1; here ML_bot moved, done); (2) python Eq. 19, X_new in a copy of the ML_top ndb.pp
+    without RIM_W (done, `..._emb_ML_bot`); (3) yambo Sigma-only run in the ML_top_<bl> folder (KS states of the top
+    layer in its position), converged GW input UNCHANGED, jobname [<run>, ndb_pp-ngsblkxp_6.0-bndsrnxp_200-emb_ML_bot,
+    ndb_rim_cutoff] (NOT the original screening folder: it has an ndb.RIM_W of the layer alone). Only ndb.pp is
+    modified for GW (BSE: the same on ndb.em1s + v or vt in the exchange kernel). COH: no issue (X^S dynamic, PPA +
+    sum over all bands). Yambo checks only HEADERS (io_header: q points, R_LATT, WF, temperature, xc, CUTOFF, gauge;
+    variables_X: ng <= stored, bands, e/h range, kernel, Drude, CGrdSpXp, field direction q0, optical average;
+    fragments: PPA energy, damping, number of frequencies), never the content of X: wrong input -> the screening of
+    the layer alone is silently recomputed in the run folder. CHECK DONE 2026-11-18 (no run): the emb ndb.pp headers
+    are byte-identical to those yambo wrote in the ML_top GW runs; fragments equal except X_Q; the converged GW input is
+    the same (non-comment lines) for ML_bot, ML_top_AA1, ML_top_AB, and the ML_bot Sigma-only run with it read
+    ndb.pp and ndb.RIM_W from the shared folder; no ndb.RIM_W in the jobname folders; run folder
+    `pp-ngsblkxp_6.0-bndsrnxp_200-gbndrnge_200-bg-emb_ML_bot`. After the run check in the report:
+    [RD ..._emb_ML_bot//ndb.pp], no [WR ...ndb.pp], [WR <run>//ndb.RIM_W].
+    STEP 3 AT GAMMA AND K DONE (2026-11-19, user's OK; Embedding_Analysis Sec. 6, generator `make_embedding_nb7.py` in
+    the scratchpad; Sec. 6 SHORTENED at the user's request (too many numbers): two figures, QP corrections of bands
+    4/5 at Gamma, K for alone / effective / extracted (+ hollow bilayer NFE states) and GW CORRECTIONS of the gap at
+    K, Gamma (user: absolute gaps mixed in the KS gap difference, 0.055/0.030 eV at K, and looked worse than the
+    states; the gap-correction error equals the conduction-state error, 31/26 meV), then five
+    short bullets and one compact check cell; no printed tables): run `pp-ngsblkxp_6.0-bndsrnxp_200-gbndrnge_200-bg-emb_ML_bot` in ML_top_AA1 and ML_top_AB
+    (Dataset with yambo_code() as GW_Analysis; input = converged file read with YamboInput(folder, filename) and its
+    arguments/variables copied into YamboInput(args=gw_cmd) so that yambo reformats it: non-comment lines identical;
+    jobname [run, ndb_pp-...-emb_ML_bot, ndb_rim_cutoff]); 4 min 52 s each, 1 node. Report: ndb.pp read from the emb
+    folder, no ndb.pp written, ndb.RIM_W written in the run folder (+ HF, dipoles, QP); E_KS, Sigma_x, Vxc identical to
+    the run alone, only Sigma_c changes. QP corrections dE = E_QP - E_KS of the top layer, alone / effective / bilayer
+    (layer_projection.json, barycentre): AA' Gamma v -1.595 / -1.407 / -1.405, K v -1.320 / -1.150 / -1.150, K c
+    +1.304 / +1.073 / +1.104; AB Gamma v -1.595 / -1.399 / -1.394, K v -1.320 / -1.131 / -1.127, K c +1.304 / +1.054 /
+    +1.084 eV. => valence: effective = bilayer within 0.3-5 meV; pi* at K: effective 30 meV lower (substrate effect
+    overestimated by ~15%); gap correction at K vs alone: -0.400 (eff) vs -0.369 (bil) AA', -0.439 vs -0.413 AB; GW gap
+    at K 6.937 vs 7.023 (AA'), 6.899 vs 6.954 (AB), the rest from the KS gaps (4.714 alone, 4.769 / 4.744 inside).
+    Stacking: same KS states (rotated/translated), so AB - AA' comes from W (G_par != G_par' terms): eff v +0.019,
+    c -0.019 vs bilayer +0.023, -0.021 eV. NFE conduction at Gamma: the scheme FAILS: dE +0.634 alone -> -0.793
+    effective (Sigma_c -1.67 -> -3.26 eV), bilayer NFE states at Gamma (b9, b10) +0.470/+0.405 (AA'); GW gap at Gamma
+    6.70 effective vs 8.06 / 8.01 bilayer. Weight of the ML_top KS states on the side of the bottom layer (z < 0;
+    WfcParser.z_weight): NFE Gamma 0.358 (0.094 below the bottom plane), pi* K 0.015, valence K 0.005, Gamma 0.0001:
+    the NFE state overlaps the substrate (no-overlap fails). Interpretation (NOT verified): W_eff gives the full
+    screening of the bottom layer where the state overlaps it, while G has only the top-layer states. Hypothesis: the
+    30 meV pi* error at K is a small version of the same spill effect; test on the full IBZ (error vs weight z < 0).
+    FULL IBZ (user 2026-11-19: bands 2-6, "also the next conduction band"): Embedding_Analysis Sec. 7 (generator
+    `make_embedding_nb8.py`), run `pp-ngsblkxp_6.0-bndsrnxp_200-gbndrnge_200-bg-emb_ML_bot-full_ibz-b2_6` in
+    ML_top_AA1 / ML_top_AB, converged input + QPkrange 1|37|2|6 + SE_CPU 1.32.1 (as the ML_bot full-IBZ b2_8 run, 3 h
+    32 min), same jobname list; submitted 2026-11-19 (jobs 62172, 62173, 1 node each, ~2.5 h expected) from the
+    nbconvert execution of the notebook (do NOT re-execute the notebook while they run: skip=True would resubmit).
+    DONE 2026-11-19 (AA' 2 h 22 min, AB 2 h 39 min; Sec. 7 check: input changes only SE_CPU + QPkrange, ndb.pp read
+    from the emb folder, no screening written; KS energies = ML_bot full-IBZ run within 0.3 meV). IN THE NOTEBOOK since
+    2026-11-19 (user's request; generator `make_embedding_nb9.py`, scratchpad; outputs of Secs. 1-7 runs unchanged,
+    runs skipped): Sec. 7 = run cell, check cell, GW bands effective vs extracted (bands 2-5, the bands_effective2
+    figure), three bullets, error vs weight figure, and a final "Conclusions of the benchmark" (the CONCLUSION below);
+    intro step 7 added. Earlier scratch figures: `bands_effective.py`
+    (GW bands of the top layer on the 19 grid points of G-M-K-G, zero at the GW VBM of each scheme: effective bands
+    2-6, extracted bands 2-5 with band 5 hollow where not attributable, alone dashed; bottom panel = shift of band 5
+    w.r.t. the VBM relative to the layer alone) and `error_vs_weight.py` (error of the effective correction of band 5
+    vs the weight of the ML_top state at z < 0, `zw_top_b456.npy`). Substrate effect on the GW corrections (relative
+    to alone; extracted = gw - dft of layer_projection.json): valence bands 2-4 effective +0.17..+0.22 vs extracted
+    +0.17..+0.25, difference -0.045..+0.017 eV; pi* (22 k) effective -0.23..-0.40 vs extracted -0.20..-0.24, error
+    -0.03 (K) to -0.18 eV (k next to the pi*/NFE crossing); NFE (15 k) effective -0.60..-1.44 vs extracted
+    -0.31..+0.12, error -0.29..-1.52 eV; band 6 effective -0.30..-1.72 eV (no reference). The error grows with the
+    weight of the state on the substrate side: pi* weight 0.015 -> -0.03, 0.035 -> -0.09, 0.046 -> -0.13, 0.057 ->
+    -0.18 eV; NFE weight 0.34-0.36 -> -1.2..-1.5 eV (about -3 to -4 eV per unit weight, both stackings): the
+    spill hypothesis is confirmed (the pi* error at K is the small end of the same effect). Bands with zero at the VBM:
+    effective band 5 shifted by -0.40..-0.56 (AA') / -0.44..-0.59 (AB) eV w.r.t. alone in the pi* region (extracted
+    -0.31..-0.35 / -0.38..-0.40, which also contains the DFT part), -1.6 eV in the NFE region (extracted ~0).
+    User (2026-11-19): band 5 is the first conduction band; band 6 is NOT of interest for now (drop it from the
+    figures), and the band figure shows only effective vs extracted (no layer alone): `bands_effective2.py` (bottom
+    panel = band 5, effective - extracted, both w.r.t. their VBM: -0.05..-0.24 eV pi*, -1.5..-1.6 eV NFE).
+    CONCLUSION (user's statement 2026-11-19, agreed with two nuances): the scheme works very well for the attributable
+    states. Nuances: (1) the chi0 splitting itself (W) holds everywhere in this benchmark (Sec. 4: X additive vs
+    bilayer 0.3-2.3%), also where the scheme fails; what fails for the NFE states is no-overlap at the level of the
+    STATES in Sigma (the layer state extends into the substrate; G has only layer states); (2) the accuracy criterion
+    is the weight of the state on the substrate side rather than f_min >= 0.9: error ~ -3 eV x weight, <= ~0.06 eV
+    for weight <= 2.5%, 0.13-0.18 eV for the attributable pi* points next to the crossing (weight 5-6%).
+    SCISSOR VIEW (user, 2026-11-19, from Projection_Analysis cell 6): the substrate effect on the top-layer states is a
+    nearly k-independent symmetric shift, valence +0.17..+0.25, pi* -0.20..-0.24 eV, gap -0.41 (AA') / -0.44 (AB) eV
+    on average (attributable k); the user expects the effective construction to do this w.r.t. the layer alone.
+    Band 5 at the 15 non-attributable k (barycentre over the 2 kept states, 55-80% of the weight, already in the
+    JSON): -0.15..-0.19 at the 9 NFE points near Gamma (bilayer NFE states at Gamma: -0.17, -0.23 vs alone), scattered
+    -0.3..+0.1 at the 5-6 points near the pi*/NFE crossing (reference unreliable there) => the physical shift is
+    scissor-like also for the NFE states, but the effective construction fails on them (Gamma: -1.43). Proposal (to
+    discuss after the full IBZ): summarize the effective scheme as a scissor from the confined states (valence, pi*),
+    applied also to the NFE states.
+    CONVENTION (user, 2026-11-19): the energy zero has no meaning; put it at the VBM of each scheme and call scissor the
+    shift of the conduction states w.r.t. the VBM (here -0.41 AA' / -0.44 AB eV); the valence shape changes by only a
+    few 0.01 eV. Use this in the full-IBZ figures.
+    EXTENDED BAND 5 (user, 2026-11-19; scratch figure `bands_extended.py`/`.png` in the scratchpad, not in a notebook):
+    the kept states of band 5 are n = 9, 10 at ALL 37 k, so layer_projection.json already holds the barycentre over
+    9, 10 at the non-attributable points. GW bands of the top layer on the path, zero at the GW VBM of each: valence
+    inside = alone; band 5 shifted w.r.t. the VBM by -0.31..-0.35 (AA') / -0.38..-0.40 (AB) eV in the attributable region,
+    but only -0.02..-0.04 / -0.09..+0.01 in the NFE region (Gamma-side ends of the path). Split: GW-correction part
+    still negative there (-0.18..-0.36 AA', -0.12..-0.39 AB, vs -0.37..-0.43 for pi*), DFT part +0.13..+0.34 eV (the
+    extracted NFE state is higher than the NFE state alone: the NFE states of the two layers mix, Gamma 4.86 / 5.34 vs
+    4.71 eV) which cancels it; n = 9, 10 hold only 55-65% of the state there, so the absolute extracted energy depends
+    on the kept states (the correction less). => in absolute energies the scissor does NOT continue into the NFE region;
+    on the corrections it does, weaker. The effective scheme can only give the correction part.
+    (User's conclusion, agreed: in the NFE region the extracted energies ~ the layer alone, no 0.4 eV scissor there.
+    Nuance: the lowest bilayer NFE state at Gamma (b9, bonding combination) is -0.19 eV w.r.t. the VBM vs the ML, i.e.
+    DFT +0.15, correction -0.34: lowered by the NFE-NFE mixing, while the barycentre (no mixing) is not shifted. For
+    the benchmark: scissor ~ -0.4 eV only for valence + pi*; NFE region: compare corrections only, uncertain reference.)
 - Slab cutoff checked on the Lumen source (2026-11-11, docs/02 Sec. 4 B): `cutoff_slab.F` = Ismail-Beigi/Rozzi,
   v_cut = 4pi/|q+G|^2 [1 - e^{-Q L/2} cos(G_z L/2)], truncation in z - z' (translation invariant: no centring issue,
   layer position in the cell irrelevant); condition: whole system (both layers) within L/2 = 10.6 A for c = 40 bohr:
