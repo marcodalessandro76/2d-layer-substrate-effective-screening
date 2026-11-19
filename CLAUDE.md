@@ -970,6 +970,49 @@ computational procedure (possibly a code implementation).
     STATES in Sigma (the layer state extends into the substrate; G has only layer states); (2) the accuracy criterion
     is the weight of the state on the substrate side rather than f_min >= 0.9: error ~ -3 eV x weight, <= ~0.06 eV
     for weight <= 2.5%, 0.13-0.18 eV for the attributable pi* points next to the crossing (weight 5-6%).
+    NEXT TEST (discussion, 2026-11-19, NOT decided): user's proposal = hBN trilayer, top layer on a 2-layer
+    substrate (towards a semi-bulk substrate: stronger effect; hope that the first conduction band has no NFE states).
+    Claude's assessment: good, cheap next step for the stronger/thicker substrate (same lattice, tools, parameters;
+    chi^S = the AA' bilayer response, possibly reused directly by placing the trilayer so that its two lower layers
+    sit where the AA1 bilayer is; bonus: chi^S of the 2-layer substrate also built from two monolayers in python,
+    the route to thick substrates; the middle layer = encapsulated case from the same explicit run). Effect expected
+    larger but less than double (second substrate layer at 2d; thin-slab g ~ t only for Q t << 1). It does NOT remove
+    the NFE problem: band 5 near Gamma is NFE in the free-standing layer itself (the scheme uses those KS states), and
+    in the full system the NFE states of the layers mix further. A first conduction band without NFE states needs a
+    different layer (band edges inside the hBN gap, large electron affinity: SnS2/hBN ~30 atoms, docs/04) =
+    regime of the application (germanene/hBN), but supercell and unfolding needed. Cheap control test also possible:
+    bilayer at larger d (spill weight down -> error should drop with it). To check first for the trilayer: slab cutoff
+    condition at c = 40 bohr (span ~12.7 A of density vs L/2 = 10.6 A); if it fails, c grows and ML/BL runs are redone.
+    User (2026-11-19): AA'A trilayer (bulk stacking; middle layer A' = B and N exchanged = rotated by 180 deg); layers
+    at -d/2, +d/2, +3d/2 so that the substrate = the AA1 bilayer as it is, top layer = ML_bot translated by 2d along z.
+    CUTOFF CHECK DONE (no run; scratch `trilayer_cutoff.py`): trilayer density estimated as rho_AA1(z) +
+    rho_ML(z - 2d) from the existing pp.x/average.x profiles (superposition checked on the bilayer: AA1 vs ML + ML
+    shifted by d differ by 0.04% of the charge, same pair weight). Trilayer at c = 40 bohr: width at 1e-4 of the max
+    12.75 A (> L/2 = 10.58 A), charge outside the L/2 window 7e-4, weight of the pairs at |z-z'| > L/2 3.1e-6 vs
+    1.1e-10 for the bilayer: c = 40 NOT enough by the bilayer criterion. Pair weight vs c: 45 -> 4e-8, 50 -> 5e-10,
+    52 -> 8e-11, 55 -> 4e-12 bohr. Proposal: c = 50 bohr (or 52 for exactly the bilayer margin) for ALL the systems of
+    the trilayer test (ML_bot, AA1 substrate, top layer, trilayer: same cell needed for the database operations);
+    ecut, k, NGsBlkXp (Ha) transferable, numbers of bands x ~1.25 (same energy window), cost of X and Sigma ~ x2.
+    SYSTEMS (user, 2026-11-19: use the translations this time): only THREE systems at c = 50: ML (A), AA' bilayer
+    (substrate: only its screening ndb.pp needed), AA'A trilayer (explicit reference, full-IBZ QP). Claude's points:
+    (1) chi translations along z already validated (the AB check of Embedding_Analysis Sec. 2 had tau = r_top - r_bot
+    with a z component d: 1.5-2e-5); (2) the projection needs the layer states in the SAME place as the layer in the
+    trilayer, but the KS states can be translated/rotated with WfcParser.transform (as in the first Projection_Analysis:
+    top states from ML_bot, check 4e-6 at K): A layers by translation, the middle A' by C2z + time reversal +
+    translation; (3) the effective Sigma-only run needs NO ML in the top position: Sigma depends only on relative
+    positions, so X_new is built in the frame of the ML with chi^S translated below it, and yambo uses the ML SAVE;
+    (4) practical: same 37 IBZ k vectors needed in ML, BL, TL (overlaps and database combination) -> check after the
+    nscf; avoid putting the ML on z = 0 (extra sigma_h symmetry through the origin could change the symmetry set);
+    simplest: ML and BL in their trilayer positions (main path without translations; translations for the other
+    layers in the projection), or the ML elsewhere to test the z translation explicitly (user's choice).
+    DECIDED (user, 2026-11-19): option (a), c = 50 bohr; new folder `hBN_trilayer/` with the SAME notebook structure
+    as hBN_bilayer (DFT_Analysis, GW_Analysis, Projection_Analysis, Embedding_Analysis, Results + results/), but
+    CONCISE in runs and interpretation: everything learned on the bilayer that carries over is ASSUMED, not re-checked
+    or re-explained. Systems (names): `ML_top` (layer A at +3d/2), `AA1` (A at -d/2, A' at +d/2 = the hBN_bilayer
+    AA1 geometry), `AA1A` (all three). `hBN_trilayer/DFT_Analysis.ipynb` created 2026-11-19 (generator
+    `make_trilayer_dft_nb.py`, scratchpad), NOT run (setup cells dry-checked): scf (ecut 80, k 12, c 50) of the three
+    systems + gaps vs the c = 40 runs of hBN_bilayer; pp.x + average.x density of AA1A and the pair-weight check;
+    nscf k = 18 with 300 / 320 / 340 bands (cg), check of the same 37 k vectors. Runs to ask the user.
     SCISSOR VIEW (user, 2026-11-19, from Projection_Analysis cell 6): the substrate effect on the top-layer states is a
     nearly k-independent symmetric shift, valence +0.17..+0.25, pi* -0.20..-0.24 eV, gap -0.41 (AA') / -0.44 (AB) eV
     on average (attributable k); the user expects the effective construction to do this w.r.t. the layer alone.
